@@ -1,0 +1,31 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "InPutDataConfig.generated.h"
+
+class UInputMappingContext;
+class UInputAction;
+
+UCLASS()
+class UE5_ACTIONRPG_API UInPutDataConfig : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	UInPutDataConfig();
+
+	UInputMappingContext* InputMappingContext = nullptr;
+
+	UInputAction* Move = nullptr;
+	UInputAction* Look = nullptr;
+	UInputAction* Jump = nullptr;
+	UInputAction* Shift = nullptr;
+	UInputAction* MouseL = nullptr;
+	UInputAction* MouseR = nullptr;
+	UInputAction* Num1 = nullptr;
+	UInputAction* Num2 = nullptr;
+	UInputAction* Num3 = nullptr;
+	UInputAction* G = nullptr;
+	UInputAction* T = nullptr;
+};

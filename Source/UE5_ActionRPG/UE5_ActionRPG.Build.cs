@@ -8,7 +8,17 @@ public class UE5_ActionRPG : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] {
+            "Core",
+            "CoreUObject",
+            "Engine",
+            "InputCore",
+            "EnhancedInput",
+            "AnimGraphRuntime",
+            "AIModule",
+            "GameplayTasks",
+            "Niagara",
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
