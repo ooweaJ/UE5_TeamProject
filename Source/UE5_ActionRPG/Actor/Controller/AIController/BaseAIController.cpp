@@ -17,8 +17,8 @@ ABaseAIController::ABaseAIController()
 	Perception = CreateDefaultSubobject<UAIPerceptionComponent>("Perception");
 
 	Sight = CreateDefaultSubobject<UAISenseConfig_Sight>("Sight");
-	Sight->SightRadius = 1000.f;
-	Sight->LoseSightRadius = 1000.f;
+	Sight->SightRadius = SightRadius;
+	Sight->LoseSightRadius = SightRadius;
 	Sight->PeripheralVisionAngleDegrees = 360.0f;
 	Sight->SetMaxAge(2.f);
 
