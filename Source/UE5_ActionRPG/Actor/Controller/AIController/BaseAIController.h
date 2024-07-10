@@ -27,24 +27,27 @@ public:
 	void SetLoactionKey(FVector InLoaction);
 	void SetTargetKey(class ACharacter* InCharacter);
 
-private:
+protected:
 	UPROPERTY(VisibleDefaultsOnly)
 	class UBehaviorComponent* Behavior;
 	UPROPERTY(VisibleDefaultsOnly)
 	class UAIPerceptionComponent* Perception;
 
-private:
+protected:
 	UFUNCTION()
 	void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
 
-private:
+protected:
 	UPROPERTY()
 	class UBehaviorTree* BTAsset;
 	UPROPERTY()
 	class UBlackboardData* BBAsset;
+	UPROPERTY(EditAnywhere)
+	float SightRadius;
 
-private:
+protected:
 	class AAIBaseCharacter* OwnerAI;
 	class UAISenseConfig_Sight* Sight;
 	float AttackRange = 100.f;
+
 };
