@@ -6,6 +6,7 @@ struct UE5_ACTIONRPG_API FBlackBoardKeyNameTable
 {
 	static inline FName TargetKey = TEXT("Target");
 	static inline FName LocationKey = TEXT("Location");
+	static inline FName BehaviorKey = TEXT("Behavior");
 
 };
 

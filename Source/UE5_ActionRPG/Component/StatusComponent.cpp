@@ -21,17 +21,6 @@ void UStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-
-void UStatusComponent::SetMove()
-{
-	bCanMove = true;
-}
-
-void UStatusComponent::SetStop()
-{
-	bCanMove = false;
-}
-
 void UStatusComponent::SetSpeed(EWalkSpeedTpye InType)
 {
 	UCharacterMovementComponent* movement = Cast<UCharacterMovementComponent>(GetOwner()->GetComponentByClass(UCharacterMovementComponent::StaticClass()));
