@@ -41,4 +41,17 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	void SetItemData(class ACharacter* InOnwerCharacter, const FItemActionData* InData);
+
+protected:
+	struct FActionDataTableRow* DefaultData;
+	class ACharacter* OwnerCharacter;
+	const FItemActionData* ActionData;
+	class AAttachment* Attachment;
+
+	UPROPERTY(EditAnywhere)
+	EItemType ItemType;
+private:
+
 };

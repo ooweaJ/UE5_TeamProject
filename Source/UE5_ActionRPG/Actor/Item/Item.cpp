@@ -1,27 +1,38 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Actor/Item/Item.h"
+#include "GameFramework/Character.h"
+#include "Actor/Item/Attachment.h"
 
-// Sets default values
 AItem::AItem()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
 
-// Called when the game starts or when spawned
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
+void AItem::SetItemData(ACharacter* InOnwerCharacter, const FItemActionData* InData)
+{
+	if (!InData) return;
+	ActionData = InData;
+	OwnerCharacter = InOnwerCharacter;
+	ItemType = InData->ItemType;
+
+	{
+		FTransform DefaultTransform;
+		AAttachment* Actor = InOnwerCharacter->GetWorld()->SpawnActorDeferred<AAttachment>(InData->Attachment, DefaultTransform, InOnwerCharacter, InOnwerCharacter, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		Actor->SetOwnerCharacter(InOnwerCharacter);
+		Actor->FinishSpawning(DefaultTransform, true);
+		Attachment = Actor;
+		Attachment->AttachToComponent(InOnwerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), InData->SocketName);
+	}
+}
