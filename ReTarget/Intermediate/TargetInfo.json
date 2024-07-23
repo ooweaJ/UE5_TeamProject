@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "ReTargeting",
+			"Path": "..\\Source\\ReTargeting.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "ReTargetingEditor",
+			"Path": "..\\Source\\ReTargetingEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
