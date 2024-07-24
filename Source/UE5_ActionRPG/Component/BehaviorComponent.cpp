@@ -2,6 +2,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "GameFrameWork/Character.h"
+#include "Misc/MISC.h"
 
 UBehaviorComponent::UBehaviorComponent()
 {
@@ -9,12 +10,9 @@ UBehaviorComponent::UBehaviorComponent()
 
 }
 
-
 void UBehaviorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-
 }
 
 void UBehaviorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -32,7 +30,7 @@ bool UBehaviorComponent::IsKnockBackMode() { return GetType() == EBehaviorType::
 
 ACharacter* UBehaviorComponent::GetTarget()
 {
-	ACharacter* character = Cast<ACharacter>(Blackboard->GetValueAsObject(TargetKey));
+	ACharacter* character = Cast<ACharacter>(Blackboard->GetValueAsObject(FBlackBoardKeyNameTable::TargetKey));
 	if (!!character)
 		return character;
 	return nullptr;
@@ -40,7 +38,7 @@ ACharacter* UBehaviorComponent::GetTarget()
 
 FVector UBehaviorComponent::GetLocation()
 {
-	return Blackboard->GetValueAsVector(LocationKey);
+	return Blackboard->GetValueAsVector(FBlackBoardKeyNameTable::LocationKey);
 }
 
 void UBehaviorComponent::SetWaitMode() { ChangeType(EBehaviorType::Wait); }
@@ -54,7 +52,7 @@ void UBehaviorComponent::SetEquipMode() { ChangeType(EBehaviorType::Equip); }
 void UBehaviorComponent::ChangeType(EBehaviorType InType)
 {
 	EBehaviorType type = GetType();
-	Blackboard->SetValueAsEnum(BehaviorKey, (uint8)InType);
+	Blackboard->SetValueAsEnum(FBlackBoardKeyNameTable::BehaviorKey, (uint8)InType);
 
 	if (OnBehaviorTypeChanged.IsBound())
 		OnBehaviorTypeChanged.Broadcast(InType);
@@ -62,6 +60,6 @@ void UBehaviorComponent::ChangeType(EBehaviorType InType)
 
 EBehaviorType UBehaviorComponent::GetType()
 {
-	return (EBehaviorType)Blackboard->GetValueAsEnum(BehaviorKey);
+	return (EBehaviorType)Blackboard->GetValueAsEnum(FBlackBoardKeyNameTable::BehaviorKey);
 }
 

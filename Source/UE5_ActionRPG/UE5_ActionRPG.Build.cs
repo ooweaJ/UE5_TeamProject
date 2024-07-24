@@ -18,6 +18,7 @@ public class UE5_ActionRPG : ModuleRules
             "AIModule",
             "GameplayTasks",
             "Niagara",
+             "GameplayAbilities", "GameplayTags", "GameplayTasks",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
