@@ -53,13 +53,13 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Temp
-	if (Test && AbilitySystemComponent)
+	if (TestEffect && AbilitySystemComponent)
 	{
 		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 		EffectContext.AddSourceObject(this);
-		FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Test, 1, EffectContext);
-
+		
+		FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(TestEffect, 1, EffectContext);
+		
 		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	}
 }
@@ -98,3 +98,4 @@ UAbilitySystemComponent* ABasePlayer::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }
+

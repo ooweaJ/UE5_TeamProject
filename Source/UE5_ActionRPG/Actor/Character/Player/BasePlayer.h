@@ -27,9 +27,6 @@ public:
 	virtual void InitAbilitySystem();
 
 public:
-	void OnAttack();
-
-public:
 	UPROPERTY(VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;
 
@@ -50,7 +47,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UBaseAttributeSet* AttributeSet;
 
-	// Temp
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UGameplayEffect> Test;
+	TSubclassOf<class UGameplayEffect> TestEffect;
 };
