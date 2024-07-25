@@ -37,7 +37,6 @@ protected:
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void 
 
 public:
 	FORCEINLINE void SetMontageData(UDataTable* InData) { MotageData = InData; }

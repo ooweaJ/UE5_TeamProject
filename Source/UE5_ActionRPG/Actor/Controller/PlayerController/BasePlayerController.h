@@ -22,5 +22,8 @@ protected:
 protected:
 	void OnMove(const FInputActionValue& InputActionValue);
 	void OnLookMouse(const FInputActionValue& InputActionValue);
-
+	void OnJump(const FInputActionValue& InputActionValue);
+	
+private:
+	class ABasePlayer* Player;
 };

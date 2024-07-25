@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
 #include "BasePlayer.generated.h"
 
 UCLASS()
-class UE5_ACTIONRPG_API ABasePlayer : public ACharacter
+class UE5_ACTIONRPG_API ABasePlayer : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -14,11 +15,16 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+	virtual void InitAbilitySystem();
 
 public:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -33,4 +39,14 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly)
 	class UStateComponent* StateComponent;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UBaseAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UBaseAttributeSet* AttributeSet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UGameplayEffect> TestEffect;
 };

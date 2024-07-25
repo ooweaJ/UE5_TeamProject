@@ -3,9 +3,11 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-
+#include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Component/StatusComponent.h"
 #include "Component/StateComponent.h"
+#include "Actor/PlayerState/BasePlayerState.h"
+#include "AbilitySystem/Attributes/PlayerAttributeSet.h"
 
 ABasePlayer::ABasePlayer()
 {
@@ -51,6 +53,22 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (TestEffect && AbilitySystemComponent)
+	{
+		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+		
+		FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(TestEffect, 1, EffectContext);
+		
+		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	}
+}
+
+void ABasePlayer::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitAbilitySystem();
 }
 
 void ABasePlayer::Tick(float DeltaTime)
@@ -63,5 +81,21 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ABasePlayer::InitAbilitySystem()
+{
+	if (ABasePlayerState* PS = GetPlayerState<ABasePlayerState>())
+	{
+		AbilitySystemComponent = Cast<UBaseAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+		AbilitySystemComponent->InitAbilityActorInfo(PS, this);
+
+		AttributeSet = PS->GetPlayerSet();
+	}
+}
+
+UAbilitySystemComponent* ABasePlayer::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
 

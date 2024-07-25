@@ -1,6 +1,7 @@
 #include "Actor/GameMode/MainWorldGameMode.h"
 #include "Actor/Character/Player/BasePlayer.h"
 #include "Actor/Controller/PlayerController/BasePlayerController.h"
+#include "Actor/PlayerState/BasePlayerState.h"
 
 AMainWorldGameMode::AMainWorldGameMode()
 {
@@ -9,6 +10,7 @@ AMainWorldGameMode::AMainWorldGameMode()
 		ConstructorHelpers::FClassFinder<ABasePlayer> Class = TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/BP_BasePlayer.BP_BasePlayer_C'");
 		ensure(Class.Class);
 		DefaultPawnClass = Class.Class;
+		PlayerStateClass = ABasePlayerState::StaticClass();
 	}
 }
 

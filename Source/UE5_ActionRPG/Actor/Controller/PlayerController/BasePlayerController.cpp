@@ -3,7 +3,7 @@
 #include "InputAction.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-
+#include "Actor/Character/Player/BasePlayer.h"
 #include "Data/Input/InPutDataConfig.h"
 
 ABasePlayerController::ABasePlayerController()
@@ -30,6 +30,7 @@ void ABasePlayerController::SetupInputComponent()
 		{
 			EnhancedInputComponent->BindAction(InPutDataConfig->Move, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Look, ETriggerEvent::Triggered, this, &ThisClass::OnLookMouse);
+			EnhancedInputComponent->BindAction(InPutDataConfig->Jump, ETriggerEvent::Started, this, &ThisClass::OnJump);
 		}
 	}
 }
@@ -37,6 +38,9 @@ void ABasePlayerController::SetupInputComponent()
 void ABasePlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
+
+	Player = Cast<ABasePlayer>(aPawn);
+	ensure(Player);
 }
 
 void ABasePlayerController::OnUnPossess()
@@ -62,4 +66,9 @@ void ABasePlayerController::OnLookMouse(const FInputActionValue& InputActionValu
 	const FVector ActionValue = InputActionValue.Get<FVector>();
 	AddYawInput(ActionValue.X);
 	AddPitchInput(ActionValue.Y);
+}
+
+void ABasePlayerController::OnJump(const FInputActionValue& InputActionValue)
+{
+	Player->Jump();
 }
