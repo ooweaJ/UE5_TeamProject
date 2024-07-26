@@ -28,7 +28,7 @@ ABasePlayer::ABasePlayer()
 
 	{
 		USkeletalMeshComponent* mesh = GetMesh();
-		static ConstructorHelpers::FObjectFinder<USkeletalMesh> Asset(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Manny.SKM_Manny'"));
+		static ConstructorHelpers::FObjectFinder<USkeletalMesh> Asset(TEXT("/Script/Engine.SkeletalMesh'/Game/ControlRig/Characters/Mannequins/Meshes/SKM_Manny.SKM_Manny'"));
 		if (!Asset.Succeeded()) return;
 
 		mesh->SetSkeletalMesh(Asset.Object);
