@@ -24,7 +24,7 @@ UInPutDataConfig::UInPutDataConfig()
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
-		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_SpaceBar.IA_SpaceBar'") };
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_F.IA_F'") };
 		check(Asset.Succeeded());
 		Jump = Asset.Object;
 	}
@@ -33,6 +33,12 @@ UInPutDataConfig::UInPutDataConfig()
 		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_Shift.IA_Shift'") };
 		check(Asset.Succeeded());
 		Shift = Asset.Object;
+	}
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_SpaceBar.IA_SpaceBar'") };
+		check(Asset.Succeeded());
+		Space = Asset.Object;
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset

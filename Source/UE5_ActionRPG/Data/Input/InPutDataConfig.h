@@ -21,6 +21,7 @@ public:
 	UInputAction* Look = nullptr;
 	UInputAction* Jump = nullptr;
 	UInputAction* Shift = nullptr;
+	UInputAction* Space = nullptr;
 	UInputAction* MouseL = nullptr;
 	UInputAction* MouseR = nullptr;
 	UInputAction* Num1 = nullptr;

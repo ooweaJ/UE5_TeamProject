@@ -94,7 +94,7 @@ void ABasePlayer::OnAttackL()
 
 void ABasePlayer::OnAttackR()
 {
-	ActiveAbility(BaseGameplayTags::Ability_GreatSword_Attack);
+	ActiveAbility(BaseGameplayTags::Ability_Katana_Attack);
 }
 
 void ABasePlayer::AddCharacterAbilities()
