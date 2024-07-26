@@ -94,6 +94,10 @@ void ABasePlayer::InitAbilitySystem()
 	}
 }
 
+void ABasePlayer::OnAttack()
+{
+}
+
 UAbilitySystemComponent* ABasePlayer::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;

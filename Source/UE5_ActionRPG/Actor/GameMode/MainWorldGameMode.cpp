@@ -14,6 +14,12 @@ AMainWorldGameMode::AMainWorldGameMode()
 	}
 }
 
+void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+	++NumberOfPlayers;
+}
+
 void AMainWorldGameMode::BeginPlay()
 {
 	Super::BeginPlay();
