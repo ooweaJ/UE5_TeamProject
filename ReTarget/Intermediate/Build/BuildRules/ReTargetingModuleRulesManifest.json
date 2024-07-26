@@ -1,8 +1,8 @@
 {
 	"SourceFiles": [
-		"D:\\JW\\UE5\\UE5_TeamProject\\ReTarget\\Source\\ReTargeting\\ReTargeting.Build.cs",
-		"D:\\JW\\UE5\\UE5_TeamProject\\ReTarget\\Source\\ReTargeting.Target.cs",
-		"D:\\JW\\UE5\\UE5_TeamProject\\ReTarget\\Source\\ReTargetingEditor.Target.cs"
+		"D:\\GitHub\\UE5_TeamProject\\ReTarget\\Source\\ReTargeting\\ReTargeting.Build.cs",
+		"D:\\GitHub\\UE5_TeamProject\\ReTarget\\Source\\ReTargeting.Target.cs",
+		"D:\\GitHub\\UE5_TeamProject\\ReTarget\\Source\\ReTargetingEditor.Target.cs"
 	],
 	"EngineVersion": "5.3.2"
 }
