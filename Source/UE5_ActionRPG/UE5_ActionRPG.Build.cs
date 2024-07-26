@@ -16,9 +16,10 @@ public class UE5_ActionRPG : ModuleRules
             "EnhancedInput",
             "AnimGraphRuntime",
             "AIModule",
-            "GameplayTasks",
             "Niagara",
              "GameplayAbilities", "GameplayTags", "GameplayTasks",
+             "OnlineSubsystem",
+             "OnlineSubsystemSteam",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

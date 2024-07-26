@@ -1,5 +1,6 @@
 #include "Actor/Character/BaseCharacter.h"
-#include "Component/BaseAbilitySystemComponent.h"
+#include "AbilitySystem/BaseAbilitySystemComponent.h"
+
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
