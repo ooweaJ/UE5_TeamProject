@@ -8,6 +8,7 @@ namespace BaseGameplayTags
 {
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Action_Move);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Action_Turn);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Action_Jump);
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Warrior_Attack);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_GreatSword_Attack);

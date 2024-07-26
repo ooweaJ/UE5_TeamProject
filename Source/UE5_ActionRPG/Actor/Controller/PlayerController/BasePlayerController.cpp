@@ -5,6 +5,8 @@
 #include "EnhancedInputComponent.h"
 #include "Actor/Character/Player/BasePlayer.h"
 #include "Data/Input/InPutDataConfig.h"
+#include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "BaseGameplayTags.h"
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -72,7 +74,8 @@ void ABasePlayerController::OnLookMouse(const FInputActionValue& InputActionValu
 
 void ABasePlayerController::OnJump(const FInputActionValue& InputActionValue)
 {
-	Player->Jump();
+	UBaseAbilitySystemComponent* BAS = Cast<UBaseAbilitySystemComponent>(Player->GetAbilitySystemComponent());
+	BAS->ActiveAbility(BaseGameplayTags::Input_Action_Jump);
 }
 
 void ABasePlayerController::OnMouseL(const FInputActionValue& InputActionValue)
