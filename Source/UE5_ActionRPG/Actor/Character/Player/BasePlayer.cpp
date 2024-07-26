@@ -8,6 +8,7 @@
 #include "Component/StateComponent.h"
 #include "Actor/PlayerState/BasePlayerState.h"
 #include "AbilitySystem/Attributes/PlayerAttributeSet.h"
+#include "BaseGameplayTags.h"
 
 ABasePlayer::ABasePlayer()
 {
@@ -53,15 +54,7 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Temp
-	if (Test && AbilitySystemComponent)
-	{
-		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
-		EffectContext.AddSourceObject(this);
-		FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Test, 1, EffectContext);
-
-		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
-	}
+	AddCharacterAbilities();
 }
 
 void ABasePlayer::PossessedBy(AController* NewController)
@@ -92,6 +85,30 @@ void ABasePlayer::InitAbilitySystem()
 
 		AttributeSet = PS->GetPlayerSet();
 	}
+}
+
+void ABasePlayer::OnAttackL()
+{
+	ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
+}
+
+void ABasePlayer::OnAttackR()
+{
+	ActiveAbility(BaseGameplayTags::Ability_GreatSword_Attack);
+}
+
+void ABasePlayer::AddCharacterAbilities()
+{
+	UBaseAbilitySystemComponent* ASC = Cast<UBaseAbilitySystemComponent>(AbilitySystemComponent);
+	if (!ASC)
+		return;
+
+	ASC->AddCharacterAbilities(StartupAbilities);
+}
+
+void ABasePlayer::ActiveAbility(FGameplayTag AbilityTag)
+{
+	AbilitySystemComponent->ActiveAbility(AbilityTag);
 }
 
 UAbilitySystemComponent* ABasePlayer::GetAbilitySystemComponent() const

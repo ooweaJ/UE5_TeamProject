@@ -27,7 +27,8 @@ public:
 	virtual void InitAbilitySystem();
 
 public:
-	void OnAttack();
+	void OnAttackL();
+	void OnAttackR();
 
 public:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -50,7 +51,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UBaseAttributeSet* AttributeSet;
 
-	// Temp
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UGameplayEffect> Test;
+public:
+	void AddCharacterAbilities();
+
+	UPROPERTY(EditAnywhere, Category = Abilities)
+	TArray<TSubclassOf<class UGameplayAbility>> StartupAbilities;
+
+public:
+	void ActiveAbility(struct FGameplayTag AbilityTag);
 };

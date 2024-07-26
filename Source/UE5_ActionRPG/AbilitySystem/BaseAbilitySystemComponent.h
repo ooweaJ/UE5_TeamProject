@@ -12,4 +12,11 @@ class UE5_ACTIONRPG_API UBaseAbilitySystemComponent : public UAbilitySystemCompo
 {
 	GENERATED_BODY()
 	
+public:
+	void AddCharacterAbilities(const TArray<TSubclassOf<class UGameplayAbility>>& StartupAbilities);
+	void ActiveAbility(FGameplayTag AbilityTag);
+	FGameplayAbilitySpec* GetAbilitySpec(FGameplayAbilitySpecHandle Handle);
+	FGameplayTagContainer GetAbilityTags(FGameplayAbilitySpecHandle SpecHandle);
+
+	TArray<FGameplayAbilitySpecHandle> SpecHandles;
 };
