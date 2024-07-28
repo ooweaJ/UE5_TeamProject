@@ -20,6 +20,7 @@ class UE5_ACTIONRPG_API UBaseAttributeSet : public UAttributeSet
 public:
 	UBaseAttributeSet();
 
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 public:
 	ATTRIBUTE_ACCESSORS(ThisClass, HP);
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxHP);

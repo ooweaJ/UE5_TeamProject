@@ -1,17 +1,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "AbilitySystemInterface.h"
+#include "Actor/Character/BaseCharacter.h"
 #include "BasePlayer.generated.h"
 
 UCLASS()
-class UE5_ACTIONRPG_API ABasePlayer : public ACharacter, public IAbilitySystemInterface
+class UE5_ACTIONRPG_API ABasePlayer : public ABaseCharacter
 {
 	GENERATED_BODY()
 
 public:
-	ABasePlayer();
+	ABasePlayer(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	virtual void BeginPlay() override;
@@ -38,20 +37,6 @@ public:
 	class UCameraComponent* Camera;
 
 public:
-	UPROPERTY(VisibleDefaultsOnly)
-	class UStatusComponent* StatusComponent;
-
-	UPROPERTY(VisibleDefaultsOnly)
-	class UStateComponent* StateComponent;
-
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UBaseAbilitySystemComponent* AbilitySystemComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UBaseAttributeSet* AttributeSet;
-
-public:
 	void AddCharacterAbilities();
 
 	UPROPERTY(EditAnywhere, Category = Abilities)
@@ -59,4 +44,6 @@ public:
 
 public:
 	void ActiveAbility(struct FGameplayTag AbilityTag);
+
+
 };
