@@ -4,16 +4,12 @@
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/BossAttributeSet.h"
 
-AAIBaseCharacter::AAIBaseCharacter()
+AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
+ : Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	AbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AttributeSet = CreateDefaultSubobject<UBossAttributeSet>(TEXT("AttributeSet"));
-	{
-		StatusComponent = CreateDefaultSubobject<UStatusComponent>("StatusComponent");
-		StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
-	}
 }
 
 void AAIBaseCharacter::BeginPlay()

@@ -10,7 +10,8 @@
 #include "AbilitySystem/Attributes/PlayerAttributeSet.h"
 #include "BaseGameplayTags.h"
 
-ABasePlayer::ABasePlayer()
+ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -19,12 +20,6 @@ ABasePlayer::ABasePlayer()
 	bUseControllerRotationRoll = false;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-
-
-	{
-		StatusComponent = CreateDefaultSubobject<UStatusComponent>("StatusComponent");
-		StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
-	}
 
 	{
 		USkeletalMeshComponent* mesh = GetMesh();
@@ -55,6 +50,8 @@ void ABasePlayer::BeginPlay()
 	Super::BeginPlay();
 	
 	AddCharacterAbilities();
+
+
 }
 
 void ABasePlayer::PossessedBy(AController* NewController)
@@ -94,7 +91,7 @@ void ABasePlayer::OnAttackL()
 
 void ABasePlayer::OnAttackR()
 {
-	ActiveAbility(BaseGameplayTags::Ability_Katana_Attack);
+	ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
 }
 
 void ABasePlayer::AddCharacterAbilities()

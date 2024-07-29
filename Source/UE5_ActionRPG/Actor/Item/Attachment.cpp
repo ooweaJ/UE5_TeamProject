@@ -25,7 +25,7 @@ void AAttachment::BeginPlay()
 		shape->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnComponentEndOverlap);
 	}
 
-	OffCollisions();
+	//OffCollisions();
 }
 
 void AAttachment::Tick(float DeltaTime)
@@ -39,11 +39,10 @@ void AAttachment::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedCompone
 	if (OtherActor == OwnerCharacter) return;
 
 
-	if (OnAttachmentBeginOverlap.IsBound())
 	{
 		ACharacter* otherCharacter = Cast<ACharacter>(OtherActor);
 		if (otherCharacter == nullptr) return;
-
+		Targets.AddUnique(otherCharacter);
 		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, otherCharacter);
 	}
 }
@@ -54,7 +53,6 @@ void AAttachment::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent
 	{
 		ACharacter* otherCharacter = Cast<ACharacter>(OtherActor);
 		if (otherCharacter == nullptr) return;
-
 		OnAttachmentEndOverlap.Broadcast(OwnerCharacter, this, otherCharacter);
 	}
 }
@@ -86,6 +84,15 @@ void AAttachment::OffCollisions()
 void AAttachment::AttachToCollision(USceneComponent* InComponent, FName InSocketName)
 {
 	InComponent->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), InSocketName);
+}
+
+TArray<AActor*> AAttachment::GetTargets()
+{
+	if (Targets.IsEmpty())
+	{
+		return TArray<AActor*>();
+	}
+	return Targets;
 }
 
 
