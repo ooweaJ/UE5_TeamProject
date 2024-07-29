@@ -10,5 +10,5 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Input_Action_Jump, "Input.Action.Jump");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Warrior_Attack, "Ability.Warrior.Attack");
-	UE_DEFINE_GAMEPLAY_TAG(Ability_GreatSword_Attack, "Ability.GreatSword.Attack");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_Katana_Attack, "Ability.Katana.Attack");
 }
