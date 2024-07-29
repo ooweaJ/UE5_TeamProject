@@ -13,5 +13,12 @@ UCLASS()
 class UE5_ACTIONRPG_API UTask_Ultimate : public UBTTaskNode
 {
 	GENERATED_BODY()
-	
+public:
+	UTask_Ultimate();
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
+protected:
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
+	class UStateComponent* State;
 };

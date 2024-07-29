@@ -18,23 +18,18 @@ ABaseAIController::ABaseAIController()
 
 	Sight = CreateDefaultSubobject<UAISenseConfig_Sight>("Sight");
 	Sight->SightRadius = SightRadius;
-	Sight->LoseSightRadius = SightRadius;
+	Sight->LoseSightRadius = SightRadius + 500;
 	Sight->PeripheralVisionAngleDegrees = 360.0f;
 	Sight->SetMaxAge(2.f);
 
+	Sight->DetectionByAffiliation.bDetectEnemies = true;
+	Sight->DetectionByAffiliation.bDetectFriendlies = true;
+	Sight->DetectionByAffiliation.bDetectNeutrals = true;
+
 	Perception->ConfigureSense(*Sight);
 	Perception->SetDominantSense(Sight->GetSenseImplementation());
+	Perception->OnPerceptionUpdated.AddDynamic(this, &ThisClass::OnPerceptionUpdated);
 
-	//static ConstructorHelpers::FObjectFinder<UBlackboardData> BBObject(TEXT("/Script/AIModule.BlackboardData'/Game/_dev/BB_AIDefault.BB_AIDefault'"));
-	//if (BBObject.Succeeded())
-	//{
-	//	BBAsset = BBObject.Object;
-	//}
-	//static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("/Script/AIModule.BehaviorTree'/Game/_dev/BT_AIDefault.BT_AIDefault'"));
-	//if (BTObject.Succeeded())
-	//{
-	//	BTAsset = BTObject.Object;
-	//}
 }
 
 void ABaseAIController::BeginPlay()
@@ -55,7 +50,6 @@ void ABaseAIController::OnPossess(APawn* InPawn)
 	if (!OwnerAI) return;
 	UBlackboardComponent* BlackboardPtr = Blackboard;
 	UseBlackboard(BBAsset, BlackboardPtr);
-	Perception->OnPerceptionUpdated.AddDynamic(this, &ThisClass::OnPerceptionUpdated);
 	Behavior->SetBlackBoard(Blackboard);
 	RunBehaviorTree(BTAsset);
 }
@@ -92,4 +86,16 @@ void ABaseAIController::SetLoactionKey(FVector InLoaction)
 void ABaseAIController::SetTargetKey(ACharacter* InCharacter)
 {
 	Blackboard->SetValueAsObject(FBlackBoardKeyNameTable::TargetKey, InCharacter);
+}
+
+void ABaseAIController::OnMeleeAttack()
+{
+}
+
+void ABaseAIController::OnSkill()
+{
+}
+
+void ABaseAIController::OnUltimate()
+{
 }
