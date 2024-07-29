@@ -2,6 +2,7 @@
 
 
 #include "Actor/Controller/AIController/Sevarog_Controller/SevarogController.h"
+#include "Perception/AISenseConfig_Sight.h"
 
 
 ASevarogController::ASevarogController()

@@ -1,17 +1,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "AbilitySystemInterface.h"
+#include "Actor/Character/BaseCharacter.h"
 #include "BasePlayer.generated.h"
 
 UCLASS()
-class UE5_ACTIONRPG_API ABasePlayer : public ACharacter, public IAbilitySystemInterface
+class UE5_ACTIONRPG_API ABasePlayer : public ABaseCharacter
 {
 	GENERATED_BODY()
 
 public:
-	ABasePlayer();
+	ABasePlayer(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	virtual void BeginPlay() override;
@@ -27,7 +26,8 @@ public:
 	virtual void InitAbilitySystem();
 
 public:
-	void OnAttack();
+	void OnAttackL();
+	void OnAttackR();
 
 public:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -36,21 +36,32 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 	class UCameraComponent* Camera;
 
+	UPROPERTY(BlueprintReadOnly)
+	FVector ForwardInput;
+
+	UPROPERTY(BlueprintReadOnly)
+	FVector RightInput;
+
+	UPROPERTY(BlueprintReadOnly)
+	FVector MoveDirection;
+	
+	UPROPERTY(BlueprintReadOnly)
+	float WalkingDirectionAngle;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bLockOn;
+
+	UPROPERTY(BlueprintReadWrite)
+	float CharacterRotationAlphaLinearValue = 1;
+
 public:
-	UPROPERTY(VisibleDefaultsOnly)
-	class UStatusComponent* StatusComponent;
+	void AddCharacterAbilities();
 
-	UPROPERTY(VisibleDefaultsOnly)
-	class UStateComponent* StateComponent;
+	UPROPERTY(EditAnywhere, Category = Abilities)
+	TArray<TSubclassOf<class UGameplayAbility>> StartupAbilities;
 
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UBaseAbilitySystemComponent* AbilitySystemComponent;
+public:
+	void ActiveAbility(struct FGameplayTag AbilityTag);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UBaseAttributeSet* AttributeSet;
 
-	// Temp
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UGameplayEffect> Test;
 };

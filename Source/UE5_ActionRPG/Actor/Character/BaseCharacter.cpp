@@ -1,23 +1,22 @@
 #include "Actor/Character/BaseCharacter.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Actor/Item/Attachment.h"
+#include "Component/StateComponent.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
+
 	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<UBaseAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
+	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
+
 	NetUpdateFrequency = 100.0f;
-}
 
-void ABaseCharacter::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-
-	check(AbilitySystemComponent);
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
@@ -29,7 +28,16 @@ UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (AttachmentClass)
+	{
+		FTransform DefaultTransform;
+		AAttachment* Actor = GetWorld()->SpawnActorDeferred<AAttachment>(AttachmentClass, DefaultTransform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		Actor->SetOwnerCharacter(this);
+		Actor->FinishSpawning(DefaultTransform, true);
+		Attachment = Actor;
+		Attachment->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), FName("Hand_R"));
+	}
 }
 
 // Called every frame
@@ -46,3 +54,26 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void ABaseCharacter::ApplyGamePlayEffectToTarget(TArray<AActor*> InTargetActor, TSubclassOf<UGameplayEffect> EffectClass)
+{
+	if (InTargetActor.IsEmpty()) return;
+
+	for (auto& Target : InTargetActor)
+	{
+		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
+		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponent();
+
+		FGameplayEffectContextHandle ContextHandle = SourceASC->MakeEffectContext();
+		ContextHandle.AddSourceObject(this);
+
+		FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(EffectClass, 1.f, ContextHandle);
+
+		if (Target && IsValid(Target) && TargetASC)
+			SourceASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
+	}
+}
+
+TArray<AActor*> ABaseCharacter::GetTargetActor()
+{
+	return Attachment->GetTargets();
+}

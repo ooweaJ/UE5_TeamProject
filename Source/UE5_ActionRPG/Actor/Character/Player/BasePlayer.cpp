@@ -8,8 +8,10 @@
 #include "Component/StateComponent.h"
 #include "Actor/PlayerState/BasePlayerState.h"
 #include "AbilitySystem/Attributes/PlayerAttributeSet.h"
+#include "BaseGameplayTags.h"
 
-ABasePlayer::ABasePlayer()
+ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -19,15 +21,9 @@ ABasePlayer::ABasePlayer()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
-
-	{
-		StatusComponent = CreateDefaultSubobject<UStatusComponent>("StatusComponent");
-		StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
-	}
-
 	{
 		USkeletalMeshComponent* mesh = GetMesh();
-		static ConstructorHelpers::FObjectFinder<USkeletalMesh> Asset(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Manny.SKM_Manny'"));
+		static ConstructorHelpers::FObjectFinder<USkeletalMesh> Asset(TEXT("/Script/Engine.SkeletalMesh'/Game/ControlRig/Characters/Mannequins/Meshes/SKM_Manny.SKM_Manny'"));
 		if (!Asset.Succeeded()) return;
 
 		mesh->SetSkeletalMesh(Asset.Object);
@@ -47,21 +43,16 @@ ABasePlayer::ABasePlayer()
 		SpringArm->bDoCollisionTest = true;
 		SpringArm->bUsePawnControlRotation = true;
 	}
+	Tags.Add("Player");
 }
 
 void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Temp
-	if (Test && AbilitySystemComponent)
-	{
-		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
-		EffectContext.AddSourceObject(this);
-		FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Test, 1, EffectContext);
+	AddCharacterAbilities();
 
-		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
-	}
+
 }
 
 void ABasePlayer::PossessedBy(AController* NewController)
@@ -94,8 +85,28 @@ void ABasePlayer::InitAbilitySystem()
 	}
 }
 
-void ABasePlayer::OnAttack()
+void ABasePlayer::OnAttackL()
 {
+	ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
+}
+
+void ABasePlayer::OnAttackR()
+{
+	ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
+}
+
+void ABasePlayer::AddCharacterAbilities()
+{
+	UBaseAbilitySystemComponent* ASC = Cast<UBaseAbilitySystemComponent>(AbilitySystemComponent);
+	if (!ASC)
+		return;
+
+	ASC->AddCharacterAbilities(StartupAbilities);
+}
+
+void ABasePlayer::ActiveAbility(FGameplayTag AbilityTag)
+{
+	AbilitySystemComponent->ActiveAbility(AbilityTag);
 }
 
 UAbilitySystemComponent* ABasePlayer::GetAbilitySystemComponent() const
