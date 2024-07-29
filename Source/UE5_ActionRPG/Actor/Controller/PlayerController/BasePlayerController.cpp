@@ -7,6 +7,8 @@
 #include "Data/Input/InPutDataConfig.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "BaseGameplayTags.h"
+#include "KismetAnimationLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -60,9 +62,28 @@ void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	float AngleDampingSpeed = 1;
 
-	ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
-	ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);
+	if (Player->WalkingDirectionAngle < 45 && Player->WalkingDirectionAngle > -45)
+	{
+		AngleDampingSpeed = 1.0;
+		
+	}
+	else
+	{
+		AngleDampingSpeed = 0.75;
+	}
+	ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y * AngleDampingSpeed);
+	ControlledPawn->AddMovementInput(RightDirection, MovementVector.X * AngleDampingSpeed);
+
+	Player->ForwardInput = ForwardDirection * MovementVector.Y;
+	Player->RightInput = RightDirection * MovementVector.X;
+	Player->MoveDirection = (Player->ForwardInput + Player->RightInput).GetSafeNormal();
+	Player->WalkingDirectionAngle = UKismetAnimationLibrary::CalculateDirection(Player->MoveDirection, Player->GetActorRotation());
+	if (!Player->bLockOn)
+	{
+		Player->SetActorRotation(UKismetMathLibrary::RLerp(Player->GetActorRotation(), Player->MoveDirection.Rotation(), GWorld->GetDeltaSeconds() * Player->CharacterRotationAlphaLinearValue, true));
+	}
 }
 
 void ABasePlayerController::OnLookMouse(const FInputActionValue& InputActionValue)

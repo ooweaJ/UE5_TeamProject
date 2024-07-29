@@ -39,3 +39,4 @@ void UTask_MeleeAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
+
