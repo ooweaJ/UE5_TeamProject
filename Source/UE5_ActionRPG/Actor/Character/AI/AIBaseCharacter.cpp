@@ -9,7 +9,8 @@ AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	AttributeSet = CreateDefaultSubobject<UBossAttributeSet>(TEXT("AttributeSet"));
+	AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("AttributeSet"));
+	Tags.Add("Boss");
 }
 
 void AAIBaseCharacter::BeginPlay()

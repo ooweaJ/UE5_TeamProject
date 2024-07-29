@@ -3,3 +3,7 @@
 
 #include "AbilitySystem/Attributes/BossAttributeSet.h"
 
+void UBossAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+}

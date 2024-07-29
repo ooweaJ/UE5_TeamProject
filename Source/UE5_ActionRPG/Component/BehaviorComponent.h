@@ -7,7 +7,7 @@
 UENUM(BlueprintType)
 enum class EBehaviorType : uint8
 {
-	Wait, patrol, Approach, Action, Hitted, KnockBack, Equip
+	Wait, patrol, Approach, Melee, Skill, Ultimate, Hitted, KnockBack, Equip
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBehaviorTypeChanged, EBehaviorType, ChangeType);
@@ -30,7 +30,9 @@ public:
 	// 현재 블랙보드의 타입이 이 타입이 맞는지 확인 용도
 	UFUNCTION(BlueprintPure) bool IsWaitMode();
 	UFUNCTION(BlueprintPure) bool IsApproachMode();
-	UFUNCTION(BlueprintPure) bool IsActionMode();
+	UFUNCTION(BlueprintPure) bool IsMeleeMode();
+	UFUNCTION(BlueprintPure) bool IsSkillMode();
+	UFUNCTION(BlueprintPure) bool IsUltimateMode();
 	UFUNCTION(BlueprintPure) bool IsPatrolMode();
 	UFUNCTION(BlueprintPure) bool IsHittedMode();
 	UFUNCTION(BlueprintPure) bool IsKnockBackMode();
@@ -47,7 +49,9 @@ public:
 	// 블랙보드의 Enum값을 변경하기 위한 함수들
 	void SetWaitMode();
 	void SetApproachMode();
-	void SetActionMode();
+	void SetMeleeMode();
+	void SetSkillMode();
+	void SetUltimateMode();
 	void SetPatrolMode();
 	void SetHittedMode();
 	void SetKnockBackMode();

@@ -14,4 +14,6 @@ class UE5_ACTIONRPG_API UBossAttributeSet : public UBaseAttributeSet
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 };

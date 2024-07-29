@@ -2,6 +2,7 @@
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Actor/Item/Attachment.h"
+#include "Component/StateComponent.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -11,6 +12,8 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<UBaseAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
 
 	NetUpdateFrequency = 100.0f;
 
