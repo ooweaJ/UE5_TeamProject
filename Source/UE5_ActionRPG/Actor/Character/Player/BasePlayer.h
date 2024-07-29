@@ -36,6 +36,24 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 	class UCameraComponent* Camera;
 
+	UPROPERTY(BlueprintReadOnly)
+	FVector ForwardInput;
+
+	UPROPERTY(BlueprintReadOnly)
+	FVector RightInput;
+
+	UPROPERTY(BlueprintReadOnly)
+	FVector MoveDirection;
+	
+	UPROPERTY(BlueprintReadOnly)
+	float WalkingDirectionAngle;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bLockOn;
+
+	UPROPERTY(BlueprintReadWrite)
+	float CharacterRotationAlphaLinearValue = 1;
+
 public:
 	void AddCharacterAbilities();
 
