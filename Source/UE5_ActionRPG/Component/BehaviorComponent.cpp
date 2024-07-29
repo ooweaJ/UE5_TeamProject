@@ -23,7 +23,9 @@ void UBehaviorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 bool UBehaviorComponent::IsWaitMode() { return GetType() == EBehaviorType::Wait; }
 bool UBehaviorComponent::IsApproachMode() { return GetType() == EBehaviorType::Approach; }
-bool UBehaviorComponent::IsActionMode() { return GetType() == EBehaviorType::Action; }
+bool UBehaviorComponent::IsMeleeMode() { return GetType() == EBehaviorType::Melee; }
+bool UBehaviorComponent::IsSkillMode() { return GetType() == EBehaviorType::Skill; }
+bool UBehaviorComponent::IsUltimateMode() { return GetType() == EBehaviorType::Ultimate; }
 bool UBehaviorComponent::IsPatrolMode() { return GetType() == EBehaviorType::patrol; }
 bool UBehaviorComponent::IsHittedMode() { return GetType() == EBehaviorType::Hitted; }
 bool UBehaviorComponent::IsKnockBackMode() { return GetType() == EBehaviorType::KnockBack; }
@@ -43,7 +45,9 @@ FVector UBehaviorComponent::GetLocation()
 
 void UBehaviorComponent::SetWaitMode() { ChangeType(EBehaviorType::Wait); }
 void UBehaviorComponent::SetApproachMode() { ChangeType(EBehaviorType::Approach); }
-void UBehaviorComponent::SetActionMode() { ChangeType(EBehaviorType::Action); }
+void UBehaviorComponent::SetMeleeMode() { ChangeType(EBehaviorType::Melee); }
+void UBehaviorComponent::SetSkillMode() { ChangeType(EBehaviorType::Skill); }
+void UBehaviorComponent::SetUltimateMode() { ChangeType(EBehaviorType::Ultimate); }
 void UBehaviorComponent::SetPatrolMode() { ChangeType(EBehaviorType::patrol); }
 void UBehaviorComponent::SetHittedMode() { ChangeType(EBehaviorType::Hitted); }
 void UBehaviorComponent::SetKnockBackMode() { ChangeType(EBehaviorType::KnockBack); }

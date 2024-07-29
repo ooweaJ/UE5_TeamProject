@@ -22,15 +22,21 @@ public:
 	FORCEINLINE	void SetAttackRange(float Range) { AttackRange = Range; }
 	FORCEINLINE float GetAttackRange() { return AttackRange; }
 	FORCEINLINE class UBehaviorComponent* GetBehavior() { return Behavior; }
+	FORCEINLINE bool IsOnSkill() { return bSkill; }
+	FORCEINLINE bool IsOnUltimate() { return bUltimate; }
 
 public:
 	void SetLoactionKey(FVector InLoaction);
 	void SetTargetKey(class ACharacter* InCharacter);
 
+	virtual void OnMeleeAttack();
+	virtual void OnSkill();
+	virtual void OnUltimate();
+
 protected:
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(EditAnywhere)
 	class UBehaviorComponent* Behavior;
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(EditAnywhere)
 	class UAIPerceptionComponent* Perception;
 
 protected:
@@ -38,16 +44,19 @@ protected:
 	void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
 
 protected:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	class UBehaviorTree* BTAsset;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	class UBlackboardData* BBAsset;
 	UPROPERTY(EditAnywhere)
-	float SightRadius;
+	float SightRadius = 3000.f;
 
+	UPROPERTY(EditAnywhere)
+	float AttackRange = 150.f;
 protected:
 	class AAIBaseCharacter* OwnerAI;
 	class UAISenseConfig_Sight* Sight;
-	float AttackRange = 100.f;
 
+	bool bSkill = false;
+	bool bUltimate = false;
 };

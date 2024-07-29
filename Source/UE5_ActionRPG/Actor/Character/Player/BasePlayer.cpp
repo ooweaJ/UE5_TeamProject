@@ -43,6 +43,7 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		SpringArm->bDoCollisionTest = true;
 		SpringArm->bUsePawnControlRotation = true;
 	}
+	Tags.Add("Player");
 }
 
 void ABasePlayer::BeginPlay()
