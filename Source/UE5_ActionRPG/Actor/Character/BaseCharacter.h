@@ -5,6 +5,7 @@
 #include "Interface/CombatInterface.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayEffect.h"
+#include "Component/StatusComponent.h"
 #include "BaseCharacter.generated.h"
 
 UCLASS()
@@ -29,6 +30,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+public:
+	FORCEINLINE UStatusComponent* GetStatusComponent() { return StatusComponent; }
 
 public:
 	UPROPERTY(EditAnywhere, Category = GAS)
@@ -44,4 +47,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UBaseAttributeSet* AttributeSet;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStatusComponent* StatusComponent;
 };

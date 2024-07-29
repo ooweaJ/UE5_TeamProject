@@ -30,6 +30,7 @@ public:
 	FORCEINLINE float GetRunSpeed() { return Speed[(int32)EWalkSpeedTpye::Run]; }
 	FORCEINLINE float GetMaxHealth() { return MaxHealth; }
 	FORCEINLINE float GetHealth() { return Health; }
+	FORCEINLINE float GetDamage() { return Damage; }
 	// 캐릭터 이동 제어를 위해 받아옴
 	FORCEINLINE bool IsCanMove() { return bCanMove; }
 
@@ -42,6 +43,7 @@ public:
 	// 체력 증가 및 감소
 	void IncreaseHealth(float InAmount);
 	void DecreaseHealth(float InAmount);
+	void SetDamage(float InAmount);
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Health")
@@ -52,5 +54,6 @@ private:
 
 private:
 	float Health;
+	float Damage;
 	bool bCanMove = true;
 };

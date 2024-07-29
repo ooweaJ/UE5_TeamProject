@@ -40,4 +40,9 @@ void UStatusComponent::DecreaseHealth(float InAmount)
 	Health = FMath::Clamp(Health, 0.f, MaxHealth);
 }
 
+void UStatusComponent::SetDamage(float InAmount)
+{
+	Damage = InAmount;
+}
+
 
