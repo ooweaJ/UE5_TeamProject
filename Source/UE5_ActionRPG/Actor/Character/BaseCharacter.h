@@ -36,8 +36,10 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AAttachment> AttachmentClass;
-	class AAttachment* Attachment;
+	TSubclassOf<class AItem> DefaultItemClass;
+
+	UPROPERTY(EditAnywhere)
+	class UMontageComponent* MontageComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UBaseAbilitySystemComponent> AbilitySystemComponent;
@@ -47,4 +49,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStateComponent* State;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UEquipComponent* Equip;
 };

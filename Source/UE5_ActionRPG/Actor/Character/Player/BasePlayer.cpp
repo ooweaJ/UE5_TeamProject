@@ -87,12 +87,10 @@ void ABasePlayer::InitAbilitySystem()
 
 void ABasePlayer::OnAttackL()
 {
-	ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
 }
 
 void ABasePlayer::OnAttackR()
 {
-	ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
 }
 
 void ABasePlayer::AddCharacterAbilities()

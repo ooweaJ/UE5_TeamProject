@@ -2,43 +2,29 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "GameplayTagContainer.h"
+#include "Actor/Item/Item.h"
+#include "Data/ActionData/ActionDataTableRow.h"
 #include "CombatActionDataAsset.generated.h"
 
-
-class UGameplayAbility;
-
 USTRUCT(BlueprintType)
-struct FAbilityInfo
+struct FItemInfoData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag AbilityTag = FGameplayTag();
+	UPROPERTY(EditAnywhere)
+	UDataTable* Data;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag CooldownTag = FGameplayTag();
+	UPROPERTY(EditAnywhere, category = "Attach")
+	TSubclassOf<class AAttachment> Attachment;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayAbility> Abiilty = nullptr;
+	UPROPERTY(EditAnywhere, category = "Attach")
+	FName SocketName;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString AbilityName = FString();
+	UPROPERTY(EditAnywhere)
+	FEquipmentData Equip;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString Abilityescription = FString();
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float AbilityCooldownTime = 0.0f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float AbilityPower = 0.0f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float AbilityDuration = 0.0f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float AbilityDurationPower = 0.0f;
+	UPROPERTY(EditAnywhere)
+	FEquipmentData UnEquip;
 };
 
 
@@ -47,9 +33,8 @@ class UE5_ACTIONRPG_API UCombatActionDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<FAbilityInfo> AbilityInformation;
+	void SetData(AItem* InItem);
 
-	FAbilityInfo FindAbilityInfoForTag(const FGameplayTag& AbilityTag) const;
-	TSubclassOf<UGameplayAbility> FindAbilityForTag(const FGameplayTag& AbilityTag) const;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FItemInfoData ItemInfoData;
 };

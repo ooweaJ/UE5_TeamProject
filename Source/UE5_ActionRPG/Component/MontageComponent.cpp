@@ -1,21 +1,44 @@
 #include "Component/MontageComponent.h"
+#include "GameFramework/Character.h"
+#include "Component/StatusComponent.h"
 
 UMontageComponent::UMontageComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
-
 }
 
-void UMontageComponent::BeginPlay()
+void UMontageComponent::PlayKnockBack()
 {
-	Super::BeginPlay();
-
+	PlayAnimMontage("KnockBack");
 }
 
-
-void UMontageComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UMontageComponent::PlayAvoid()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	PlayAnimMontage("Avoid");
+}
 
+void UMontageComponent::PlayRoll()
+{
+	PlayAnimMontage("Roll");
+}
+
+void UMontageComponent::PlayHit()
+{
+	PlayAnimMontage("Hit");
+}
+
+void UMontageComponent::PlayAnimMontage(FName Key)
+{
+	ACharacter* character = Cast<ACharacter>(GetOwner());
+	FMontageData* data = MotageData->FindRow<FMontageData>(Key, "");
+	if (!data) return ;
+
+	UStateComponent* state = character->GetComponentByClass<UStateComponent>();
+	UStatusComponent* status = character->GetComponentByClass<UStatusComponent>();
+
+	if (!data->AnimMontage) return;
+	character->StopAnimMontage();
+	state->ChangeType(data->Type);
+	data->bCanMove ? status->SetMove() : status->SetStop();
+	character->PlayAnimMontage(data->AnimMontage, data->PlayRate, data->StartSection);
 }
 

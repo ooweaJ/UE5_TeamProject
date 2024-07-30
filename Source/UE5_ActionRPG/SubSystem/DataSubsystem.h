@@ -16,9 +16,6 @@ public:
 public:
 	FORCEINLINE UDataTable* GetItemData() { return ItemDataTable; }
 
-	const FItemActionData* FindActionData(const FName& InKey);
-	FItemData* FindItemData(const FName& InKey);
-
 protected:
 	UPROPERTY()
 	UDataTable* ActionDataTable;
