@@ -30,10 +30,10 @@ public:
 	void OnAttackR();
 
 public:
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;
 
-	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
+	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class UCameraComponent* Camera;
 
 	UPROPERTY(BlueprintReadOnly)
