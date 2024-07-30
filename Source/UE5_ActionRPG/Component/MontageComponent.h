@@ -16,7 +16,7 @@ public:
 	class UAnimMontage* AnimMontage;
 
 	UPROPERTY(EditAnywhere)
-	EStateType Type;
+	EStateType Type = EStateType::Action;
 
 	UPROPERTY(EditAnywhere)
 	float PlayRate = 1.f;
@@ -25,7 +25,7 @@ public:
 	FName StartSection;
 
 	UPROPERTY(EditAnywhere)
-	bool bCanMove;
+	bool bCanMove = true;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

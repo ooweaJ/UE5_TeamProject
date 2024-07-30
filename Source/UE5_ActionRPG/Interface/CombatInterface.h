@@ -22,8 +22,4 @@ class UE5_ACTIONRPG_API ICombatInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
-public:
-	virtual void ApplyGamePlayEffectToTarget(TArray<AActor*> InTargetActor, TSubclassOf<UGameplayEffect> EffectClass) = 0;
-	virtual TArray<AActor*> GetTargetActor() = 0;
 };

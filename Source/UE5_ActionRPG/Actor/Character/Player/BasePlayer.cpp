@@ -3,12 +3,10 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Component/StatusComponent.h"
 #include "Component/StateComponent.h"
-#include "Actor/PlayerState/BasePlayerState.h"
-#include "AbilitySystem/Attributes/PlayerAttributeSet.h"
-#include "BaseGameplayTags.h"
+#include "Component/EquipComponent.h"
+#include "Actor/Item/Item.h"
 
 ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -50,16 +48,12 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	AddCharacterAbilities();
-
-
 }
 
 void ABasePlayer::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	InitAbilitySystem();
 }
 
 void ABasePlayer::Tick(float DeltaTime)
@@ -74,40 +68,18 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
-void ABasePlayer::InitAbilitySystem()
+void ABasePlayer::OnMouseL()
 {
-	if (ABasePlayerState* PS = GetPlayerState<ABasePlayerState>())
+	if (AItem* item = Equip->GetCurrentItem())
 	{
-		AbilitySystemComponent = Cast<UBaseAbilitySystemComponent>(PS->GetAbilitySystemComponent());
-		AbilitySystemComponent->InitAbilityActorInfo(PS, this);
-
-		AttributeSet = PS->GetPlayerSet();
+		item->OnDefaultAction();
 	}
 }
 
-void ABasePlayer::OnAttackL()
+void ABasePlayer::OnMouseR()
 {
-}
-
-void ABasePlayer::OnAttackR()
-{
-}
-
-void ABasePlayer::AddCharacterAbilities()
-{
-	UBaseAbilitySystemComponent* ASC = Cast<UBaseAbilitySystemComponent>(AbilitySystemComponent);
-	if (!ASC)
-		return;
-
-	ASC->AddCharacterAbilities(StartupAbilities);
-}
-
-void ABasePlayer::ActiveAbility(FGameplayTag AbilityTag)
-{
-	AbilitySystemComponent->ActiveAbility(AbilityTag);
-}
-
-UAbilitySystemComponent* ABasePlayer::GetAbilitySystemComponent() const
-{
-	return AbilitySystemComponent;
+	if (AItem* item = Equip->GetCurrentItem())
+	{
+		item->OnSkillAction();
+	}
 }

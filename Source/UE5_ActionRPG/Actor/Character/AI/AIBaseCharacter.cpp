@@ -1,23 +1,19 @@
 #include "Actor/Character/AI/AIBaseCharacter.h"
 #include "Component/StatusComponent.h"
 #include "Component/StateComponent.h"
-#include "AbilitySystem/BaseAbilitySystemComponent.h"
-#include "AbilitySystem/Attributes/BossAttributeSet.h"
+
 
 AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
  : Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("AttributeSet"));
 	Tags.Add("Boss");
 }
 
 void AAIBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	InitAbilitySystem();
 }
 
 void AAIBaseCharacter::Tick(float DeltaTime)
@@ -30,14 +26,4 @@ void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
-
-UAbilitySystemComponent* AAIBaseCharacter::GetAbilitySystemComponent() const
-{
-	return AbilitySystemComponent;
-}
-
-void AAIBaseCharacter::InitAbilitySystem()
-{
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }

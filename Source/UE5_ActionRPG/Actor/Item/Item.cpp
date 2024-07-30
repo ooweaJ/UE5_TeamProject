@@ -97,3 +97,19 @@ FActionData* AItem::GetUltimateAction()
 	return nullptr;
 }
 
+void AItem::OnDefaultAction()
+{
+	FActionData* Data = GetDefaultAction();
+	if (!Data) return;
+
+	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+}
+
+void AItem::OnSkillAction()
+{
+	FActionData* Data = GetSkillAction();
+	if (!Data) return;
+
+	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+}
+

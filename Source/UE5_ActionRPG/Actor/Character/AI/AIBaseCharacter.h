@@ -20,8 +20,4 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-public:
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
-	virtual void InitAbilitySystem();
-
 };

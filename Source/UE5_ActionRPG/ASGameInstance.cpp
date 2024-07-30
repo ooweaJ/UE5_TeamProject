@@ -130,7 +130,7 @@ void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSucces
 
 	UWorld* world = GetWorld();
 	if (world == nullptr) return;
-	world->ServerTravel("/Game/_dev/Level/Menu?listen");
+	world->ServerTravel("/Game/_dev/Level/MainWorld?listen");
 }
 
 void UASGameInstance::OnDestroySessionComplete(FName InSessionName, bool InSuccess)
@@ -203,14 +203,15 @@ void UASGameInstance::CreateSession()
 	if (SessionInterface.IsValid())
 	{
 		FOnlineSessionSettings sessionSettiongs;
-		if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
-		{
-			sessionSettiongs.bIsLANMatch = true;
-		}
-		else
-		{
-			sessionSettiongs.bIsLANMatch = false;
-		}
+		//if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
+		//{
+		//	sessionSettiongs.bIsLANMatch = true;
+		//}
+		//else
+		//{
+		//	sessionSettiongs.bIsLANMatch = false;
+		//}
+		sessionSettiongs.bIsLANMatch = true;
 		sessionSettiongs.NumPublicConnections = 4;
 		sessionSettiongs.bShouldAdvertise = true;
 		sessionSettiongs.bUsesPresence = true;

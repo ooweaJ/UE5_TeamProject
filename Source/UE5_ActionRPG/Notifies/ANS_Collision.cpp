@@ -18,5 +18,4 @@ void UANS_Collision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBa
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 	if (MeshComp == nullptr) return;
 	
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), EventTag, FGameplayEventData()); 
 }

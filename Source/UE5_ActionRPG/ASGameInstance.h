@@ -24,7 +24,7 @@ struct FCharacterData
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	ECharacterClass CharacterClassName;
+	ECharacterClass CharacterClassName = ECharacterClass::_End;
 };
 
 

@@ -22,12 +22,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
-	virtual void InitAbilitySystem();
-
-public:
-	void OnAttackL();
-	void OnAttackR();
+	void OnMouseL();
+	void OnMouseR();
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
@@ -53,15 +49,4 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	float CharacterRotationAlphaLinearValue = 1;
-
-public:
-	void AddCharacterAbilities();
-
-	UPROPERTY(EditAnywhere, Category = Abilities)
-	TArray<TSubclassOf<class UGameplayAbility>> StartupAbilities;
-
-public:
-	void ActiveAbility(struct FGameplayTag AbilityTag);
-
-
 };
