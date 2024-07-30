@@ -17,9 +17,9 @@ void ABaseWeapon::BeginPlay()
 
 void ABaseWeapon::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
 {
-	ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(InAttacker);
+	/*ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(InAttacker);
 	float LocalDamage = BaseCharacter->GetStatusComponent()->GetDamage();
 	LocalDamage += WeaponDamage;
 	FDamageEvent DamageEvent;
-	InOtherCharacter->TakeDamage(LocalDamage, DamageEvent, BaseCharacter->GetController(), BaseCharacter);
+	InOtherCharacter->TakeDamage(LocalDamage, DamageEvent, BaseCharacter->GetController(), BaseCharacter);*/
 }
