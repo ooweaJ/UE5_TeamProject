@@ -89,7 +89,7 @@ void UASGameInstance::LoadMainMenuLevel()
 {
 	APlayerController* controller = GetFirstLocalPlayerController();
 	if (controller == nullptr) return;
-	controller->ClientTravel("/Game/_dev/Level/MainMenu", ETravelType::TRAVEL_Absolute);
+	controller->ClientTravel("/Game/_dev/Level/MainWorld", ETravelType::TRAVEL_Absolute);
 }
 
 void UASGameInstance::RefreshServerList()
