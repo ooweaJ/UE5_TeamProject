@@ -97,7 +97,7 @@ void UASGameInstance::RefreshServerList()
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	if (SessionSearch.IsValid())
 	{
-		//SessionSearch->bIsLanQuery = true;
+		SessionSearch->bIsLanQuery = true;
 		SessionSearch->MaxSearchResults = 100;  
 		SessionSearch->QuerySettings.Set(TEXT("PRESENCESEARCH"), true, EOnlineComparisonOp::Equals);
 		UE_LOG(LogTemp, Error, TEXT("Start Find Sessions"));
@@ -130,7 +130,7 @@ void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSucces
 
 	UWorld* world = GetWorld();
 	if (world == nullptr) return;
-	world->ServerTravel("/Game/_dev/Level/MainMenu?listen");
+	world->ServerTravel("/Game/_dev/Level/MainWorld?listen");
 }
 
 void UASGameInstance::OnDestroySessionComplete(FName InSessionName, bool InSuccess)
