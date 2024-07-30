@@ -3,6 +3,7 @@
 
 #include "Actor/PlayerState/BasePlayerState.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "Component/StatusComponent.h"
 #include "AbilitySystem/Attributes/PlayerAttributeSet.h"
 
 ABasePlayerState::ABasePlayerState(const FObjectInitializer& ObjectInitializer)
@@ -10,6 +11,7 @@ ABasePlayerState::ABasePlayerState(const FObjectInitializer& ObjectInitializer)
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	PlayerSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("PlayerSet"));
+	StatusComponent = CreateDefaultSubobject<UStatusComponent>(TEXT("StatusComponent"));
 
 }
 
@@ -26,4 +28,9 @@ UBaseAbilitySystemComponent* ABasePlayerState::GetPlayerAbilitySystemComponent()
 UPlayerAttributeSet* ABasePlayerState::GetPlayerSet() const
 {
 	return PlayerSet;
+}
+
+UStatusComponent* ABasePlayerState::GetStatusComponent() const
+{
+	return StatusComponent;
 }

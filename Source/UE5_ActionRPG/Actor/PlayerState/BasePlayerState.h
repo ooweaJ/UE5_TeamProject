@@ -22,6 +22,7 @@ public:
 
 	UBaseAbilitySystemComponent* GetPlayerAbilitySystemComponent() const;
 	UPlayerAttributeSet* GetPlayerSet() const;
+	class UStatusComponent* GetStatusComponent() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -29,4 +30,7 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UPlayerAttributeSet* PlayerSet;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStatusComponent* StatusComponent;
 };

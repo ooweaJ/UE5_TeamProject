@@ -3,6 +3,7 @@
 #include "Component/StateComponent.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/BossAttributeSet.h"
+#include "Component/StatusComponent.h"
 
 AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
  : Super(ObjectInitializer)
@@ -10,6 +11,7 @@ AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 
 	AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("AttributeSet"));
+	StatusComponent = CreateDefaultSubobject<UStatusComponent>(TEXT("StatusComponent"));
 	Tags.Add("Boss");
 }
 
@@ -30,6 +32,15 @@ void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+float AAIBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	/* TODO */
+
+	return TempDamage;
 }
 
 UAbilitySystemComponent* AAIBaseCharacter::GetAbilitySystemComponent() const

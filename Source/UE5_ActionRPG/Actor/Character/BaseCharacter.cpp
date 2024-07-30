@@ -3,6 +3,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Actor/Item/Attachment.h"
 #include "Component/StateComponent.h"
+#include "Component/StatusComponent.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -54,6 +55,11 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
 void ABaseCharacter::ApplyGamePlayEffectToTarget(TArray<AActor*> InTargetActor, TSubclassOf<UGameplayEffect> EffectClass)
 {
 	if (InTargetActor.IsEmpty()) return;
@@ -76,4 +82,9 @@ void ABaseCharacter::ApplyGamePlayEffectToTarget(TArray<AActor*> InTargetActor, 
 TArray<AActor*> ABaseCharacter::GetTargetActor()
 {
 	return Attachment->GetTargets();
+}
+
+UStatusComponent* ABaseCharacter::GetStatusComponent()
+{
+	return StatusComponent;
 }

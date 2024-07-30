@@ -30,7 +30,6 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		mesh->SetRelativeLocation(FVector(0, 0, -88));
 		mesh->SetRelativeRotation(FRotator(0, -90, 0));
 	}
-
 	{
 		SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 		SpringArm->SetupAttachment(RootComponent);
@@ -51,7 +50,6 @@ void ABasePlayer::BeginPlay()
 	Super::BeginPlay();
 	
 	AddCharacterAbilities();
-
 
 }
 
@@ -74,6 +72,15 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	/* TODO */
+
+	return TempDamage;
+}
+
 void ABasePlayer::InitAbilitySystem()
 {
 	if (ABasePlayerState* PS = GetPlayerState<ABasePlayerState>())
@@ -82,17 +89,19 @@ void ABasePlayer::InitAbilitySystem()
 		AbilitySystemComponent->InitAbilityActorInfo(PS, this);
 
 		AttributeSet = PS->GetPlayerSet();
+
+		StatusComponent = PS->GetStatusComponent();
 	}
 }
 
 void ABasePlayer::OnAttackL()
 {
-	ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
+	//ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
 }
 
 void ABasePlayer::OnAttackR()
 {
-	ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
+	//ActiveAbility(BaseGameplayTags::Ability_Warrior_Attack);
 }
 
 void ABasePlayer::AddCharacterAbilities()

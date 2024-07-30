@@ -5,6 +5,8 @@
 #include "Actor/Item/Attachment.h"
 #include "Actor/Character/BaseCharacter.h"
 #include "Engine/DamageEvents.h"
+#include "Kismet/GameplayStatics.h"
+#include "Component/StatusComponent.h"
 
 ABaseWeapon::ABaseWeapon()
 {
@@ -17,9 +19,8 @@ void ABaseWeapon::BeginPlay()
 
 void ABaseWeapon::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
 {
-	/*ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(InAttacker);
-	float LocalDamage = BaseCharacter->GetStatusComponent()->GetDamage();
-	LocalDamage += WeaponDamage;
-	FDamageEvent DamageEvent;
-	InOtherCharacter->TakeDamage(LocalDamage, DamageEvent, BaseCharacter->GetController(), BaseCharacter);*/
+	ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(InAttacker);
+	AController* LocalInstigator = BaseCharacter->GetController();
+	float LocalDamage = BaseCharacter->GetStatusComponent()->GetDamage() + WeaponDamage;
+	UGameplayStatics::ApplyDamage(InOtherCharacter, LocalDamage, LocalInstigator, InCauser, UDefaultDamageType::StaticClass());
 }

@@ -19,6 +19,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void ApplyGamePlayEffectToTarget(TArray<AActor*> InTargetActor, TSubclassOf<UGameplayEffect> EffectClass);
 	virtual TArray<AActor*> GetTargetActor();
+	class UStatusComponent* GetStatusComponent();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,6 +31,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 public:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TMap<int32, TSubclassOf<class UGameplayAbility>> StartInputAbilities;
@@ -47,4 +49,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStateComponent* State;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStatusComponent* StatusComponent;
 };
