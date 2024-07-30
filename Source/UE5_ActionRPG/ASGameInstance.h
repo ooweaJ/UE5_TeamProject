@@ -4,6 +4,7 @@
 #include "Engine/GameInstance.h"
 #include "OnlineSubsystem.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "Interface/MenuInterface.h"
 #include "ASGameInstance.generated.h"
 
 
@@ -28,7 +29,7 @@ struct FCharacterData
 
 
 UCLASS()
-class UE5_ACTIONRPG_API UASGameInstance : public UGameInstance
+class UE5_ACTIONRPG_API UASGameInstance : public UGameInstance, public IMenuInterface
 {
 	GENERATED_BODY()
 
@@ -49,8 +50,30 @@ private:
 	void OnNetworkFailure(UWorld* InWorld, UNetDriver* InNetDriver, ENetworkFailure::Type InType, const FString& ErrorSting);
 	void CreateSession();
 
-	void Host();
+	UFUNCTION(BlueprintCallable, Exec)
+	void LoadMainMenu();
+
+	UFUNCTION(BlueprintCallable, Exec)
+	void LoadinGameMenu();
+
+	UFUNCTION(Exec)
+	void Host(FString InServerName) override;
+
+
+	UFUNCTION(Exec)
+	void Join(uint32 Index) override;
+
+	void LoadMainMenuLevel() override;
+
+	void RefreshServerList() override;
+
+	void StartSession();
 private:
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+	TSubclassOf<class UUserWidget> MainMenuClass;
+	TSubclassOf<class UUserWidget> InGameMenuClass;
+
+	class UUI_ServerMenu* MainMenu;
+	FString DesiredServerName;
 };
