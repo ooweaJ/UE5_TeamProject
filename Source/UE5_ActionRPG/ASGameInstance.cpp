@@ -89,7 +89,7 @@ void UASGameInstance::LoadMainMenuLevel()
 {
 	APlayerController* controller = GetFirstLocalPlayerController();
 	if (controller == nullptr) return;
-	controller->ClientTravel("/Game/_dev/Level/MainMenu", ETravelType::TRAVEL_Absolute);
+	controller->ClientTravel("/Game/_dev/Level/SessionWorld", ETravelType::TRAVEL_Absolute);
 }
 
 void UASGameInstance::RefreshServerList()
@@ -130,7 +130,7 @@ void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSucces
 
 	UWorld* world = GetWorld();
 	if (world == nullptr) return;
-	world->ServerTravel("/Game/_dev/Level/MainWorld?listen");
+	world->ServerTravel("/Game/_dev/Level/Menu?listen");
 }
 
 void UASGameInstance::OnDestroySessionComplete(FName InSessionName, bool InSuccess)
