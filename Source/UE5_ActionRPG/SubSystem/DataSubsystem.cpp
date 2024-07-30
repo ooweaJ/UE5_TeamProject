@@ -14,17 +14,3 @@ UDataSubsystem::UDataSubsystem()
 		ItemDataTable = Asset.Object;
 	}*/
 }
-
-const FItemActionData* UDataSubsystem::FindActionData(const FName& InKey)
-{
-	FItemActionData* Row = ActionDataTable->FindRow<FItemActionData>(InKey, TEXT(""));
-	ensure(Row);
-	return Row;
-}
-
-FItemData* UDataSubsystem::FindItemData(const FName& InKey)
-{
-	FItemData* Row = ItemDataTable->FindRow<FItemData>(InKey, TEXT(""));
-	ensure(Row);
-	return Row;
-}

@@ -3,29 +3,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Data/ActionData/ActionDataTableRow.h"
+#include "GameplayTagContainer.h"
 #include "Item.generated.h"
 
-USTRUCT()
-struct UE5_ACTIONRPG_API FItemActionData : public FTableRowBase
-{
-	GENERATED_BODY()
-public:
-
-	UPROPERTY(EditAnywhere)
-	UDataTable* Data;
-
-	UPROPERTY(EditAnywhere, category = "Attach")
-	TSubclassOf<class AAttachment> Attachment;
-
-	UPROPERTY(EditAnywhere, category = "Attach")
-	FName SocketName;
-
-	UPROPERTY(EditAnywhere)
-	EItemType ItemType;
-
-	UPROPERTY(EditAnywhere)
-	FEquipmentData Equip;
-};
+struct FActionData;
+struct FItemInfoData;
+struct FGameplayTag;
 
 UCLASS()
 class UE5_ACTIONRPG_API AItem : public AActor
@@ -35,23 +18,31 @@ class UE5_ACTIONRPG_API AItem : public AActor
 public:	
 	AItem();
 
+	FORCEINLINE void SetItemInfoData(FItemInfoData* InData) { ItemInfoData = InData; }
+	FORCEINLINE void SetOwnerCharacter(ACharacter* InCharacter) { OwnerCharacter = InCharacter; }
+
 protected:
 	virtual void BeginPlay() override;
+	void AddActionData();
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void SetItemData(class ACharacter* InOnwerCharacter, const FItemActionData* InData);
+	virtual FActionData* GetDefaultAction(uint32 Num);
+	virtual FActionData* GetSkillAction(uint32 Num);
+	virtual FActionData* GetUltimateAction();
+
+	void SetupItemData();
 
 protected:
-	struct FActionDataTableRow* DefaultData;
-	class ACharacter* OwnerCharacter;
-	const FItemActionData* ActionData;
-	class AAttachment* Attachment;
-
 	UPROPERTY(EditAnywhere)
-	EItemType ItemType;
-private:
+	class UCombatActionDataAsset* ItemData;
 
+protected:
+	class ACharacter* OwnerCharacter;
+	class AAttachment* Attachment;
+	FItemInfoData* ItemInfoData;
+
+	TMap<FGameplayTag, FActionData> ActionTagMap;
 };

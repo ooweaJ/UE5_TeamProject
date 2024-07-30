@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "Actor/Item/DamageType/DefaultDamageType.h"
+#include "GameplayTagContainer.h"
 #include "Data/Item/ItemData.h"
 #include "ActionDataTableRow.generated.h"
 
@@ -34,6 +35,9 @@ struct FActionData : public FEquipmentData
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag AbilityTag = FGameplayTag();
+
 	UPROPERTY(EditAnywhere)
 	float Power;
 

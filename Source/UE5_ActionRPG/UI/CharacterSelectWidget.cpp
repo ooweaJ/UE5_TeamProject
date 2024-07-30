@@ -3,18 +3,30 @@
 
 #include "UI/CharacterSelectWidget.h"
 
-void UCharacterSelectWidget::NativeConstruct()
+void UCharacterSelectWidget::NativeOnInitialized()
 {
-	Super::NativeConstruct(); 
+	Super::NativeOnInitialized(); 
+
+	CharacterSelectButton->OnClicked.AddDynamic(this, &ThisClass::OnCharacterSelectButtonClicked); 
 }
 
-bool UCharacterSelectWidget::SetCharacterClassName(ECharacterClass::type type)
+void UCharacterSelectWidget::OnCharacterSelectButtonClicked()
+{
+	if (CharacterSelectButtonClicked.IsBound())
+	{
+		CharacterSelectButtonClicked.Execute(this); 
+	}
+}
+
+bool UCharacterSelectWidget::SetCharacterClassName(ECharacterClass InCharacterClass)
 {
 	//if (!type) { check(false); return false; }
 
+	CharacterClassName = InCharacterClass; 
+
 	FText CharacterClassNameText; 
 
-	switch (type)
+	switch (InCharacterClass)
 	{
 	case ECharacterClass::Warrior:
 		CharacterClassNameText = FText::FromString(TEXT("Warrior"));
@@ -34,7 +46,12 @@ bool UCharacterSelectWidget::SetCharacterClassName(ECharacterClass::type type)
 
 	}
 
-	CharacterClassName->SetText(CharacterClassNameText); 
+	CharacterClassTextBlock->SetText(CharacterClassNameText); 
 
 	return true; 
+}
+
+ECharacterClass UCharacterSelectWidget::GetCharacterClassName() const
+{
+	return CharacterClassName;
 }

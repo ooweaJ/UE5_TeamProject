@@ -1,9 +1,11 @@
 #include "Actor/Character/BaseCharacter.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
-#include "Actor/Item/Attachment.h"
+#include "Actor/Item/Item.h"
 #include "Component/StateComponent.h"
+#include "Component/EquipComponent.h"
 #include "Component/StatusComponent.h"
+
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -14,6 +16,7 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
+	Equip = ObjectInitializer.CreateDefaultSubobject<UEquipComponent>(this, TEXT("EquipComponent"));
 	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
 
 	NetUpdateFrequency = 100.0f;
@@ -30,14 +33,15 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (AttachmentClass)
+	if (DefaultItemClass)
 	{
 		FTransform DefaultTransform;
-		AAttachment* Actor = GetWorld()->SpawnActorDeferred<AAttachment>(AttachmentClass, DefaultTransform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		Actor->SetOwnerCharacter(this);
-		Actor->FinishSpawning(DefaultTransform, true);
-		Attachment = Actor;
-		Attachment->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), FName("Hand_R"));
+		FActorSpawnParameters ASP;
+		ASP.Owner = this;
+		ASP.Instigator = this;
+		ASP.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		AItem* Item = GetWorld()->SpawnActor<AItem>(DefaultItemClass, DefaultTransform,ASP);
+		Equip->SetSelectItem(Item);
 	}
 }
 
@@ -81,7 +85,7 @@ void ABaseCharacter::ApplyGamePlayEffectToTarget(TArray<AActor*> InTargetActor, 
 
 TArray<AActor*> ABaseCharacter::GetTargetActor()
 {
-	return Attachment->GetTargets();
+	return TArray<AActor*>();
 }
 
 UStatusComponent* ABaseCharacter::GetStatusComponent()

@@ -6,33 +6,40 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
+#include "Components/Button.h"
+#include "ASGameInstance.h"
 #include "CharacterSelectWidget.generated.h"
 
-namespace ECharacterClass
-{
-	enum type
-	{
-		Warrior, 
-		Ranger, 
-		Swordman, 
-		Spearman, 
-		_End 
-	};
-}
+DECLARE_DELEGATE_OneParam(FOnCharacterSelectButtonEvent, UCharacterSelectWidget*);
+
 UCLASS()
 class UE5_ACTIONRPG_API UCharacterSelectWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	virtual void NativeConstruct() override;
+	friend class UMenuWidget; 
 
-	bool SetCharacterClassName(ECharacterClass::type type);
+public:
+	bool SetCharacterClassName(ECharacterClass InCharacterClass);
+	ECharacterClass GetCharacterClassName() const; 
+
+protected:
+	virtual void NativeOnInitialized() override; 
+
+	UFUNCTION()
+	void OnCharacterSelectButtonClicked(); 
 
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UTextBlock* CharacterClassName;
+	UTextBlock* CharacterClassTextBlock;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UImage* CharacterImage;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UButton* CharacterSelectButton;
+
+	ECharacterClass CharacterClassName; 
+
+	FOnCharacterSelectButtonEvent CharacterSelectButtonClicked;
 };

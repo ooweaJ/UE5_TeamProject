@@ -9,6 +9,11 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Input_Action_Turn, "Input.Action.Turn");
 	UE_DEFINE_GAMEPLAY_TAG(Input_Action_Jump, "Input.Action.Jump");
 	
-	UE_DEFINE_GAMEPLAY_TAG(Ability_Warrior_Attack, "Ability.Warrior.Attack");
-	UE_DEFINE_GAMEPLAY_TAG(Ability_Katana_Attack, "Ability.Katana.Attack");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction, "Ability.Default.1");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction2, "Ability.Default.2");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction3, "Ability.Default.3");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_Skill, "Ability.Skill.1");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_Skill2, "Ability.Skill.2");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_Skill3, "Ability.Skill.3");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_Ultimate, "Ability.Ultimate");
 }

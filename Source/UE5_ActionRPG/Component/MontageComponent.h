@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Component/StateComponent.h"
 #include "MontageComponent.generated.h"
 
 USTRUCT(BlueprintType)
@@ -13,6 +14,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* AnimMontage;
+
+	UPROPERTY(EditAnywhere)
+	EStateType Type;
 
 	UPROPERTY(EditAnywhere)
 	float PlayRate = 1.f;
@@ -32,15 +36,15 @@ class UE5_ACTIONRPG_API UMontageComponent : public UActorComponent
 public:	
 	UMontageComponent();
 
-protected:
-	virtual void BeginPlay() override;
+	void PlayKnockBack();
+	void PlayAvoid();
+	void PlayRoll();
+	void PlayHit();
 
-public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-public:
-	FORCEINLINE void SetMontageData(UDataTable* InData) { MotageData = InData; }
-	
 private:
+	void PlayAnimMontage(FName Key);
+
+private:
+	UPROPERTY(EditAnywhere)
 	UDataTable* MotageData;
 };

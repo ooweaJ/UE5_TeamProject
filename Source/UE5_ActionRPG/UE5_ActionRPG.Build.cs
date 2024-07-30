@@ -20,6 +20,8 @@ public class UE5_ActionRPG : ModuleRules
              "GameplayAbilities", "GameplayTags", "GameplayTasks",
              "OnlineSubsystem",
              "OnlineSubsystemSteam",
+             "Slate", 
+             "SlateCore", 
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
