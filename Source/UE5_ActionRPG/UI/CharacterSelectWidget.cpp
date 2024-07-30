@@ -32,8 +32,8 @@ bool UCharacterSelectWidget::SetCharacterClassName(ECharacterClass InCharacterCl
 		CharacterClassNameText = FText::FromString(TEXT("Warrior"));
 		break; 
 
-	case ECharacterClass::Ranger:
-		CharacterClassNameText = FText::FromString(TEXT("Ranger"));
+	case ECharacterClass::Assassin:
+		CharacterClassNameText = FText::FromString(TEXT("Assassin"));
 		break;
 
 	case ECharacterClass::Swordman:
