@@ -12,15 +12,12 @@
 
 class UCharacterSelectWidget; 
 
-namespace EMenu
+UENUM() 
+enum class EMenu : uint8
 {
-	enum type
-	{
-		Main, 
-		CharacterSelect
-	};
-}
-
+	Main,
+	CharacterSelect
+};
 
 UCLASS()
 class UE5_ACTIONRPG_API UMenuWidget : public UUserWidget
@@ -29,6 +26,8 @@ class UE5_ACTIONRPG_API UMenuWidget : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override; 
+
+	void SetButtonNormalStyle(UButton* InButton, FLinearColor InLinearColor = FLinearColor(1.f, 1.f, 1.f, 0.f)); 
 
 public:
 	UFUNCTION()
@@ -78,4 +77,8 @@ protected:
 
 protected:
 	virtual void PopulateGrid(); 
+
+private:
+	UButton* CurrentClickedButton = nullptr; 
+	UButton* LastClickedButton = nullptr; 
 };
