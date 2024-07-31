@@ -39,10 +39,10 @@ public:
 	FGameplayTag AbilityTag = FGameplayTag();
 
 	UPROPERTY(EditAnywhere)
-	float Power;
+	float Power = 1.0f;
 
 	UPROPERTY(EditAnywhere)
-	float HitStop;
+	float HitStop = 1.0f;
 
 	UPROPERTY(EditAnywhere)
 	class UParticleSystem* Effect;

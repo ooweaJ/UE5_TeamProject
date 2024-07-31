@@ -29,9 +29,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	virtual FActionData* GetDefaultAction(uint32 Num);
-	virtual FActionData* GetSkillAction(uint32 Num);
+	virtual FActionData* GetDefaultAction(uint32 Num = 1);
+	virtual FActionData* GetSkillAction(uint32 Num = 1);
 	virtual FActionData* GetUltimateAction();
+
+	virtual void OnDefaultAction();
+	virtual void OnSkillAction();
 
 	void SetupItemData();
 

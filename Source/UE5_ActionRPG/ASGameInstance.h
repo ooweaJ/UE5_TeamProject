@@ -12,7 +12,7 @@ UENUM(BlueprintType)
 enum class ECharacterClass : uint8
 {
 	Warrior UMETA(DisplayName = "Warrior"),
-	Ranger UMETA(DisplayName = "Ranger"),
+	Assassin UMETA(DisplayName = "Assassin"),
 	Swordman UMETA(DisplayName = "Swordman"),
 	Spearman UMETA(DisplayName = "Spearman"),
 	_End UMETA(Hidden)
@@ -24,7 +24,7 @@ struct FCharacterData
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	ECharacterClass CharacterClassName;
+	ECharacterClass CharacterClassName = ECharacterClass::_End;
 };
 
 

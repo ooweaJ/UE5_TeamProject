@@ -7,30 +7,12 @@
 #include "AbilitySystemInterface.h"
 #include "BasePlayerState.generated.h"
 
-class UPlayerAttributeSet;
-class UBaseAbilitySystemComponent;
-
 UCLASS()
-class UE5_ACTIONRPG_API ABasePlayerState : public APlayerState, public IAbilitySystemInterface
+class UE5_ACTIONRPG_API ABasePlayerState : public APlayerState
 {
 	GENERATED_BODY()
 	
 public:
 	ABasePlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
-
-	UBaseAbilitySystemComponent* GetPlayerAbilitySystemComponent() const;
-	UPlayerAttributeSet* GetPlayerSet() const;
-	class UStatusComponent* GetStatusComponent() const;
-
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UBaseAbilitySystemComponent* AbilitySystemComponent;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UPlayerAttributeSet* PlayerSet;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStatusComponent* StatusComponent;
 };

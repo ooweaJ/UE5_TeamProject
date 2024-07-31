@@ -5,10 +5,10 @@
 #include "EnhancedInputComponent.h"
 #include "Actor/Character/Player/BasePlayer.h"
 #include "Data/Input/InPutDataConfig.h"
-#include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "BaseGameplayTags.h"
 #include "KismetAnimationLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Camera/CameraComponent.h"
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -19,31 +19,11 @@ void ABasePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	/*UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	const UInPutDataConfig* InPutDataConfig = GetDefault<UInPutDataConfig>();
-	if (Subsystem)
-		Subsystem->AddMappingContext(InPutDataConfig->InputMappingContext, 0);
-	else
-		UE_LOG(LogTemp, Warning, TEXT("Subsystem is nullptr"));*/
-	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-	{
-		APlayerController* PlayerController = It->Get();
-		if (PlayerController && PlayerController->IsLocalController())
-		{
-			UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-			const UInPutDataConfig* InPutDataConfig = GetDefault<UInPutDataConfig>();
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 
-			if (Subsystem)
-			{
-				Subsystem->AddMappingContext(InPutDataConfig->InputMappingContext, 0);
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Subsystem is nullptr for player controller: %s"), *PlayerController->GetName());
-			}
-		}
-	}
-	
+	if (!Subsystem) return;
+	const UInPutDataConfig* InPutDataConfig = GetDefault<UInPutDataConfig>();
+	Subsystem->AddMappingContext(InPutDataConfig->InputMappingContext, 0);
 }
 
 void ABasePlayerController::SetupInputComponent()
@@ -80,58 +60,63 @@ void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	const FVector ForwardDirection = FRotator(0, Player->Camera->GetComponentRotation().Yaw,0).Vector();
+	const FVector RightDirection = FRotator(0, Player->Camera->GetComponentRotation().Yaw+90, 0).Vector();
+
+	ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
+	ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);
+
 	float AngleDampingSpeed = 1;
-	ABasePlayer* BasePlayer = Cast<ABasePlayer>(ControlledPawn);
-	if (!BasePlayer) return;
-	if (BasePlayer->WalkingDirectionAngle < 45 && BasePlayer->WalkingDirectionAngle > -45)
-	{
-		AngleDampingSpeed = 1.0;
-	}
-	else
-	{
-		AngleDampingSpeed = 0.75;
-	}
 
-	ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y * AngleDampingSpeed);
-	ControlledPawn->AddMovementInput(RightDirection, MovementVector.X * AngleDampingSpeed);
-
-	BasePlayer->ForwardInput = ForwardDirection * MovementVector.Y;
-	BasePlayer->RightInput = RightDirection * MovementVector.X;
-	BasePlayer->MoveDirection = (BasePlayer->ForwardInput + BasePlayer->RightInput).GetSafeNormal();
-	BasePlayer->WalkingDirectionAngle = UKismetAnimationLibrary::CalculateDirection(BasePlayer->MoveDirection, BasePlayer->GetActorRotation());
-	if (!BasePlayer->bLockOn)
+	if (Player)
 	{
-		BasePlayer->SetActorRotation(UKismetMathLibrary::RLerp(BasePlayer->GetActorRotation(), BasePlayer->MoveDirection.Rotation(), GWorld->GetDeltaSeconds() * BasePlayer->CharacterRotationAlphaLinearValue, true));
+		if (Player->WalkingDirectionAngle < 45 && Player->WalkingDirectionAngle > -45)
+		{
+			AngleDampingSpeed = 1.0;
+
+		}
+		else
+		{
+			AngleDampingSpeed = 0.75;
+		}
+		ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y * AngleDampingSpeed);
+		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X * AngleDampingSpeed);
+
+		Player->ForwardInput = ForwardDirection * MovementVector.Y;
+		Player->RightInput = RightDirection * MovementVector.X;
+		Player->MoveDirection = (Player->ForwardInput + Player->RightInput).GetSafeNormal();
+		Player->WalkingDirectionAngle = UKismetAnimationLibrary::CalculateDirection(Player->MoveDirection, Player->GetActorRotation());
+		if (!Player->bLockOn)
+		{
+			Player->SetActorRotation(UKismetMathLibrary::RLerp(Player->GetActorRotation(), Player->MoveDirection.Rotation(), GWorld->GetDeltaSeconds() * Player->CharacterRotationAlphaLinearValue, true));
+		}
 	}
 }
 
 void ABasePlayerController::OnLookMouse(const FInputActionValue& InputActionValue)
 {
-	const FVector ActionValue = InputActionValue.Get<FVector>();
-	AddYawInput(ActionValue.X);
-	AddPitchInput(ActionValue.Y);
+	if (!Player->bLockOn)
+	{
+		const FVector ActionValue = InputActionValue.Get<FVector>();
+		AddYawInput(ActionValue.X);
+		AddPitchInput(ActionValue.Y);
+	}
 }
 
 void ABasePlayerController::OnJump(const FInputActionValue& InputActionValue)
 {
-	ABasePlayer* PlayerCharacter = Cast<ABasePlayer>(GetPawn());
-	if (!PlayerCharacter) 
-	{
-		ensure(false);
-		return;
-	}
-	UBaseAbilitySystemComponent* BAS = Cast<UBaseAbilitySystemComponent>(PlayerCharacter->GetAbilitySystemComponent());
-	BAS->ActiveAbility(BaseGameplayTags::Input_Action_Jump);
+	if (Player)
+		Player->Jump();
 }
 
 void ABasePlayerController::OnMouseL(const FInputActionValue& InputActionValue)
 {
-	//Player->OnAttackL();
+	if (Player)
+		Player->OnMouseL();
 }
 
 void ABasePlayerController::OnMouseR(const FInputActionValue& InputActionValue)
 {
-	//Player->OnAttackR();
+	if(Player)
+		Player->OnMouseR();
 }
