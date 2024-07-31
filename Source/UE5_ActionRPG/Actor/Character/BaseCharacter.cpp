@@ -49,31 +49,7 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
-void ABaseCharacter::ApplyGamePlayEffectToTarget(TArray<AActor*> InTargetActor, TSubclassOf<UGameplayEffect> EffectClass)
-{
-	if (InTargetActor.IsEmpty()) return;
-
-	for (auto& Target : InTargetActor)
-	{
-		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
-		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponent();
-
-		FGameplayEffectContextHandle ContextHandle = SourceASC->MakeEffectContext();
-		ContextHandle.AddSourceObject(this);
-
-		FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(EffectClass, 1.f, ContextHandle);
-
-		if (Target && IsValid(Target) && TargetASC)
-			SourceASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
-	}
-}
-
-TArray<AActor*> ABaseCharacter::GetTargetActor()
-{
-	return TArray<AActor*>();
-}
-
-UStatusComponent* ABaseCharacter::GetStatusComponent()
+UStatusComponent* ABaseCharacter::GetStatusComponent() const
 {
 	return StatusComponent;
 }

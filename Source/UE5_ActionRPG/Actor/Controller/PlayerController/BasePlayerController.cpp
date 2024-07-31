@@ -47,6 +47,8 @@ void ABasePlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
 
+	Player = Cast<ABasePlayer>(aPawn);
+	ensure(Player);
 }
 
 void ABasePlayerController::OnUnPossess()
@@ -56,12 +58,12 @@ void ABasePlayerController::OnUnPossess()
 void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 {
 	FVector2D MovementVector = InputActionValue.Get<FVector2D>();
-	APawn* ControlledPawn = GetPawn();
+	ABasePlayer* ControlledPawn = Cast<ABasePlayer>(GetPawn());
 
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	const FVector ForwardDirection = FRotator(0, Player->Camera->GetComponentRotation().Yaw,0).Vector();
-	const FVector RightDirection = FRotator(0, Player->Camera->GetComponentRotation().Yaw+90, 0).Vector();
+	const FVector ForwardDirection = FRotator(0, ControlledPawn->Camera->GetComponentRotation().Yaw,0).Vector();
+	const FVector RightDirection = FRotator(0, ControlledPawn->Camera->GetComponentRotation().Yaw+90, 0).Vector();
 
 	ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
 	ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);

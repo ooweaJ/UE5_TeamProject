@@ -7,8 +7,3 @@ ABasePlayerState::ABasePlayerState(const FObjectInitializer& ObjectInitializer)
 {
 
 }
-
-UStatusComponent* ABasePlayerState::GetStatusComponent() const
-{
-	return StatusComponent;
-}

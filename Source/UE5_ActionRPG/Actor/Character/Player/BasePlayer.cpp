@@ -76,7 +76,7 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	return TempDamage;
 }
 
-void ABasePlayer::InitAbilitySystem()
+void ABasePlayer::OnMouseL()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{
