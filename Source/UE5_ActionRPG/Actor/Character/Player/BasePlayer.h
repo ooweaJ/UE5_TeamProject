@@ -54,4 +54,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	float CharacterRotationAlphaLinearValue = 1;
+
+	UPROPERTY(BlueprintReadWrite)
+	float LeftHandWeight;
+
+	UPROPERTY(BlueprintReadWrite)
+	float UpperWeight;
 };
