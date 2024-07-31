@@ -20,7 +20,7 @@ void AWarriorItem::OnSkillAction()
 	{
 		if (ABasePlayer* Player = Cast<ABasePlayer>(OwnerCharacter))
 		{
-			Player->bEquipState = true;
+			Player->UpperWeight = 1;
 		}
 	}
 }
@@ -56,7 +56,7 @@ void AWarriorItem::OffSkillAction()
 	{
 		if (ABasePlayer* Player = Cast<ABasePlayer>(OwnerCharacter))
 		{
-			Player->bEquipState = false;
+			Player->UpperWeight = 0;
 		}
 	}
 }
