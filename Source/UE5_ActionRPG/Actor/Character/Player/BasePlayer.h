@@ -46,6 +46,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bLockOn;
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool bEquipState;
 
 	UPROPERTY(BlueprintReadWrite)
 	float CharacterRotationAlphaLinearValue = 1;
