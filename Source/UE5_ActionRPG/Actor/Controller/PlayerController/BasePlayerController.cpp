@@ -127,11 +127,11 @@ void ABasePlayerController::OnMouseR(const FInputActionValue& InputActionValue)
 void ABasePlayerController::OffMouseL(const FInputActionValue& InputActionValue)
 {
 	if (Player)
-		Player->OnMouseR();
+		Player->OffMouseL();
 }
 
 void ABasePlayerController::OffMouseR(const FInputActionValue& InputActionValue)
 {
 	if (Player)
-		Player->OnMouseR();
+		Player->OffMouseR();
 }
