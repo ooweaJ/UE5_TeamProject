@@ -105,11 +105,59 @@ void AItem::OnDefaultAction()
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
 }
 
+void AItem::OnDefaultAction2()
+{
+}
+
+void AItem::OnDefaultAction3()
+{
+}
+
 void AItem::OnSkillAction()
 {
 	FActionData* Data = GetSkillAction();
 	if (!Data) return;
 
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+}
+
+void AItem::OnSkillAction2()
+{
+}
+
+void AItem::OnSkillAction3()
+{
+}
+
+void AItem::OnUltimateAction()
+{
+}
+
+void AItem::OffDefaultAction()
+{
+}
+
+void AItem::OffDefaultAction2()
+{
+}
+
+void AItem::OffDefaultAction3()
+{
+}
+
+void AItem::OffSkillAction()
+{
+}
+
+void AItem::OffSkillAction2()
+{
+}
+
+void AItem::OffSkillAction3()
+{
+}
+
+void AItem::OffUltimateAction()
+{
 }
 

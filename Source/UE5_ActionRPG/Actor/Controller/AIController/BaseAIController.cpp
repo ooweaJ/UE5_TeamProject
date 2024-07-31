@@ -90,12 +90,15 @@ void ABaseAIController::SetTargetKey(ACharacter* InCharacter)
 
 void ABaseAIController::OnMeleeAttack()
 {
+	OwnerAI->OnMelee();
 }
 
 void ABaseAIController::OnSkill()
 {
+	OwnerAI->OnSkill();
 }
 
 void ABaseAIController::OnUltimate()
 {
+	OwnerAI->OnUltimate();
 }

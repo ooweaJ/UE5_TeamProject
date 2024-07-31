@@ -24,6 +24,8 @@ public:
 public:
 	void OnMouseL();
 	void OnMouseR();
+	void OffMouseL();
+	void OffMouseR();
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
