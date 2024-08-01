@@ -6,9 +6,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "MenuGameModeBase.generated.h"
 
-
-class UMenuWidget; 
-
 UCLASS()
 
 class UE5_ACTIONRPG_API AMenuGameModeBase : public AGameModeBase
@@ -20,10 +17,4 @@ public:
 
 	virtual void BeginPlay() override; 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override; 
-
-private:
-	TSubclassOf<UMenuWidget> MenuWidgetClass; 
-	UMenuWidget* MenuWidget; 
-
-	
 };

@@ -53,3 +53,13 @@ void ABaseCharacter::EndAction()
 	State->SetIdleMode();
 	Equip->EndAction();
 }
+
+float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+UStatusComponent* ABaseCharacter::GetStatusComponent() const
+{
+	return StatusComponent;
+}

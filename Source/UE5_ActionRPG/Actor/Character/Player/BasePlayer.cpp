@@ -28,7 +28,6 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		mesh->SetRelativeLocation(FVector(0, 0, -88));
 		mesh->SetRelativeRotation(FRotator(0, -90, 0));
 	}
-
 	{
 		SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 		SpringArm->SetupAttachment(RootComponent);
@@ -68,6 +67,15 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	/* TODO */
+
+	return TempDamage;
+}
+
 void ABasePlayer::OnMouseL()
 {
 	if (AItem* item = Equip->GetCurrentItem())
@@ -99,3 +107,5 @@ void ABasePlayer::OffMouseR()
 		item->OffSkillAction();
 	}
 }
+
+

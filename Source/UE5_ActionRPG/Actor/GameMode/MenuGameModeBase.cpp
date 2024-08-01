@@ -2,33 +2,22 @@
 
 
 #include "Actor/GameMode/MenuGameModeBase.h"
-#include "UI/MenuWidget.h"
-#include "Kismet/GameplayStatics.h"
+#include "Actor/Controller/PlayerController/MenuPlayerController.h"
 
 AMenuGameModeBase::AMenuGameModeBase()
 {
-	static ConstructorHelpers::FClassFinder<UMenuWidget> FindClass
-	{
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/Menu/UI_Menu.UI_Menu_C'")
-	};
-
-	ensure(FindClass.Class); 
-	MenuWidgetClass = FindClass.Class; 
+	PlayerControllerClass = AMenuPlayerController::StaticClass(); 
 }
 
 void AMenuGameModeBase::BeginPlay()
 {
 	Super::BeginPlay(); 
 
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-	if (PlayerController)
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController(); 
+	if (AMenuPlayerController* MenuPlayerController = Cast<AMenuPlayerController>(PlayerController))
 	{
-		PlayerController->SetShowMouseCursor(true); 
+		MenuPlayerController->SetShowMouseCursor(true); 
 	}
-
-	MenuWidget = CreateWidget<UMenuWidget>(GetWorld(), MenuWidgetClass); 
-	MenuWidget->AddToViewport(); 
 }
 
 void AMenuGameModeBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
