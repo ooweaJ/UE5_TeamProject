@@ -19,9 +19,18 @@ public:
 
 	virtual void BeginPlay() override;
 
-	void OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter);
+	FORCEINLINE void ReSetHitted() { HittedCharacters.Empty(); }
 
+	UFUNCTION()
+	void OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter);
+	virtual void OnDefaultAction();
+	virtual void EndAction();
+	virtual void ItemAction();
 public:
+	TArray<class ACharacter*> HittedCharacters;
+	uint32 ComboCount = 1;
 	float WeaponDamage = 100.f;
 	float AttackSpeed = 1.f;
+	bool bCanCombo;
+	bool bSucceed;
 };

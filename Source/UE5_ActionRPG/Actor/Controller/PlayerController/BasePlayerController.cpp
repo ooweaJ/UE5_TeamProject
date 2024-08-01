@@ -60,9 +60,7 @@ void ABasePlayerController::OnUnPossess()
 void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 {
 	FVector2D MovementVector = InputActionValue.Get<FVector2D>();
-	APawn* ControlledPawn = GetPawn();
 	
-	if (!Player) return;
 	ABasePlayer* ControlledPawn = Cast<ABasePlayer>(GetPawn());
 
 	const FRotator Rotation = GetControlRotation();

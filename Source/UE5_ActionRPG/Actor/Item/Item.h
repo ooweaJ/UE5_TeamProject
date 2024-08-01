@@ -20,6 +20,8 @@ public:
 
 	FORCEINLINE void SetItemInfoData(FItemInfoData* InData) { ItemInfoData = InData; }
 	FORCEINLINE void SetOwnerCharacter(ACharacter* InCharacter) { OwnerCharacter = InCharacter; }
+	FORCEINLINE class AAttachment* GetAttachment() { return Attachment; }
+	FORCEINLINE FActionData* GetCurrentData() { return CurrentData; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -52,6 +54,7 @@ public:
 	void SetupItemData();
 
 	virtual void EndAction();
+	virtual void ItemAction();
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;
@@ -60,6 +63,7 @@ protected:
 	class ACharacter* OwnerCharacter;
 	class AAttachment* Attachment;
 	class UStateComponent* OwnerState;
+	class UStatusComponent* OwnerStatus;
 	FItemInfoData* ItemInfoData;
 	TMap<FGameplayTag, FActionData> ActionTagMap;
 	FActionData* CurrentData;

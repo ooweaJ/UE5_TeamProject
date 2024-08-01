@@ -3,6 +3,7 @@
 #include "Actor/Item/Attachment.h"
 #include "Data/ActionData/CombatActionDataAsset.h"
 #include "Component/StateComponent.h"
+#include "Component/StatusComponent.h"
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -39,6 +40,11 @@ void AItem::BeginPlay()
 	if (UStateComponent* State = OwnerCharacter->GetComponentByClass<UStateComponent>())
 	{
 		OwnerState = State;
+	}
+
+	if (UStatusComponent* Status = OwnerCharacter->GetComponentByClass<UStatusComponent>())
+	{
+		OwnerStatus = Status;
 	}
 }
 
@@ -111,6 +117,7 @@ void AItem::OnDefaultAction()
 	if (!Data) return;
 
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+	OwnerState->SetActionMode();
 }
 
 void AItem::OnDefaultAction2()
@@ -119,6 +126,7 @@ void AItem::OnDefaultAction2()
 	if (!Data) return;
 
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+	OwnerState->SetActionMode();
 }
 
 void AItem::OnDefaultAction3()
@@ -127,6 +135,7 @@ void AItem::OnDefaultAction3()
 	if (!Data) return;
 
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+	OwnerState->SetActionMode();
 }
 
 void AItem::OnSkillAction()
@@ -135,6 +144,7 @@ void AItem::OnSkillAction()
 	if (!Data) return;
 
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+	OwnerState->SetActionMode();
 }
 
 void AItem::OnSkillAction2()
@@ -143,6 +153,7 @@ void AItem::OnSkillAction2()
 	if (!Data) return;
 
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+	OwnerState->SetActionMode();
 }
 
 void AItem::OnSkillAction3()
@@ -151,6 +162,7 @@ void AItem::OnSkillAction3()
 	if (!Data) return;
 
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+	OwnerState->SetActionMode();
 }
 
 void AItem::OnUltimateAction()
@@ -159,6 +171,7 @@ void AItem::OnUltimateAction()
 	if (!Data) return;
 
 	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+	OwnerState->SetActionMode();
 }
 
 void AItem::OffDefaultAction()
@@ -192,4 +205,8 @@ void AItem::OffUltimateAction()
 void AItem::EndAction()
 {
 
+}
+
+void AItem::ItemAction()
+{
 }
