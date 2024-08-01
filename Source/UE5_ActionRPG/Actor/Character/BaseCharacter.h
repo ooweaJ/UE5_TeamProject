@@ -26,6 +26,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void EndAction();
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AItem> DefaultItemClass;
@@ -38,4 +39,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UEquipComponent* Equip;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UStatusComponent* Status;
 };

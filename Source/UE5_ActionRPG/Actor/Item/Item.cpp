@@ -2,7 +2,7 @@
 #include "GameFramework/Character.h"
 #include "Actor/Item/Attachment.h"
 #include "Data/ActionData/CombatActionDataAsset.h"
-
+#include "Component/StateComponent.h"
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -35,6 +35,11 @@ void AItem::BeginPlay()
 	Super::BeginPlay();
 
 	SetupItemData();
+	
+	if (UStateComponent* State = OwnerCharacter->GetComponentByClass<UStateComponent>())
+	{
+		OwnerState = State;
+	}
 }
 
 void AItem::AddActionData()
@@ -67,6 +72,7 @@ FActionData* AItem::GetDefaultAction(uint32 Num)
 
 	if (FActionData* FoundData = ActionTagMap.Find(TargetTag))
 	{
+		CurrentData = FoundData;
 		return FoundData;
 	}
 
@@ -79,6 +85,7 @@ FActionData* AItem::GetSkillAction(uint32 Num)
 
 	if (FActionData* FoundData = ActionTagMap.Find(TargetTag))
 	{
+		CurrentData = FoundData;
 		return FoundData;
 	}
 
@@ -91,6 +98,7 @@ FActionData* AItem::GetUltimateAction()
 
 	if (FActionData* FoundData = ActionTagMap.Find(TargetTag))
 	{
+		CurrentData = FoundData;
 		return FoundData;
 	}
 
@@ -107,10 +115,18 @@ void AItem::OnDefaultAction()
 
 void AItem::OnDefaultAction2()
 {
+	FActionData* Data = GetDefaultAction(2);
+	if (!Data) return;
+
+	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
 }
 
 void AItem::OnDefaultAction3()
 {
+	FActionData* Data = GetDefaultAction(3);
+	if (!Data) return;
+
+	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
 }
 
 void AItem::OnSkillAction()
@@ -123,14 +139,26 @@ void AItem::OnSkillAction()
 
 void AItem::OnSkillAction2()
 {
+	FActionData* Data = GetSkillAction(2);
+	if (!Data) return;
+
+	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
 }
 
 void AItem::OnSkillAction3()
 {
+	FActionData* Data = GetSkillAction(3);
+	if (!Data) return;
+
+	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
 }
 
 void AItem::OnUltimateAction()
 {
+	FActionData* Data = GetUltimateAction();
+	if (!Data) return;
+
+	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
 }
 
 void AItem::OffDefaultAction()
@@ -161,3 +189,7 @@ void AItem::OffUltimateAction()
 {
 }
 
+void AItem::EndAction()
+{
+
+}

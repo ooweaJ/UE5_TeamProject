@@ -23,4 +23,6 @@ protected:
 
 	class UStateComponent* State;
   
+	UPROPERTY(Editanywhere)
+	uint32 AbilityNum = 1;
 };

@@ -33,6 +33,7 @@ public:
 	virtual void OnSkill();
 	virtual void OnUltimate();
 
+	class ACharacter* GetTarget();
 protected:
 	UPROPERTY(EditAnywhere)
 	class UBehaviorComponent* Behavior;

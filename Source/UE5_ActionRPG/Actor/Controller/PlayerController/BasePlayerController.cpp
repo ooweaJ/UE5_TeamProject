@@ -60,7 +60,8 @@ void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 {
 	FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 	APawn* ControlledPawn = GetPawn();
-
+	
+	if (!Player) return;
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 	const FVector ForwardDirection = FRotator(0, Player->Camera->GetComponentRotation().Yaw,0).Vector();
@@ -98,6 +99,7 @@ void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 
 void ABasePlayerController::OnLookMouse(const FInputActionValue& InputActionValue)
 {
+	if (!Player)return;
 	if (!Player->bLockOn)
 	{
 		const FVector ActionValue = InputActionValue.Get<FVector>();

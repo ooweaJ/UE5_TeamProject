@@ -20,12 +20,18 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void OnMelee();
-	virtual void OnSkill();
+	virtual void OnMelee(uint32 Num = 1);
+	virtual void OnSkill(uint32 Num = 1);
 	virtual void OnUltimate();
-
-
 	virtual void OffMelee();
 	virtual void OffSkill();
 	virtual void OffUltimate();
+
+public:
+	FORCEINLINE void SetMoveDirection(FVector InDirection) { Direction = InDirection; }
+	FORCEINLINE void SetStrafe(bool InStrafe) { bStrafe = InStrafe; }
+
+private:
+	FVector Direction;
+	bool bStrafe = false;
 };

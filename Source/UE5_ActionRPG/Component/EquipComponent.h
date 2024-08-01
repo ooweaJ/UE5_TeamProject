@@ -27,7 +27,8 @@ public:
 
 	FORCEINLINE AItem* GetCurrentItem() { return SelectItem; }
 	FORCEINLINE void SetSelectItem(AItem* InItem) { SelectItem = InItem; }
-	
+	void EndAction();
+
 private:
 	TArray<AItem*> EquipItems;
 	AItem* SelectItem;
