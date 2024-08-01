@@ -13,7 +13,7 @@ enum class ECharacterClass : uint8
 {
 	Warrior UMETA(DisplayName = "Warrior"),
 	Assassin UMETA(DisplayName = "Assassin"),
-	Swordman UMETA(DisplayName = "Swordman"),
+	Katana UMETA(DisplayName = "Katana"),
 	Spearman UMETA(DisplayName = "Spearman"),
 	_End UMETA(Hidden)
 };
@@ -41,6 +41,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	FCharacterData CharacterData; 
 
+	UPROPERTY(EditAnywhere)
+	TMap<ECharacterClass, TSubclassOf<class ABasePlayer>> CharacterClassMap; 
+
+	UFUNCTION(BlueprintCallable)
+	void LoadinGameMenu();
+
+
 private:
 	void OnCreateSessionComplete(FName InSessionName, bool InSuccess);
 	void OnDestroySessionComplete(FName InSessionName, bool InSuccess);
@@ -52,9 +59,6 @@ private:
 
 	UFUNCTION(BlueprintCallable, Exec)
 	void LoadMainMenu();
-
-	UFUNCTION(BlueprintCallable, Exec)
-	void LoadinGameMenu();
 
 	UFUNCTION(Exec)
 	void Host(FString InServerName) override;
@@ -75,5 +79,6 @@ private:
 	TSubclassOf<class UUserWidget> InGameMenuClass;
 
 	class UUI_ServerMenu* MainMenu;
+	class UMenuWidget* InGameMenu; 
 	FString DesiredServerName;
 };

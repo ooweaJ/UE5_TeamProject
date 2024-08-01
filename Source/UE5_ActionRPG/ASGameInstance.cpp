@@ -3,15 +3,51 @@
 #include "OnlineSubsystemTypes.h"
 #include "Engine.h"
 #include "UI/UI_ServerMenu.h"
+#include "UI/MenuWidget.h"
+#include "Actor/Character/Player/BasePlayer.h"
 
 const static FName SESSION_NAME = TEXT("GameSession");
 const static FName SEVER_NAME_SETTINGS_KEY = TEXT("ServerName");
 
 UASGameInstance::UASGameInstance(const FObjectInitializer& ObjectInitializer)
 {
-	ConstructorHelpers::FClassFinder<UUserWidget> mainMenuClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/UI_Session.UI_Session_C'"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> mainMenuClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/UI_Session.UI_Session_C'"));
 	if (mainMenuClass.Succeeded())
+	{
 		MainMenuClass = mainMenuClass.Class;
+	}
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> MenuClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/Menu/UI_Menu.UI_Menu_C'"));
+	if (MenuClass.Succeeded())
+	{
+		InGameMenuClass = MenuClass.Class; 
+	}
+
+	static ConstructorHelpers::FClassFinder<ABasePlayer> WarriorClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Warrior/BP_Warrior.BP_Warrior_C'"));
+	static ConstructorHelpers::FClassFinder<ABasePlayer> AssassinClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Assassin/BP_Assassin.BP_Assassin_C'"));
+	static ConstructorHelpers::FClassFinder<ABasePlayer> KatanaClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Katana/BP_Katana.BP_Katana_C'"));
+	static ConstructorHelpers::FClassFinder<ABasePlayer> SpearmanClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Spear/BP_Spear.BP_Spear_C'"));
+
+	if (WarriorClass.Succeeded())
+	{
+		CharacterClassMap.Add(ECharacterClass::Warrior, WarriorClass.Class); 
+	}
+
+	if (AssassinClass.Succeeded())
+	{
+		CharacterClassMap.Add(ECharacterClass::Assassin, AssassinClass.Class);
+	}
+
+	if (KatanaClass.Succeeded())
+	{
+		CharacterClassMap.Add(ECharacterClass::Katana, KatanaClass.Class);
+	}
+
+	if (SpearmanClass.Succeeded())
+	{
+		CharacterClassMap.Add(ECharacterClass::Spearman, SpearmanClass.Class);
+	}
+
 }
 
 void UASGameInstance::Init()
@@ -53,6 +89,11 @@ void UASGameInstance::LoadMainMenu()
 
 void UASGameInstance::LoadinGameMenu()
 {
+	if (!InGameMenuClass) { return; }
+	InGameMenu = CreateWidget<UMenuWidget>(this, InGameMenuClass); 
+
+	if (!InGameMenu) { return; }
+	InGameMenu->AddToViewport(); 
 }
 
 void UASGameInstance::Host(FString InServerName)
