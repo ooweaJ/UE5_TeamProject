@@ -2,6 +2,7 @@
 
 
 #include "UI/CharacterSelectWidget.h"
+#include "Materials/MaterialInterface.h"
 
 void UCharacterSelectWidget::NativeOnInitialized()
 {
@@ -18,7 +19,20 @@ void UCharacterSelectWidget::OnCharacterSelectButtonClicked()
 	}
 }
 
-bool UCharacterSelectWidget::SetCharacterClassName(ECharacterClass InCharacterClass)
+void UCharacterSelectWidget::SetImageBrush(const FString MaterialPath)
+{
+	UMaterialInterface* Material = LoadObject<UMaterialInterface>(nullptr, *MaterialPath);
+
+	if (Material)
+	{
+		FSlateBrush Brush;
+		Brush.SetResourceObject(Material);
+		Brush.ImageSize = FVector2D(400.f, 700.f); 
+		CharacterImage->SetBrush(Brush);
+	}
+}
+
+bool UCharacterSelectWidget::SetCharacterClassWidget(ECharacterClass InCharacterClass)
 {
 	//if (!type) { check(false); return false; }
 
@@ -29,21 +43,41 @@ bool UCharacterSelectWidget::SetCharacterClassName(ECharacterClass InCharacterCl
 	switch (InCharacterClass)
 	{
 	case ECharacterClass::Warrior:
+	{
 		CharacterClassNameText = FText::FromString(TEXT("Warrior"));
-		break; 
+		const FString MaterialPath = TEXT("/Script/Engine.Material'/Game/_dev/Actor/Character/Player/Warrior/MT_Warrior.MT_Warrior'");
+		SetImageBrush(MaterialPath); 
+
+		break;
+	}
+		
 
 	case ECharacterClass::Assassin:
+	{
 		CharacterClassNameText = FText::FromString(TEXT("Assassin"));
-		break;
+		const FString MaterialPath = TEXT("/Script/Engine.Material'/Game/_dev/Actor/Character/Player/Assassin/MT_Assassin.MT_Assassin'");
+		SetImageBrush(MaterialPath);
 
+		break;
+	}
 	case ECharacterClass::Katana:
+	{
 		CharacterClassNameText = FText::FromString(TEXT("Katana"));
-		break; 
+		const FString MaterialPath = TEXT("/Script/Engine.Material'/Game/_dev/Actor/Character/Player/Katana/MT_Katana.MT_Katana'");
+		SetImageBrush(MaterialPath);
+
+		break;
+	}
+		 
 
 	case ECharacterClass::Spearman:
+	{
 		CharacterClassNameText = FText::FromString(TEXT("Spearman"));
-		break; 
+		const FString MaterialPath = TEXT("/Script/Engine.Material'/Game/_dev/Actor/Character/Player/Spear/MT_Spear.MT_Spear'");
+		SetImageBrush(MaterialPath);
 
+		break;
+	}
 	}
 
 	CharacterClassTextBlock->SetText(CharacterClassNameText); 
