@@ -2,7 +2,7 @@
 
 
 #include "Component/EquipComponent.h"
-
+#include "Actor/Item/Item.h"
 // Sets default values for this component's properties
 UEquipComponent::UEquipComponent()
 {
@@ -30,5 +30,13 @@ void UEquipComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UEquipComponent::EndAction()
+{
+	if (SelectItem)
+	{
+		SelectItem->EndAction();
+	}
 }
 

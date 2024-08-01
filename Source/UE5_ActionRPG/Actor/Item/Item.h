@@ -51,6 +51,7 @@ public:
 
 	void SetupItemData();
 
+	virtual void EndAction();
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;
@@ -58,7 +59,8 @@ protected:
 protected:
 	class ACharacter* OwnerCharacter;
 	class AAttachment* Attachment;
+	class UStateComponent* OwnerState;
 	FItemInfoData* ItemInfoData;
-
 	TMap<FGameplayTag, FActionData> ActionTagMap;
+	FActionData* CurrentData;
 };

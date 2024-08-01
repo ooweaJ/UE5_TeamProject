@@ -102,3 +102,8 @@ void ABaseAIController::OnUltimate()
 {
 	OwnerAI->OnUltimate();
 }
+
+ACharacter* ABaseAIController::GetTarget()
+{
+	return Behavior->GetTarget();
+}

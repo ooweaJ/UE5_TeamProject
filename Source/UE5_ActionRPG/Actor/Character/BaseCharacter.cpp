@@ -1,9 +1,9 @@
 #include "Actor/Character/BaseCharacter.h"
 #include "Actor/Item/Item.h"
 #include "Component/StateComponent.h"
-#include "Component/EquipComponent.h"
 #include "Component/StatusComponent.h"
-
+#include "Component/EquipComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -12,6 +12,8 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 
 	Equip = ObjectInitializer.CreateDefaultSubobject<UEquipComponent>(this, TEXT("EquipComponent"));
 	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
+	Status = ObjectInitializer.CreateDefaultSubobject<UStatusComponent>(this, TEXT("StatusComponent"));
+	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 }
 
 
@@ -42,6 +44,14 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ABaseCharacter::EndAction()
+{
+	if (!State && !Equip) return;
+
+	State->SetIdleMode();
+	Equip->EndAction();
 }
 
 float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
