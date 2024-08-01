@@ -2,6 +2,7 @@
 #include "Actor/Item/Item.h"
 #include "Component/StateComponent.h"
 #include "Component/EquipComponent.h"
+#include "Component/StatusComponent.h"
 
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -41,4 +42,14 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+UStatusComponent* ABaseCharacter::GetStatusComponent() const
+{
+	return StatusComponent;
 }

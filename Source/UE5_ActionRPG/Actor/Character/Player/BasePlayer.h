@@ -21,6 +21,8 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 public:
 	void OnMouseL();
 	void OnMouseR();
@@ -54,4 +56,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	float CharacterRotationAlphaLinearValue = 1;
+
+	UPROPERTY(BlueprintReadWrite)
+	float LeftHandWeight;
+
+	UPROPERTY(BlueprintReadWrite)
+	float UpperWeight;
 };
