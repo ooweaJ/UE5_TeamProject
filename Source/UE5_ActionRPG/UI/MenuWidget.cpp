@@ -139,7 +139,7 @@ void UMenuWidget::PopulateGrid()
 	{
 		UCharacterSelectWidget* CharacterSelectWidget = CreateWidget<UCharacterSelectWidget>(GetWorld(), CharacterSelectWidgetClass);
 
-		bool bSetCharClassName = CharacterSelectWidget->SetCharacterClassName(static_cast<ECharacterClass>(i));
+		bool bSetCharClassName = CharacterSelectWidget->SetCharacterClassWidget(static_cast<ECharacterClass>(i));
 
 		if (!bSetCharClassName){check(false); return; }
 
