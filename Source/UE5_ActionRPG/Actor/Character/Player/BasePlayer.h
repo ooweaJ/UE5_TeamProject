@@ -26,6 +26,8 @@ public:
 public:
 	void OnMouseL();
 	void OnMouseR();
+	void OffMouseL();
+	void OffMouseR();
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
@@ -48,6 +50,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bLockOn;
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool bEquipState;
 
 	UPROPERTY(BlueprintReadWrite)
 	float CharacterRotationAlphaLinearValue = 1;

@@ -27,3 +27,31 @@ void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+void AAIBaseCharacter::OnMelee()
+{
+	if (!State) return;
+		State->SetActionMode();
+}
+
+void AAIBaseCharacter::OnSkill()
+{
+	State->SetActionMode();
+}
+
+void AAIBaseCharacter::OnUltimate()
+{
+	State->SetActionMode();
+}
+
+void AAIBaseCharacter::OffMelee()
+{
+}
+
+void AAIBaseCharacter::OffSkill()
+{
+}
+
+void AAIBaseCharacter::OffUltimate()
+{
+}

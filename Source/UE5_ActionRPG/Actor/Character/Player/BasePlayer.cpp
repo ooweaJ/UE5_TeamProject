@@ -91,3 +91,19 @@ void ABasePlayer::OnMouseR()
 		item->OnSkillAction();
 	}
 }
+
+void ABasePlayer::OffMouseL()
+{
+	if (AItem* item = Equip->GetCurrentItem())
+	{
+		item->OffDefaultAction();
+	}
+}
+
+void ABasePlayer::OffMouseR()
+{
+	if (AItem* item = Equip->GetCurrentItem())
+	{
+		item->OffSkillAction();
+	}
+}

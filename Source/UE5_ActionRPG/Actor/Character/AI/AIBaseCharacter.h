@@ -20,4 +20,12 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void OnMelee();
+	virtual void OnSkill();
+	virtual void OnUltimate();
+
+
+	virtual void OffMelee();
+	virtual void OffSkill();
+	virtual void OffUltimate();
 };
