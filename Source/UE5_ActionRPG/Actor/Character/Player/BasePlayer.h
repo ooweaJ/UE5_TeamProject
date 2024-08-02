@@ -29,6 +29,13 @@ public:
 	void OffMouseL();
 	void OffMouseR();
 
+	UFUNCTION(Server, Reliable)
+	void ServerOnMouseL();
+	void ServerOnMouseL_Implementation();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastOnDefaultAction();
+	void MulticastOnDefaultAction_Implementation();
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;

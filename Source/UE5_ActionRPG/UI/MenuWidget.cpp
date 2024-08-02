@@ -94,7 +94,7 @@ void UMenuWidget::OnSelectStartButtonClicked()
 	FCharacterData Data; 
 	Data.CharacterClassName = CharacterClassName; 
 
-	FString LevelPath = TEXT("/Game/_dev/Level/MainWorld");
+	FString LevelPath = TEXT("/Game/_dev/Level/SessionWorld");
 	LevelTransitionUtils::OpenLevelWithData(this, LevelPath, Data); 
 
 }
