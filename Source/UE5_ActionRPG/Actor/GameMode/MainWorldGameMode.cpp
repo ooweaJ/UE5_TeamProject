@@ -1,11 +1,10 @@
 #include "Actor/GameMode/MainWorldGameMode.h"
-#include "Actor/Character/Player/BasePlayer.h"
 #include "Actor/Controller/PlayerController/BasePlayerController.h"
 #include "Actor/PlayerState/BasePlayerState.h"
 #include "ASGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
-
+#include "Engine.h"
 
 AMainWorldGameMode::AMainWorldGameMode()
 {
@@ -23,11 +22,8 @@ void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 	++NumberOfPlayers;
 
-	if (UASGameInstance* ASGameInstance = Cast<UASGameInstance>(GetWorld()->GetGameInstance()))
 	{
-		if (ASGameInstance->CharacterData.CharacterClassName != ECharacterClass::_End)
-		{
-			TSubclassOf<ABasePlayer>* BasePlayer = ASGameInstance->CharacterClassMap.Find(ASGameInstance->CharacterData.CharacterClassName); 
+			TSubclassOf<ABasePlayer>* BasePlayer = ClassMap.Find(ClassName);
 			if (!BasePlayer) { check(false); return; }
 
 			APlayerStart* PlayerStart = Cast<APlayerStart>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass())); 
@@ -45,8 +41,15 @@ void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
 				Pawn->Destroy();
 
 			NewPlayer->Possess(NewBasePlayer); 
-		}
 	}
+}
+
+APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+{
+	APlayerController* PC = Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
+	const FString Class = UGameplayStatics::ParseOption(Options, "Class");
+	ClassName = Class;
+	return PC;
 }
 
 void AMainWorldGameMode::BeginPlay()

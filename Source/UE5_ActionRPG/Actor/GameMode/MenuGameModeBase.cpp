@@ -12,12 +12,6 @@ AMenuGameModeBase::AMenuGameModeBase()
 void AMenuGameModeBase::BeginPlay()
 {
 	Super::BeginPlay(); 
-
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController(); 
-	if (AMenuPlayerController* MenuPlayerController = Cast<AMenuPlayerController>(PlayerController))
-	{
-		MenuPlayerController->SetShowMouseCursor(true); 
-	}
 }
 
 void AMenuGameModeBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
