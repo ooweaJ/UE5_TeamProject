@@ -24,6 +24,12 @@ void ABasePlayerController::BeginPlay()
 	if (!Subsystem) return;
 	const UInPutDataConfig* InPutDataConfig = GetDefault<UInPutDataConfig>();
 	Subsystem->AddMappingContext(InPutDataConfig->InputMappingContext, 0);
+
+	if(ABasePlayer* player = Cast<ABasePlayer>(GetPawn()))
+	{
+		ensure(player);
+		Player = player;
+	}
 }
 
 void ABasePlayerController::SetupInputComponent()
@@ -37,8 +43,10 @@ void ABasePlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InPutDataConfig->Move, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Look, ETriggerEvent::Triggered, this, &ThisClass::OnLookMouse);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Jump, ETriggerEvent::Started, this, &ThisClass::OnJump);
+			EnhancedInputComponent->BindAction(InPutDataConfig->Space, ETriggerEvent::Started, this, &ThisClass::OnDodgeStarted);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Started, this, &ThisClass::OnMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Started, this, &ThisClass::OnMouseR);
+			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Triggered, this, &ThisClass::OnMouseR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Completed, this, &ThisClass::OffMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Completed, this, &ThisClass::OffMouseR);
 		}
@@ -49,8 +57,6 @@ void ABasePlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
 
-	Player = Cast<ABasePlayer>(aPawn);
-	ensure(Player);
 }
 
 void ABasePlayerController::OnUnPossess()
@@ -113,6 +119,18 @@ void ABasePlayerController::OnJump(const FInputActionValue& InputActionValue)
 {
 	if (Player)
 		Player->Jump();
+}
+
+void ABasePlayerController::OnDodgeStarted(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->OnDodgeStarted(Player->WalkingDirectionAngle);
+}
+
+void ABasePlayerController::OnDodgeEnded(const FInputActionValue& InputActionValue)
+{
+	if (!!Player)
+		Player->OnDodgeEnd();
 }
 
 void ABasePlayerController::OnMouseL(const FInputActionValue& InputActionValue)

@@ -23,6 +23,8 @@ protected:
 	void OnMove(const FInputActionValue& InputActionValue);
 	void OnLookMouse(const FInputActionValue& InputActionValue);
 	void OnJump(const FInputActionValue& InputActionValue);
+	void OnDodgeStarted(const FInputActionValue& InputActionValue);
+	void OnDodgeEnded(const FInputActionValue& InputActionValue);
 	void OnMouseL(const FInputActionValue& InputActionValue);
 	void OnMouseR(const FInputActionValue& InputActionValue);
 	void OffMouseL(const FInputActionValue& InputActionValue);

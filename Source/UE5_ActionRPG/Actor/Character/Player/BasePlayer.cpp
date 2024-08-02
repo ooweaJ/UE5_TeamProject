@@ -6,7 +6,9 @@
 #include "Component/StatusComponent.h"
 #include "Component/StateComponent.h"
 #include "Component/EquipComponent.h"
+#include "Component/MontageComponent.h"
 #include "Actor/Item/Item.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -59,6 +61,8 @@ void ABasePlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if(Status && State->IsIdleMode())
+		RegenStamina(DeltaTime);
 }
 
 void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -74,6 +78,30 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	/* TODO */
 
 	return TempDamage;
+}
+
+void ABasePlayer::OnDodgeStarted(float DirectionAngle)
+{
+	if (!HasEnoughStamina() || !State->IsIdleMode()) 
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Red, TEXT("Can not Dodge"), true);
+		return;
+	}
+	if (!GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
+	{
+		MontageComponent->PlayAvoid(SelectSlot());
+		if (Status)
+		{
+			Status->DecreaseStamina(Status->GetDodgeCost());
+		}
+		// Temp
+		OnDodgeEnd();
+	}
+}
+
+void ABasePlayer::OnDodgeEnd()
+{
+	State->SetIdleMode();
 }
 
 void ABasePlayer::OnMouseL()
@@ -108,4 +136,60 @@ void ABasePlayer::OffMouseR()
 	}
 }
 
+bool ABasePlayer::HasEnoughStamina()
+{
+	return Status && Status->GetStamina() > Status->GetDodgeCost();
+}
+
+void ABasePlayer::RegenStamina(float DeltaTime)
+{
+	EStateType CurrentType = State->GetCurrentMode();
+	if(CurrentType == EStateType::Idle)
+	{
+		Status->SetStaminaRegen(40.f);
+		Status->IncreaseStamina(Status->GetStaminaRegen() * DeltaTime);
+	}
+	else
+	{
+		Status->SetStaminaRegen(20.f);
+		Status->IncreaseStamina(Status->GetStaminaRegen() * DeltaTime);
+	}
+	GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Blue, FString::SanitizeFloat(Status->GetStamina()));
+}
+
+FName ABasePlayer::SelectSlot()
+{
+	int64 LocalIndex = 0;
+	if (UKismetMathLibrary::InRange_FloatFloat(WalkingDirectionAngle, -45, 45))
+	{
+		LocalIndex = 0;
+	}
+	if (UKismetMathLibrary::InRange_FloatFloat(WalkingDirectionAngle, 45, 135, false))
+	{
+		LocalIndex = 1;
+	}
+	if (UKismetMathLibrary::InRange_FloatFloat(WalkingDirectionAngle, 135, 180, false) || 
+		UKismetMathLibrary::InRange_FloatFloat(WalkingDirectionAngle, -180, -135, true, false))
+	{
+		LocalIndex = 2;
+	}
+	if (UKismetMathLibrary::InRange_FloatFloat(WalkingDirectionAngle, -135, -45, false, true))
+	{
+		LocalIndex = 3;
+	}
+	FName SlotName;
+	switch (LocalIndex)
+	{
+	case 0:
+		return SlotName = TEXT("FWD");
+	case 1:
+		return SlotName = TEXT("Right");
+	case 2:
+		return SlotName = TEXT("BWD");
+	case 3:
+		return SlotName = TEXT("Left");
+	default:
+		return SlotName = TEXT("");
+	}
+}
 

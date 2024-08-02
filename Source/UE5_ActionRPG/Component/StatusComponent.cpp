@@ -3,16 +3,17 @@
 
 UStatusComponent::UStatusComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 }
-
 
 void UStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	Health = MaxHealth;
+	Mana = MaxMana;
+	Stamina = MaxStamina;
 }
 
 void UStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -45,4 +46,46 @@ void UStatusComponent::SetDamage(float InAmount)
 	Damage = InAmount;
 }
 
+void UStatusComponent::IncreaseMans(float InAmount)
+{
+	Mana += InAmount;
+	Mana = FMath::Clamp(Mana, 0.f, MaxMana);
+}
 
+void UStatusComponent::DecreaseMana(float InAmount)
+{
+	Mana -= InAmount;
+	Mana = FMath::Clamp(Mana, 0.f, MaxMana);
+}
+
+void UStatusComponent::IncreaseStamina(float InAmount)
+{
+	Stamina += InAmount;
+	Stamina = FMath::Clamp(Stamina, 0.f, MaxStamina);
+}
+
+void UStatusComponent::DecreaseStamina(float InAmount)
+{
+	Stamina -= InAmount;
+	Stamina = FMath::Clamp(Stamina, 0.f, MaxStamina);
+}
+
+void UStatusComponent::SetStaminaRegen(float InAmount)
+{
+	StaminaRegen = InAmount;
+}
+
+float UStatusComponent::GetHealthPercent()
+{
+	return Health / MaxHealth;
+}
+
+float UStatusComponent::GetManaPercent()
+{
+	return Mana / MaxMana;
+}
+
+float UStatusComponent::GetStaminaPercent()
+{
+	return Stamina / MaxStamina;
+}

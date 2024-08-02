@@ -24,10 +24,17 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
+	void OnDodgeStarted(float DirectionAngle);
+	void OnDodgeEnd();
 	void OnMouseL();
 	void OnMouseR();
 	void OffMouseL();
 	void OffMouseR();
+
+private:
+	bool HasEnoughStamina();
+	void RegenStamina(float DeltaTime);
+	FName SelectSlot();
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)

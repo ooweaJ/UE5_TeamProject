@@ -28,7 +28,7 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
-	class UStatusComponent* GetStatusComponent() const;
+	class UStatusComponent* GetStatus() const;
 	
 	void EndAction();
 
@@ -41,9 +41,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStateComponent* State;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStatusComponent* StatusComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UEquipComponent* Equip;

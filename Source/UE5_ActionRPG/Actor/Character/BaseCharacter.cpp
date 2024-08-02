@@ -2,6 +2,7 @@
 #include "Actor/Item/Item.h"
 #include "Component/StateComponent.h"
 #include "Component/StatusComponent.h"
+#include "Component/MontageComponent.h"
 #include "Component/EquipComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -11,11 +12,11 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 
 	Equip = ObjectInitializer.CreateDefaultSubobject<UEquipComponent>(this, TEXT("EquipComponent"));
+	MontageComponent = ObjectInitializer.CreateDefaultSubobject<UMontageComponent>(this, TEXT("MontageComponent"));
 	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
 	Status = ObjectInitializer.CreateDefaultSubobject<UStatusComponent>(this, TEXT("StatusComponent"));
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 }
-
 
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
@@ -59,7 +60,7 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
-UStatusComponent* ABaseCharacter::GetStatusComponent() const
+UStatusComponent* ABaseCharacter::GetStatus() const
 {
-	return StatusComponent;
+	return Status;
 }
