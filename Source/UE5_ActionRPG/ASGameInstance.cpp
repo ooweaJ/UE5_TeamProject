@@ -171,7 +171,7 @@ void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSucces
 
 	UWorld* world = GetWorld();
 	if (world == nullptr) return;
-	world->ServerTravel("/Game/_dev/Level/Menu?listen");
+	world->ServerTravel("/Game/_dev/Level/MainWorld?listen");
 }
 
 void UASGameInstance::OnDestroySessionComplete(FName InSessionName, bool InSuccess)
