@@ -47,7 +47,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadinGameMenu();
 
-
 private:
 	void OnCreateSessionComplete(FName InSessionName, bool InSuccess);
 	void OnDestroySessionComplete(FName InSessionName, bool InSuccess);

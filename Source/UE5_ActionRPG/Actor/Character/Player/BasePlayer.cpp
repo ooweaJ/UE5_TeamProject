@@ -78,9 +78,13 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 
 void ABasePlayer::OnMouseL()
 {
-	if (AItem* item = Equip->GetCurrentItem())
+	if (HasAuthority())
 	{
-		item->OnDefaultAction();
+		MulticastOnDefaultAction();
+	}
+	else
+	{
+		ServerOnMouseL();
 	}
 }
 
@@ -105,6 +109,19 @@ void ABasePlayer::OffMouseR()
 	if (AItem* item = Equip->GetCurrentItem())
 	{
 		item->OffSkillAction();
+	}
+}
+
+void ABasePlayer::ServerOnMouseL_Implementation()
+{
+	MulticastOnDefaultAction();
+}
+
+void ABasePlayer::MulticastOnDefaultAction_Implementation()
+{
+	if (AItem* item = Equip->GetCurrentItem())
+	{
+		item->OnDefaultAction();
 	}
 }
 

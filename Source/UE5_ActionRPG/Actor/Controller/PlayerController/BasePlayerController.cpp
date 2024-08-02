@@ -24,6 +24,9 @@ void ABasePlayerController::BeginPlay()
 	if (!Subsystem) return;
 	const UInPutDataConfig* InPutDataConfig = GetDefault<UInPutDataConfig>();
 	Subsystem->AddMappingContext(InPutDataConfig->InputMappingContext, 0);
+
+	if (ABasePlayer* player = Cast<ABasePlayer>(GetPawn()))
+		Player = player;
 }
 
 void ABasePlayerController::SetupInputComponent()
@@ -49,8 +52,7 @@ void ABasePlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
 
-	Player = Cast<ABasePlayer>(aPawn);
-	ensure(Player);
+	
 }
 
 void ABasePlayerController::OnUnPossess()
@@ -117,8 +119,9 @@ void ABasePlayerController::OnJump(const FInputActionValue& InputActionValue)
 
 void ABasePlayerController::OnMouseL(const FInputActionValue& InputActionValue)
 {
-	if (Player)
-		Player->OnMouseL();
+	if (ABasePlayer* player = Cast<ABasePlayer>(GetPawn()))
+		player->OnMouseL();
+
 }
 
 void ABasePlayerController::OnMouseR(const FInputActionValue& InputActionValue)
