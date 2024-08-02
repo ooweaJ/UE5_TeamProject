@@ -144,16 +144,16 @@ bool ABasePlayer::HasEnoughStamina()
 void ABasePlayer::RegenStamina(float DeltaTime)
 {
 	EStateType CurrentType = State->GetCurrentMode();
-	if(CurrentType == EStateType::Idle)
+	//if(CurrentType == EStateType::Idle)
 	{
-		Status->SetStaminaRegen(40.f);
+		//Status->SetStaminaRegen(40.f);
 		Status->IncreaseStamina(Status->GetStaminaRegen() * DeltaTime);
 	}
-	else
-	{
-		Status->SetStaminaRegen(20.f);
-		Status->IncreaseStamina(Status->GetStaminaRegen() * DeltaTime);
-	}
+	//else
+	//{
+	//	Status->SetStaminaRegen(20.f);
+	//	Status->IncreaseStamina(Status->GetStaminaRegen() * DeltaTime);
+	//}
 	GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Blue, FString::SanitizeFloat(Status->GetStamina()));
 }
 
