@@ -177,7 +177,6 @@ void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSucces
 
 	UWorld* world = GetWorld();
 	if (world == nullptr) return;
-	world->ServerTravel("/Game/_dev/Level/MainWorld?listen");
 	UGameplayStatics::OpenLevel(world, FName("/Game/_dev/Level/MainWorld?listen"), true, ClassName);
 
 }

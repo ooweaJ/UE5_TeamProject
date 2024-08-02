@@ -28,8 +28,8 @@ void LevelTransitionUtils::OpenLevelWithData(UObject* WorldContextObject, const 
 			}
 			FString ClassName(TEXT("Class=") + Option);
 			ASGameInstance->SetClassName(ClassName);
+			UGameplayStatics::OpenLevel(WorldContextObject, FName(*LevelName)); 
 		}
 	}
 
-	UGameplayStatics::OpenLevel(WorldContextObject, FName(*LevelName)); 
 }
