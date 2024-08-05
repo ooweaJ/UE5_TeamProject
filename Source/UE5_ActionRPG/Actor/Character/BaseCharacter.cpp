@@ -54,6 +54,7 @@ void ABaseCharacter::EndAction()
 {
 	if (!State && !Equip) return;
 
+	GEngine->AddOnScreenDebugMessage(3, 2.f, FColor::Red, TEXT("EndAction"));
 	State->SetIdleMode();
 	Equip->EndAction();
 }

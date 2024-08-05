@@ -7,7 +7,7 @@
 UENUM(BlueprintType)
 enum class EStateType : uint8
 {
-	Idle, Equip, Action, Hitted, Dead, Max
+	Idle, Equip, Action, Hitted, Evade, Dead, Max
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -29,6 +29,8 @@ public:
 	FORCEINLINE bool IsEquipMode() { return Type == EStateType::Equip; }
 	FORCEINLINE bool IsActionMode() { return Type == EStateType::Action; }
 	FORCEINLINE bool IsHittedMode() { return Type == EStateType::Hitted; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE bool IsEvadeMode() { return Type == EStateType::Evade; }
 	FORCEINLINE bool IsDeadMode() { return Type == EStateType::Dead; }
 	
 
@@ -37,6 +39,7 @@ public:
 	void SetEquipMode();
 	void SetActionMode();
 	void SetHittedMode();
+	void SetEvadeMode();
 	void SetDeadMode();
 	void ChangeType(EStateType InNewType);
 

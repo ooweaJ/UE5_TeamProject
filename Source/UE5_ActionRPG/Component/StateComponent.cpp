@@ -42,6 +42,11 @@ void UStateComponent::SetHittedMode()
 	ChangeType(EStateType::Hitted);
 }
 
+void UStateComponent::SetEvadeMode()
+{
+	ChangeType(EStateType::Evade);
+}
+
 void UStateComponent::SetDeadMode()
 {
 	ChangeType(EStateType::Dead);

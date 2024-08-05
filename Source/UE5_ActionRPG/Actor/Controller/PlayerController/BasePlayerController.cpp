@@ -40,6 +40,7 @@ void ABasePlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InPutDataConfig->Move, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Look, ETriggerEvent::Triggered, this, &ThisClass::OnLookMouse);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Jump, ETriggerEvent::Started, this, &ThisClass::OnJump);
+			EnhancedInputComponent->BindAction(InPutDataConfig->Space, ETriggerEvent::Started, this, &ThisClass::OnEvade);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Started, this, &ThisClass::OnMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Started, this, &ThisClass::OnMouseR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Completed, this, &ThisClass::OffMouseL);
@@ -115,6 +116,12 @@ void ABasePlayerController::OnJump(const FInputActionValue& InputActionValue)
 {
 	if (Player)
 		Player->Jump();
+}
+
+void ABasePlayerController::OnEvade(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->OnEvade();
 }
 
 void ABasePlayerController::OnMouseL(const FInputActionValue& InputActionValue)

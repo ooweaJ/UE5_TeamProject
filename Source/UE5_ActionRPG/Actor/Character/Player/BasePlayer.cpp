@@ -115,6 +115,13 @@ void ABasePlayer::OffMouseR()
 	}
 }
 
+void ABasePlayer::OnEvade()
+{
+	if (State->IsEvadeMode()) return;
+	State->SetEvadeMode();
+	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, TEXT("OnEvade"));
+}
+
 void ABasePlayer::ServerOnMouseL_Implementation()
 {
 	MulticastOnDefaultAction();
