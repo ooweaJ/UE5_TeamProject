@@ -23,10 +23,10 @@ void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
 
 	{
 		TSubclassOf<ABasePlayer>* BasePlayer = ClassMap.Find(ClassName);
-		if (!BasePlayer) { check(false); return; }
+		if (!BasePlayer) return;
 
 		APlayerStart* PlayerStart = Cast<APlayerStart>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass())); 
-		if (!PlayerStart) { check(false); return; }
+		if (!PlayerStart) return;
 
 		FVector SpawnLocation = PlayerStart->GetActorLocation(); 
 		FRotator SpawnRotation = PlayerStart->GetActorRotation(); 
