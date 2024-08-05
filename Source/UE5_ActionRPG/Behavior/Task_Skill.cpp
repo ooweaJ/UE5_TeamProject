@@ -26,7 +26,7 @@ EBTNodeResult::Type UTask_Skill::ExecuteTask(UBehaviorTreeComponent& OwnerComp, 
 	State = state;
 
 	if (!state->IsIdleMode()) return EBTNodeResult::Failed;
-	controller->OnSkill();
+	controller->OnSkill(AbilityNum);
 
 	return EBTNodeResult::InProgress;
 }

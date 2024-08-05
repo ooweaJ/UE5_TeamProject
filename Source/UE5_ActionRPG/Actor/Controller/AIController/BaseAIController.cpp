@@ -9,6 +9,7 @@
 #include "Component/BehaviorComponent.h"
 #include "Actor/Character/AI/AIBaseCharacter.h"
 #include "MISC/MISC.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 ABaseAIController::ABaseAIController()
 {
@@ -35,6 +36,7 @@ ABaseAIController::ABaseAIController()
 void ABaseAIController::BeginPlay()
 {
 	Super::BeginPlay();
+	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 15.f, false);
 }
 
 void ABaseAIController::Tick(float DeltaTime)
@@ -78,6 +80,11 @@ void ABaseAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors
 	Blackboard->SetValueAsObject(FBlackBoardKeyNameTable::TargetKey, player);
 }
 
+void ABaseAIController::CooldownSkill()
+{
+	bSkill = true;
+}
+
 void ABaseAIController::SetLoactionKey(FVector InLoaction)
 {
 	Blackboard->SetValueAsVector(FBlackBoardKeyNameTable::LocationKey, InLoaction);
@@ -93,9 +100,11 @@ void ABaseAIController::OnMeleeAttack()
 	OwnerAI->OnMelee();
 }
 
-void ABaseAIController::OnSkill()
+void ABaseAIController::OnSkill(uint32 Num)
 {
-	OwnerAI->OnSkill();
+	OwnerAI->OnSkill(Num);
+	bSkill = false;
+	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 15.f, false);
 }
 
 void ABaseAIController::OnUltimate()

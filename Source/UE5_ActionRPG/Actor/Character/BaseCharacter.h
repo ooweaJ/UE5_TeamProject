@@ -17,6 +17,7 @@ public:
 
 	FORCEINLINE void SetParrying(bool InParry) { Parrying = InParry; }
 	FORCEINLINE bool GetParrying() { return Parrying; }
+	FORCEINLINE class UStateComponent* GetState() { return State; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -43,7 +43,6 @@ void AGruxItem::OnDefaultAction3()
 void AGruxItem::OnSkillAction()
 {
 	if (!OwnerState) return;
-	if (!OwnerState->IsIdleMode())return;
 	Super::OnSkillAction();
 	OwnerState->SetActionMode();
 }
