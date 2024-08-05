@@ -26,6 +26,11 @@ void UMontageComponent::PlayHit()
 	PlayAnimMontage("Hit");
 }
 
+void UMontageComponent::PlayStun()
+{
+	PlayAnimMontage("Stun");
+}
+
 void UMontageComponent::PlayAnimMontage(FName Key)
 {
 	ACharacter* character = Cast<ACharacter>(GetOwner());

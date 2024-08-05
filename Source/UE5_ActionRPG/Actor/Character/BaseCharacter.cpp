@@ -3,7 +3,10 @@
 #include "Component/StateComponent.h"
 #include "Component/StatusComponent.h"
 #include "Component/EquipComponent.h"
+#include "Component/MontageComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Engine/DamageEvents.h"
+#include "Actor/Item/DamageType/DefaultDamageType.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -13,6 +16,7 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	Equip = ObjectInitializer.CreateDefaultSubobject<UEquipComponent>(this, TEXT("EquipComponent"));
 	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
 	Status = ObjectInitializer.CreateDefaultSubobject<UStatusComponent>(this, TEXT("StatusComponent"));
+	MontageComponent = ObjectInitializer.CreateDefaultSubobject<UMontageComponent>(this, TEXT("MontageComponent"));
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 }
 
@@ -54,9 +58,40 @@ void ABaseCharacter::EndAction()
 	Equip->EndAction();
 }
 
+void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
+{
+
+	if (UDefaultDamageType* DamageType = Cast<UDefaultDamageType>(InDamageType->GetDefaultObject()))
+	{
+		if (!MontageComponent) return;
+		switch (DamageType->Type)
+		{
+		case EDamageType::Default:
+			break;
+		case EDamageType::Hitstop:
+			MontageComponent->PlayHit();
+			break;
+		case EDamageType::Stun:
+			MontageComponent->PlayStun();
+			break;
+		case EDamageType::Knockback:
+			MontageComponent->PlayKnockBack();
+			break;
+		case EDamageType::Knockdown:
+			break;
+		}
+	}
+}
+
 float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	if (!DamageEvent.DamageTypeClass) return 0;
+
+	HitPlayMontage(DamageEvent.DamageTypeClass);
+
+	return 0;
 }
 
 UStatusComponent* ABaseCharacter::GetStatusComponent() const
