@@ -7,6 +7,8 @@
 #include "Component/StateComponent.h"
 #include "Component/EquipComponent.h"
 #include "Actor/Item/Item.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -16,7 +18,7 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
+		
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	{
@@ -58,7 +60,8 @@ void ABasePlayer::PossessedBy(AController* NewController)
 void ABasePlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	TickLockOn();
 }
 
 void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -123,6 +126,67 @@ void ABasePlayer::MulticastOnDefaultAction_Implementation()
 	{
 		item->OnDefaultAction();
 	}
+}
+
+void ABasePlayer::LockOn()
+{
+	if (!bLockOn)
+	{
+		TArray<TEnumAsByte<EObjectTypeQuery>> Array;
+		Array.Add(EObjectTypeQuery::ObjectTypeQuery3);
+		TArray<AActor*> Ignore;
+		Ignore.Add(this);
+		TArray<FHitResult> MultiHit;
+		UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), GetActorLocation(), GetActorLocation(), LockOnRadius, Array, false, Ignore, EDrawDebugTrace::ForDuration, MultiHit, true, FLinearColor::Green, FLinearColor::Red, 5.0f);
+		AActor* NearestActor = nullptr;
+		float NearDistance = 9999.f;
+		float Distance;
+		for (FHitResult& A : MultiHit)
+		{
+			Distance = (GetActorLocation() - A.GetActor()->GetActorLocation()).Length();
+			if (NearDistance > Distance)
+			{
+				NearDistance = Distance;
+				NearestActor = A.GetActor();
+			}
+		}
+		if (NearestActor)
+		{
+			TargetActor = NearestActor;
+			bLockOn = true;
+			NearestActor = nullptr;
+		}
+	}
+	else
+	{
+		bLockOn = false;
+		TargetActor = nullptr;
+	}
+
+}
+
+void ABasePlayer::TickLockOn()
+{
+	ArmPos = SpringArm->GetComponentLocation();
+	ActorPos = GetActorLocation();
+	if (bLockOn)
+	{
+		FRotator LookRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation() * FVector(1, 1, 0), TargetActor->GetActorLocation() * FVector(1, 1, 0));
+		SetActorRotation(LookRot);
+		// SpringArm Set Location
+		SpringArm->SetWorldLocation(FMath::Lerp(ArmPos, ActorPos
+			, 1.35f * this->GetWorld()->GetDeltaSeconds()));
+		Camera->SetWorldLocation(ArmPos + (LookRot.Vector() * LockOnCameraArmLength * -1.0f) + FVector(0, 0, 90));
+		Camera->SetWorldRotation(LookRot);
+		GetController()->K2_SetActorRotation(LookRot,false);
+	}
+	else
+	{
+		SpringArm->SetWorldLocationAndRotation(ActorPos, GetActorForwardVector().Rotation());
+		Camera->SetRelativeTransform(FTransform());
+	}
+	
+	
 }
 
 
