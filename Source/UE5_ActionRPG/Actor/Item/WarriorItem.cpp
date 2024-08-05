@@ -1,5 +1,28 @@
 #include "Actor/Item/WarriorItem.h"
 #include "Actor/Character/Player/BasePlayer.h"
+#include "Actor/Character/BaseCharacter.h"
+#include "Engine/DamageEvents.h"
+
+void AWarriorItem::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
+{
+	if (Parry)
+	{
+		 ABaseCharacter* Target = Cast<ABaseCharacter>(InOtherCharacter);
+		 if (Target)
+		 {
+			 if (Target->GetParrying())
+			 {
+				 FDamageEvent de;
+				 de.DamageTypeClass = CurrentData->DamageType;
+				 InOtherCharacter->TakeDamage(0, de, InAttacker->GetController(), InCauser);
+			 }
+		 }
+	}
+	else
+	{
+		Super::OnDamage(InAttacker,InCauser,InOtherCharacter);
+	}
+}
 
 void AWarriorItem::OnDefaultAction()
 {
@@ -16,13 +39,7 @@ void AWarriorItem::OnDefaultAction3()
 
 void AWarriorItem::OnSkillAction()
 {
-	if (OwnerCharacter)
-	{
-		if (ABasePlayer* Player = Cast<ABasePlayer>(OwnerCharacter))
-		{
-			Player->UpperWeight = 1;
-		}
-	}
+	Super::OnSkillAction();
 }
 
 void AWarriorItem::OnSkillAction2()
@@ -71,4 +88,14 @@ void AWarriorItem::OffSkillAction3()
 
 void AWarriorItem::OffUltimateAction()
 {
+}
+
+void AWarriorItem::OnItemSkillAction()
+{
+	Parry = true;
+}
+
+void AWarriorItem::OffItemSkillAction()
+{
+	Parry = false;
 }

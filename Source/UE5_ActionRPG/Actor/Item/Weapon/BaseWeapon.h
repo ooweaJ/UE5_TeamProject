@@ -22,7 +22,7 @@ public:
 	FORCEINLINE void ReSetHitted() { HittedCharacters.Empty(); }
 
 	UFUNCTION()
-	void OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter);
+	virtual void OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter);
 	virtual void OnDefaultAction();
 	virtual void EndAction();
 	virtual void ItemAction();

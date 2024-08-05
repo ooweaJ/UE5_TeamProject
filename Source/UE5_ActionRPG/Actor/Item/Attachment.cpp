@@ -25,7 +25,7 @@ void AAttachment::BeginPlay()
 		shape->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnComponentEndOverlap);
 	}
 
-	//OffCollisions();
+	OffCollisions();
 }
 
 void AAttachment::Tick(float DeltaTime)

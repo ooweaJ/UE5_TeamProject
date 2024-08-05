@@ -15,6 +15,8 @@ public:
 	// Sets default values for this character's properties
 	ABaseCharacter(const FObjectInitializer& ObjectInitializer);
 
+	FORCEINLINE void SetParrying(bool InParry) { Parrying = InParry; }
+	FORCEINLINE bool GetParrying() { return Parrying; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,7 +33,7 @@ public:
 	class UStatusComponent* GetStatusComponent() const;
 	
 	void EndAction();
-
+	void HitPlayMontage(TSubclassOf<UDamageType> InDamageType);
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AItem> DefaultItemClass;
@@ -50,4 +52,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStatusComponent* Status;
+
+	bool Parrying;
 };
