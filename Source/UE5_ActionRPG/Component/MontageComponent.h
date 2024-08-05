@@ -40,6 +40,7 @@ public:
 	void PlayAvoid(FName SlotName);
 	void PlayRoll();
 	void PlayHit();
+	void PlayStun();
 
 private:
 	void PlayAnimMontage(FName Key, FName SlotName = "");

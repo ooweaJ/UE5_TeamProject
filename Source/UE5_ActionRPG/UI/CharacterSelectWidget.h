@@ -20,7 +20,8 @@ class UE5_ACTIONRPG_API UCharacterSelectWidget : public UUserWidget
 	friend class UMenuWidget; 
 
 public:
-	bool SetCharacterClassName(ECharacterClass InCharacterClass);
+	void SetImageBrush(const FString MaterialPath);
+	bool SetCharacterClassWidget(ECharacterClass InCharacterClass);
 	ECharacterClass GetCharacterClassName() const; 
 
 protected:

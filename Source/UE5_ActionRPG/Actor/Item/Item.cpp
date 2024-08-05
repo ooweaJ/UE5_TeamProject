@@ -210,3 +210,11 @@ void AItem::EndAction()
 void AItem::ItemAction()
 {
 }
+
+void AItem::OnItemSkillAction()
+{
+}
+
+void AItem::OffItemSkillAction()
+{
+}

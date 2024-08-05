@@ -11,9 +11,9 @@ void UMontageComponent::PlayKnockBack()
 	PlayAnimMontage("KnockBack");
 }
 
-void UMontageComponent::PlayAvoid(FName SlotName)
+void UMontageComponent::PlayAvoid()
 {
-	PlayAnimMontage("Avoid", SlotName);
+	PlayAnimMontage("Avoid");
 }
 
 void UMontageComponent::PlayRoll()
@@ -26,13 +26,16 @@ void UMontageComponent::PlayHit()
 	PlayAnimMontage("Hit");
 }
 
-void UMontageComponent::PlayAnimMontage(FName Key, FName SlotName)
+void UMontageComponent::PlayStun()
+{
+	PlayAnimMontage("Stun");
+}
+
+void UMontageComponent::PlayAnimMontage(FName Key)
 {
 	ACharacter* character = Cast<ACharacter>(GetOwner());
-
-	if (!MontageData) return;
-	FMontageData* data = MontageData->FindRow<FMontageData>(Key, "");
-	if (!data) return;
+	FMontageData* data = MotageData->FindRow<FMontageData>(Key, "");
+	if (!data) return ;
 
 	UStateComponent* state = character->GetComponentByClass<UStateComponent>();
 	UStatusComponent* status = character->GetComponentByClass<UStatusComponent>();
@@ -41,9 +44,6 @@ void UMontageComponent::PlayAnimMontage(FName Key, FName SlotName)
 	character->StopAnimMontage();
 	state->ChangeType(data->Type);
 	data->bCanMove ? status->SetMove() : status->SetStop();
-	if(SlotName != "")
-		character->PlayAnimMontage(data->AnimMontage, data->PlayRate, SlotName);
-	else
-		character->PlayAnimMontage(data->AnimMontage, data->PlayRate, data->StartSection);
+	character->PlayAnimMontage(data->AnimMontage, data->PlayRate, data->StartSection);
 }
 

@@ -24,18 +24,18 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
-	void OnDodgeStarted(float DirectionAngle);
-	void OnDodgeEnd();
 	void OnMouseL();
 	void OnMouseR();
 	void OffMouseL();
 	void OffMouseR();
 
-private:
-	bool HasEnoughStamina();
-	void RegenStamina(float DeltaTime);
-	FName SelectSlot();
+	UFUNCTION(Server, Reliable)
+	void ServerOnMouseL();
+	void ServerOnMouseL_Implementation();
 
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastOnDefaultAction();
+	void MulticastOnDefaultAction_Implementation();
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;

@@ -55,6 +55,8 @@ public:
 
 	virtual void EndAction();
 	virtual void ItemAction();
+	virtual void OnItemSkillAction();
+	virtual void OffItemSkillAction();
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;
