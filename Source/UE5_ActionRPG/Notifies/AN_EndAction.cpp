@@ -16,8 +16,6 @@ void UAN_EndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* 
 
 	if (ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(MeshComp->GetOwner()))
 	{
-		
-		GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Black, TEXT("EndNotify"));
 		BaseCharacter->EndAction();
 	}
 }

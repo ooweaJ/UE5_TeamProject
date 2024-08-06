@@ -90,9 +90,9 @@ void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 		ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y * AngleDampingSpeed);
 		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X * AngleDampingSpeed);
 
-		Player->ForwardInput = ForwardDirection * MovementVector.Y;
-		Player->RightInput = RightDirection * MovementVector.X;
-		Player->MoveDirection = (Player->ForwardInput + Player->RightInput).GetSafeNormal();
+		Player->ForwardInput = MovementVector.Y;
+		Player->RightInput = MovementVector.X;
+		Player->MoveDirection = (ForwardDirection * Player->ForwardInput + RightDirection * Player->RightInput).GetSafeNormal();
 		Player->WalkingDirectionAngle = UKismetAnimationLibrary::CalculateDirection(Player->MoveDirection, Player->GetActorRotation());
 		if (!Player->bLockOn)
 		{
@@ -120,14 +120,18 @@ void ABasePlayerController::OnJump(const FInputActionValue& InputActionValue)
 
 void ABasePlayerController::OnEvade(const FInputActionValue& InputActionValue)
 {
-	if (Player)
+	FVector LastInput = Player->GetLastMovementInputVector();
+	if (!Player) return;
+	if (LastInput.IsNearlyZero())
+		Player->OnStepBack();
+	else
 		Player->OnEvade();
 }
 
 void ABasePlayerController::OnMouseL(const FInputActionValue& InputActionValue)
 {
-	if (ABasePlayer* player = Cast<ABasePlayer>(GetPawn()))
-		player->OnMouseL();
+	if (Player)
+		Player->OnMouseL();
 
 }
 

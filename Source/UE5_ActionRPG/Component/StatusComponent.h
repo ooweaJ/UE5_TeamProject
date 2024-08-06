@@ -50,7 +50,7 @@ private:
 	float MaxHealth = 100.f;
 
 	UPROPERTY(EditAnywhere, Category = "Speed")
-	float Speed[(int32)EWalkSpeedTpye::Max] = { 200, 300, 900, 1200 };
+	float Speed[(int32)EWalkSpeedTpye::Max] = { 300, 600, 900, 1200 };
 
 private:
 	float Health;

@@ -47,6 +47,11 @@ void UStateComponent::SetEvadeMode()
 	ChangeType(EStateType::Evade);
 }
 
+void UStateComponent::SetStepBackMode()
+{
+	ChangeType(EStateType::StepBack);
+}
+
 void UStateComponent::SetDeadMode()
 {
 	ChangeType(EStateType::Dead);

@@ -20,6 +20,7 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationRoll = false;
 		
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+	
 
 	{
 		USkeletalMeshComponent* mesh = GetMesh();
@@ -49,6 +50,7 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Status->SetSpeed(EWalkSpeedTpye::Walk);
 }
 
 void ABasePlayer::PossessedBy(AController* NewController)
@@ -117,9 +119,14 @@ void ABasePlayer::OffMouseR()
 
 void ABasePlayer::OnEvade()
 {
-	if (State->IsEvadeMode()) return;
+	if (!State->IsIdleMode()) return;
 	State->SetEvadeMode();
-	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, TEXT("OnEvade"));
+}
+
+void ABasePlayer::OnStepBack()
+{
+	if (!State->IsIdleMode()) return;
+	State->SetStepBackMode();
 }
 
 void ABasePlayer::ServerOnMouseL_Implementation()

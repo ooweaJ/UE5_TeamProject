@@ -29,6 +29,7 @@ public:
 	void OffMouseL();
 	void OffMouseR();
 	void OnEvade();
+	void OnStepBack();
 
 	UFUNCTION(Server, Reliable)
 	void ServerOnMouseL();
@@ -50,10 +51,10 @@ public:
 	class UCameraComponent* Camera;
 
 	UPROPERTY(BlueprintReadOnly)
-	FVector ForwardInput;
+	float ForwardInput;
 
 	UPROPERTY(BlueprintReadOnly)
-	FVector RightInput;
+	float RightInput;
 
 	UPROPERTY(BlueprintReadOnly)
 	FVector MoveDirection;
