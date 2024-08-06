@@ -15,11 +15,25 @@ UCLASS()
 class UE5_ACTIONRPG_API ASpearProjectile : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ASpearProjectile();
 
+public:
+	void SetComponentsVisibility(bool bVisible);
+
+	UProjectileMovementComponent* GetProjectileComp() const { return ProjectileComp; }
+
+protected:
+	virtual void BeginPlay() override; 
+
+private:
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UPROPERTY()
+	float SpearThrowingDamage = 10.f; 
 protected:
 	UPROPERTY()
 	UBoxComponent* Box; 

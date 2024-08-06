@@ -6,7 +6,10 @@
 #include "Engine/TextureRenderTarget2D.h"
 #include "Engine/SkinnedAssetCommon.h"
 #include "Animation/AnimBlueprint.h"
+#include "Actor/Item/Weapon/SpearProjectile.h"
 #include "Actor/Item/Weapon/SpearWeapon.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ASpearman::ASpearman(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -25,8 +28,20 @@ ASpearman::ASpearman(const FObjectInitializer& ObjectInitializer)
 		ensure(ABPClass.Class); 
 		GetMesh()->SetAnimInstanceClass(ABPClass.Class); 
 	}
-	
+}
 
+ASpearWeapon* ASpearman::GetSpearWeapon() const
+{
+	if (DefaultItemClass)
+	{
+		ASpearWeapon* SpearWeapon = Cast<ASpearWeapon>(DefaultItemClass); 
+		return SpearWeapon; 
+	}
+	else
+	{
+		check(false); 
+		return nullptr; 
+	}
 }
 
 void ASpearman::OnConstruction(const FTransform& Transform)
@@ -45,11 +60,54 @@ void ASpearman::OnConstruction(const FTransform& Transform)
 	}
 
 	DefaultItemClass = ASpearWeapon::StaticClass(); 
+
+	SetupSpearProjectile();
 }
 
 float ASpearman::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	return 0.0f;
+	return Damage;
+}
+
+void ASpearman::SetupSpearProjectile()
+{
+	FActorSpawnParameters SpawnParams; 
+	SpawnParams.Owner = this; 
+	
+
+	FName SocketName = TEXT("Hand_Spear_R"); 
+	const FTransform& SocketTransform = GetMesh()->GetSocketTransform(SocketName, ERelativeTransformSpace::RTS_ParentBoneSpace);
+	const FVector& SocketLocation = SocketTransform.GetLocation(); 
+	const FRotator& SocketRotation = SocketTransform.GetRotation().Rotator(); 
+
+	SpearProjectile = GetWorld()->SpawnActor<ASpearProjectile>(SocketLocation, GetControlRotation(), SpawnParams);
+	SpearProjectile->SetActorEnableCollision(false); 
+
+	UProjectileMovementComponent* ProjectileMovement = SpearProjectile->FindComponentByClass<UProjectileMovementComponent>();
+	if (ProjectileMovement)
+	{
+		ProjectileMovement->SetActive(false); 
+	}
+
+	SpearProjectile->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+	SpearProjectile->SetComponentsVisibility(false); 
+}
+
+void ASpearman::ThrowSpear()
+{
+	SpearProjectile->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
+	FName SocketName = TEXT("Hand_Spear_R");
+
+	const FTransform& SocketTransform = GetMesh()->GetSocketTransform(SocketName, ERelativeTransformSpace::RTS_ParentBoneSpace); 
+	const FRotator& SocketRotation = SocketTransform.GetRotation().Rotator(); 
+
+	const FVector& SocketForwardVector = UKismetMathLibrary::GetForwardVector(SocketRotation); 
+
+	UProjectileMovementComponent* ProjectileComp = SpearProjectile->GetProjectileComp();
+	ProjectileComp->SetVelocityInLocalSpace(SocketForwardVector * 3000.f);
+	ProjectileComp->Activate(true);
+	SetActorEnableCollision(true);
 }
