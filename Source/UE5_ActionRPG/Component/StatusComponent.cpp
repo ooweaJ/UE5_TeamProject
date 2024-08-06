@@ -7,18 +7,19 @@ UStatusComponent::UStatusComponent()
 
 }
 
-
 void UStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Health = MaxHealth;
+
 }
 
 void UStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	StatusRegen(HP);
+	StatusRegen(MP);
+	StatusRegen(SP);
 }
 
 void UStatusComponent::SetSpeed(EWalkSpeedTpye InType)
@@ -28,16 +29,22 @@ void UStatusComponent::SetSpeed(EWalkSpeedTpye InType)
 		movement->MaxWalkSpeed = Speed[(int32)InType];
 }
 
-void UStatusComponent::IncreaseHealth(float InAmount)
+void UStatusComponent::StatusModify(UPARAM(ref) FStatus& Status, float InAmount)
 {
-	Health += InAmount;
-	Health = FMath::Clamp(Health, 0.f, MaxHealth);
+	Status.Current = FMath::Clamp(Status.Current+InAmount, 0.f, Status.Max);
 }
 
-void UStatusComponent::DecreaseHealth(float InAmount)
+float UStatusComponent::StatusPersent(const FStatus& Status)
 {
-	Health -= InAmount;
-	Health = FMath::Clamp(Health, 0.f, MaxHealth);
+	return Status.Current / Status.Max;
+}
+
+void UStatusComponent::StatusRegen(FStatus& Status)
+{
+	if (Status.bRegen)
+	{
+		Status.Current = FMath::Clamp(Status.Current + (Status.Regen*GetWorld()->GetDeltaSeconds()), 0.f, Status.Max);
+	}
 }
 
 void UStatusComponent::SetDamage(float InAmount)
