@@ -41,14 +41,19 @@ void UStateComponent::SetHittedMode()
 	ChangeType(EStateType::Hitted);
 }
 
+void UStateComponent::SetEvadeMode()
+{
+	ChangeType(EStateType::Evade);
+}
+
+void UStateComponent::SetStepBackMode()
+{
+	ChangeType(EStateType::StepBack);
+}
+
 void UStateComponent::SetDeadMode()
 {
 	ChangeType(EStateType::Dead);
-}
-
-void UStateComponent::SetDodgeMode()
-{
-	ChangeType(EStateType::Dodge);
 }
 
 void UStateComponent::SetOnOrient()
