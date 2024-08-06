@@ -37,13 +37,13 @@ public:
 	UMontageComponent();
 
 	void PlayKnockBack();
-	void PlayAvoid(FName SlotName);
+	void PlayAvoid();
 	void PlayRoll();
 	void PlayHit();
 	void PlayStun();
 
 private:
-	void PlayAnimMontage(FName Key, FName SlotName = "");
+	void PlayAnimMontage(FName Key);
 
 private:
 	UPROPERTY(EditAnywhere)

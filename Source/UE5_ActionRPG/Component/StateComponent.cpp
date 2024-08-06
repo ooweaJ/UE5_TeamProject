@@ -56,11 +56,6 @@ void UStateComponent::SetDeadMode()
 	ChangeType(EStateType::Dead);
 }
 
-void UStateComponent::SetDodgeMode()
-{
-	ChangeType(EStateType::Dodge);
-}
-
 void UStateComponent::SetOnOrient()
 {
 	OwnerCharacter->bUseControllerRotationYaw = false;
