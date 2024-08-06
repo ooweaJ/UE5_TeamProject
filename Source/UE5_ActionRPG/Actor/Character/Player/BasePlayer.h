@@ -36,6 +36,11 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastOnDefaultAction();
 	void MulticastOnDefaultAction_Implementation();
+
+	UFUNCTION(BlueprintCallable)
+	void LockOn();
+	
+	void TickLockOn();
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;
@@ -56,7 +61,7 @@ public:
 	float WalkingDirectionAngle;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool bLockOn;
+	bool bLockOn = false;
 	
 	UPROPERTY(BlueprintReadWrite)
 	bool bEquipState;
@@ -69,4 +74,20 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	float UpperWeight;
+
+	UPROPERTY(BlueprintReadWrite)
+	AActor* TargetActor = nullptr;
+
+	UPROPERTY(BlueprintReadWrite)
+	float LockOnCameraArmLength = 300.0f;
+	float LockOnRadius = 900;
+
+	UPROPERTY(BlueprintReadWrite)
+	float TESTNum = 0;
+
+	bool Condition = true;
+	
+	FVector ArmPos;
+	FVector ActorPos;
+
 };
