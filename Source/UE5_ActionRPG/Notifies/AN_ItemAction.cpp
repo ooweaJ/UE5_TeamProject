@@ -17,6 +17,6 @@ void UAN_ItemAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase*
 	if (Equip == nullptr) return;
 	if (AItem* Item = Cast<AItem>(Equip->GetCurrentItem()))
 	{
-		Item->ItemAction();
+		Item->OnItemAction(Num);
 	}
 }

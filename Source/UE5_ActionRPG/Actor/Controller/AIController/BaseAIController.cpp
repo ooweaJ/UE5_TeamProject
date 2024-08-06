@@ -97,7 +97,8 @@ void ABaseAIController::SetTargetKey(ACharacter* InCharacter)
 
 void ABaseAIController::OnMeleeAttack()
 {
-	OwnerAI->OnMelee();
+	uint32 num = FMath::RandRange(1, 2);
+	OwnerAI->OnMelee(num);
 }
 
 void ABaseAIController::OnSkill(uint32 Num)

@@ -89,3 +89,17 @@ void ABaseWeapon::ItemAction()
 		Data->bCanMove ? OwnerStatus->SetMove() : OwnerStatus->SetStop();
 	}
 }
+
+void ABaseWeapon::ItemAction2()
+{
+	if (!bSucceed) return;
+	bSucceed = false;
+	OwnerCharacter->StopAnimMontage();
+	ComboCount++;
+
+	if (FActionData* Data = GetDefaultAction2(ComboCount))
+	{
+		OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
+		Data->bCanMove ? OwnerStatus->SetMove() : OwnerStatus->SetStop();
+	}
+}

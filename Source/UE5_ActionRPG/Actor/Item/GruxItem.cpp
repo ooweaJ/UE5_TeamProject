@@ -1,6 +1,8 @@
 #include "Actor/Item/GruxItem.h"
 #include "GameFramework/Character.h"
 #include "Component/StateComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Actor/Character/AI/Grux.h"
 
 AGruxItem::AGruxItem()
 {
@@ -11,7 +13,11 @@ AGruxItem::AGruxItem()
 void AGruxItem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (AGrux* grux = Cast<AGrux>(GetOwner()))
+	{
+		Grux =  grux;
+	}
 }
 
 void AGruxItem::Tick(float DeltaTime)
@@ -22,15 +28,24 @@ void AGruxItem::Tick(float DeltaTime)
 
 void AGruxItem::OnDefaultAction()
 {
-	if (!OwnerState) return;
-	if (!OwnerState->IsIdleMode())return;
 	Super::OnDefaultAction();
-	OwnerState->SetActionMode();
 }
 
 void AGruxItem::OnDefaultAction2()
 {
-	Super::OnDefaultAction2();
+	if (bCanCombo == true)
+	{
+		bCanCombo = false;
+		bSucceed = true;
+
+		return;
+	}
+	if (!OwnerState->IsIdleMode()) return;
+
+	FActionData* Data = GetDefaultAction2();
+	if (!Data) return;
+
+	OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
 	OwnerState->SetActionMode();
 }
 
@@ -43,8 +58,11 @@ void AGruxItem::OnDefaultAction3()
 void AGruxItem::OnSkillAction()
 {
 	if (!OwnerState) return;
-	Super::OnSkillAction();
-	OwnerState->SetActionMode();
+	if (UCharacterMovementComponent* Movement = OwnerCharacter->GetCharacterMovement())
+	{
+		Movement->SetMovementMode(EMovementMode::MOVE_Flying);
+		Super::OnSkillAction();
+	}
 }
 
 void AGruxItem::OnSkillAction2()
@@ -97,5 +115,10 @@ void AGruxItem::OffSkillAction3()
 
 void AGruxItem::OffUltimateAction()
 {
+}
+
+void AGruxItem::OnItemSkillAction()
+{
+	Grux->OnFlySkill();
 }
 

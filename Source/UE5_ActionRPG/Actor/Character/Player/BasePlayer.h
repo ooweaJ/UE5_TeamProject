@@ -28,7 +28,8 @@ public:
 	void OnMouseR();
 	void OffMouseL();
 	void OffMouseR();
-
+	void OnShift();
+	void OffShift();
 	UFUNCTION(Server, Reliable)
 	void ServerOnMouseL();
 	void ServerOnMouseL_Implementation();

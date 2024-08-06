@@ -30,7 +30,7 @@ public:
 	FORCEINLINE bool IsActionMode() { return Type == EStateType::Action; }
 	FORCEINLINE bool IsHittedMode() { return Type == EStateType::Hitted; }
 	FORCEINLINE bool IsDeadMode() { return Type == EStateType::Dead; }
-	
+	bool IsCanCombo();
 
 public:
 	void SetIdleMode();

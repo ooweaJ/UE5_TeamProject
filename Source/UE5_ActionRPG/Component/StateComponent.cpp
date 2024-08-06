@@ -1,6 +1,8 @@
 #include "StateComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Component/EquipComponent.h"
+#include "Actor/Item/Weapon/BaseWeapon.h"
 
 UStateComponent::UStateComponent()
 {
@@ -63,4 +65,15 @@ void UStateComponent::ChangeType(EStateType InNewType)
 {
 	EStateType prevType = Type;
 	Type = InNewType;
+}
+
+bool UStateComponent::IsCanCombo()
+{
+	UEquipComponent* equip = OwnerCharacter->GetComponentByClass<UEquipComponent>();
+	if (!equip) return false;
+
+	ABaseWeapon* weapon = Cast<ABaseWeapon>(equip->GetCurrentItem());
+	if (!weapon) return false;
+
+	return weapon->IsCanCombo();
 }
