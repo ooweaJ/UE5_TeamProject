@@ -183,16 +183,16 @@ void ABasePlayer::TickLockOn()
 {
 	ArmPos = SpringArm->GetComponentLocation();
 	ActorPos = GetActorLocation();
-	if (bLockOn)
+	if (bLockOn && TargetActor)
 	{
-		FRotator LookRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation() * FVector(1, 1, 0), TargetActor->GetActorLocation() * FVector(1, 1, 0));
-		SetActorRotation(LookRot);
-		// SpringArm Set Location
-		SpringArm->SetWorldLocation(FMath::Lerp(ArmPos, ActorPos
-			, 1.35f * this->GetWorld()->GetDeltaSeconds()));
-		Camera->SetWorldLocation(ArmPos + (LookRot.Vector() * LockOnCameraArmLength * -1.0f) + FVector(0, 0, 90));
-		Camera->SetWorldRotation(LookRot);
-		GetController()->K2_SetActorRotation(LookRot,false);
+			FRotator LookRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation() * FVector(1, 1, 0), TargetActor->GetActorLocation() * FVector(1, 1, 0));
+			SetActorRotation(LookRot);
+			// SpringArm Set Location
+			SpringArm->SetWorldLocation(FMath::Lerp(ArmPos, ActorPos
+				, 1.35f * this->GetWorld()->GetDeltaSeconds()));
+			Camera->SetWorldLocation(ArmPos + (LookRot.Vector() * LockOnCameraArmLength * -1.0f) + FVector(0, 0, 90));
+			Camera->SetWorldRotation(LookRot);
+			GetController()->K2_SetActorRotation(LookRot, false);
 	}
 	else
 	{
