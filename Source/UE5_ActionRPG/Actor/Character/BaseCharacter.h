@@ -29,8 +29,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
-
-	class UStatusComponent* GetStatusComponent() const;
 	
 	void EndAction();
 	void HitPlayMontage(TSubclassOf<UDamageType> InDamageType);
@@ -43,9 +41,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStateComponent* State;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStatusComponent* StatusComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UEquipComponent* Equip;

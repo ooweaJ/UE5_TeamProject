@@ -94,7 +94,3 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	return 0;
 }
 
-UStatusComponent* ABaseCharacter::GetStatusComponent() const
-{
-	return StatusComponent;
-}
