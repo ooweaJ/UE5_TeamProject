@@ -23,7 +23,6 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 }
 
-
 void UStateComponent::SetIdleMode()
 {
 	ChangeType(EStateType::Idle);
@@ -42,6 +41,16 @@ void UStateComponent::SetActionMode()
 void UStateComponent::SetHittedMode()
 {
 	ChangeType(EStateType::Hitted);
+}
+
+void UStateComponent::SetEvadeMode()
+{
+	ChangeType(EStateType::Evade);
+}
+
+void UStateComponent::SetStepBackMode()
+{
+	ChangeType(EStateType::StepBack);
 }
 
 void UStateComponent::SetDeadMode()

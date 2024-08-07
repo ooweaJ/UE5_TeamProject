@@ -20,7 +20,6 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 }
 
-
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
@@ -94,9 +93,4 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
 
 	return DamageAmount;
-}
-
-UStatusComponent* ABaseCharacter::GetStatusComponent() const
-{
-	return StatusComponent;
 }

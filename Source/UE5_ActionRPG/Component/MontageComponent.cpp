@@ -34,7 +34,7 @@ void UMontageComponent::PlayStun()
 void UMontageComponent::PlayAnimMontage(FName Key)
 {
 	ACharacter* character = Cast<ACharacter>(GetOwner());
-	FMontageData* data = MotageData->FindRow<FMontageData>(Key, "");
+	FMontageData* data = MontageData->FindRow<FMontageData>(Key, "");
 	if (!data) return ;
 
 	UStateComponent* state = character->GetComponentByClass<UStateComponent>();

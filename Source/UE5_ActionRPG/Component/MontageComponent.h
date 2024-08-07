@@ -17,7 +17,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	EStateType Type = EStateType::Action;
-
+	
 	UPROPERTY(EditAnywhere)
 	float PlayRate = 1.f;
 
@@ -47,5 +47,5 @@ private:
 
 private:
 	UPROPERTY(EditAnywhere)
-	UDataTable* MotageData;
+	UDataTable* MontageData;
 };
