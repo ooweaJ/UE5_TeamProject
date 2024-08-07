@@ -3,6 +3,8 @@
 
 #include "Actor/Item/Weapon/SpearProjectile.h"
 #include "Components/BoxComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Actor/Character/AI/AIBaseCharacter.h"
 #include "Kismet/GameplayStatics.h"
@@ -14,12 +16,14 @@ ASpearProjectile::ASpearProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Box Collision
 	{
 		Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 		SetRootComponent(Box);
 		Box->SetBoxExtent(FVector(180., 430., 180.)); 
 	}
 
+	// Skeletal Mesh
 	{
 		SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh")); 
 		SkeletalMesh->SetupAttachment(GetRootComponent()); 
@@ -29,13 +33,25 @@ ASpearProjectile::ASpearProjectile()
 		SkeletalMesh->SetSkeletalMesh(SkeletalAsset.Object); 
 	}
 
+	// Niagara System Component
+	{
+		NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent")); 
+		NiagaraComponent->SetupAttachment(SkeletalMesh); 
+
+		static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraAsset(TEXT("/Script/Niagara.NiagaraSystem'/Game/_dev/Effect/Spear/Niagara/NS_SparkAura.NS_SparkAura'"));
+		ensure(NiagaraAsset.Object); 
+		NiagaraComponent->SetAsset(NiagaraAsset.Object); 
+	}
+
+	// Projectile Movement Component
 	{
 		ProjectileComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-		ProjectileComp->InitialSpeed = 1000.f;
+		ProjectileComp->InitialSpeed = 3000.f;
+		/*ProjectileComp->MaxSpeed = 3000.f;
+		ProjectileComp->bAutoActivate = false;*/
 		ProjectileComp->ProjectileGravityScale = 0.f; 
-		ProjectileComp->bRotationFollowsVelocity = false;
-		ProjectileComp->bShouldBounce = false;
 	}
+
 }
 
 void ASpearProjectile::SetComponentsVisibility(bool bVisible)
@@ -56,7 +72,8 @@ void ASpearProjectile::BeginPlay()
 {
 	Super::BeginPlay(); 
 
-	Box->OnComponentHit.AddDynamic(this, &ASpearProjectile::OnHit); 
+	Box->OnComponentHit.AddDynamic(this, &ASpearProjectile::OnHit);
+
 }
 
 void ASpearProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -71,5 +88,3 @@ void ASpearProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 		
 	}
 }
-
-

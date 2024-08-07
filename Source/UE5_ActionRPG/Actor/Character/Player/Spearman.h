@@ -9,6 +9,7 @@
 class USceneCaptureComponent2D; 
 class ASpearProjectile; 
 class ASpearWeapon;
+class UCameraComponent; 
 
 UCLASS()
 class UE5_ACTIONRPG_API ASpearman : public ABasePlayer
@@ -21,6 +22,7 @@ public:
 public:
 	ASpearProjectile* GetSpearProjectile() const { return SpearProjectile; }
 	ASpearWeapon* GetSpearWeapon() const;
+	UCameraComponent* GetCamera() const { return Camera; }
 
 	void ThrowSpear();
 

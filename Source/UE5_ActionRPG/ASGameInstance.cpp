@@ -5,6 +5,7 @@
 #include "UI/UI_ServerMenu.h"
 #include "UI/MenuWidget.h"
 #include "Actor/Character/Player/BasePlayer.h"
+#include "Actor/Character/Player/Spearman.h"
 
 const static FName SESSION_NAME = TEXT("GameSession");
 const static FName SEVER_NAME_SETTINGS_KEY = TEXT("ServerName");
@@ -26,7 +27,7 @@ UASGameInstance::UASGameInstance(const FObjectInitializer& ObjectInitializer)
 	static ConstructorHelpers::FClassFinder<ABasePlayer> WarriorClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Warrior/BP_Warrior.BP_Warrior_C'"));
 	static ConstructorHelpers::FClassFinder<ABasePlayer> AssassinClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Assassin/BP_Assassin.BP_Assassin_C'"));
 	static ConstructorHelpers::FClassFinder<ABasePlayer> KatanaClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Katana/BP_Katana.BP_Katana_C'"));
-	static ConstructorHelpers::FClassFinder<ABasePlayer> SpearmanClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Spear/BP_Spear.BP_Spear_C'"));
+	// static ConstructorHelpers::FClassFinder<ABasePlayer> SpearmanClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Spear/BP_Spear.BP_Spear_C'"));
 
 	if (WarriorClass.Succeeded())
 	{
@@ -43,10 +44,12 @@ UASGameInstance::UASGameInstance(const FObjectInitializer& ObjectInitializer)
 		CharacterClassMap.Add(ECharacterClass::Katana, KatanaClass.Class);
 	}
 
-	if (SpearmanClass.Succeeded())
+	/*if (SpearmanClass.Succeeded())
 	{
 		CharacterClassMap.Add(ECharacterClass::Spearman, SpearmanClass.Class);
-	}
+	}*/
+
+	CharacterClassMap.Add(ECharacterClass::Spearman, ASpearman::StaticClass());
 
 }
 

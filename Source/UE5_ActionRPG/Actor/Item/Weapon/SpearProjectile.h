@@ -6,10 +6,12 @@
 #include "GameFramework/Actor.h"
 #include "SpearProjectile.generated.h"
 
-
 class UBoxComponent;
 class USkeletalMeshComponent; 
+class UNiagaraComponent;
+class UNiagaraSystem; 
 class UProjectileMovementComponent;
+
 
 UCLASS()
 class UE5_ACTIONRPG_API ASpearProjectile : public AActor
@@ -25,13 +27,13 @@ public:
 
 	UProjectileMovementComponent* GetProjectileComp() const { return ProjectileComp; }
 
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 protected:
 	virtual void BeginPlay() override; 
 
 private:
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
 	UPROPERTY()
 	float SpearThrowingDamage = 10.f; 
 protected:
@@ -40,6 +42,12 @@ protected:
 
 	UPROPERTY()
 	USkeletalMeshComponent* SkeletalMesh; 
+
+	UPROPERTY()
+	UNiagaraComponent* NiagaraComponent; 
+
+	UPROPERTY()
+	UNiagaraSystem* NiagaraSystem; 
 
 	UPROPERTY(EditAnywhere)
 	UProjectileMovementComponent* ProjectileComp;

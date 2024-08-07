@@ -55,6 +55,7 @@ void ASpearWeapon::OnSkillAction2()
 			FActionData* Data = GetSkillAction(1);
 			if (!Data) { return; }
 
+
 			SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.25f);
 			OwnerState->SetActionMode();
 		}

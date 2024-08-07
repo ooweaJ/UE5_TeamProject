@@ -10,6 +10,7 @@
 #include "Actor/Item/Weapon/SpearWeapon.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Camera/CameraComponent.h"
 
 ASpearman::ASpearman(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -76,14 +77,12 @@ void ASpearman::SetupSpearProjectile()
 	FActorSpawnParameters SpawnParams; 
 	SpawnParams.Owner = this; 
 	
-
 	FName SocketName = TEXT("Hand_Spear_R"); 
 	const FTransform& SocketTransform = GetMesh()->GetSocketTransform(SocketName, ERelativeTransformSpace::RTS_ParentBoneSpace);
 	const FVector& SocketLocation = SocketTransform.GetLocation(); 
-	const FRotator& SocketRotation = SocketTransform.GetRotation().Rotator(); 
-
+	
 	SpearProjectile = GetWorld()->SpawnActor<ASpearProjectile>(SocketLocation, GetControlRotation(), SpawnParams);
-	SpearProjectile->SetActorEnableCollision(false); 
+	SpearProjectile->SetActorEnableCollision(false);
 
 	UProjectileMovementComponent* ProjectileMovement = SpearProjectile->FindComponentByClass<UProjectileMovementComponent>();
 	if (ProjectileMovement)
@@ -92,7 +91,7 @@ void ASpearman::SetupSpearProjectile()
 	}
 
 	SpearProjectile->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
-	SpearProjectile->SetComponentsVisibility(false); 
+	SpearProjectile->SetComponentsVisibility(false);
 }
 
 void ASpearman::ThrowSpear()
@@ -101,13 +100,12 @@ void ASpearman::ThrowSpear()
 
 	FName SocketName = TEXT("Hand_Spear_R");
 
-	const FTransform& SocketTransform = GetMesh()->GetSocketTransform(SocketName, ERelativeTransformSpace::RTS_ParentBoneSpace); 
-	const FRotator& SocketRotation = SocketTransform.GetRotation().Rotator(); 
+	const FRotator& SpearControlRotation = GetController()->GetControlRotation();
+	const FVector& SpearControlVector = SpearControlRotation.Vector(); 
 
-	const FVector& SocketForwardVector = UKismetMathLibrary::GetForwardVector(SocketRotation); 
-
+	SpearProjectile->SetActorRotation(SpearControlRotation - FRotator(0., 90., 0.)); 
 	UProjectileMovementComponent* ProjectileComp = SpearProjectile->GetProjectileComp();
-	ProjectileComp->SetVelocityInLocalSpace(SocketForwardVector * 3000.f);
+	ProjectileComp->Velocity = SpearControlVector * 1500.f;
 	ProjectileComp->Activate(true);
-	SetActorEnableCollision(true);
+	SpearProjectile->SetActorEnableCollision(true);
 }
