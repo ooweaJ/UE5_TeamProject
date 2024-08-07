@@ -63,8 +63,6 @@ public:
 	void OnItemAction(int32 Num);
 
 	void MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate);
-	virtual void OnItemSkillAction();
-	virtual void OffItemSkillAction();
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;
