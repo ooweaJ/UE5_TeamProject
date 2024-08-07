@@ -34,6 +34,7 @@ public:
 
 public:
 	virtual FActionData* GetDefaultAction(uint32 Num = 1);
+	virtual FActionData* GetDefaultAction2(uint32 Num = 1);
 	virtual FActionData* GetSkillAction(uint32 Num = 1);
 	virtual FActionData* GetUltimateAction();
 
@@ -57,6 +58,13 @@ public:
 
 	virtual void EndAction();
 	virtual void ItemAction();
+	virtual void ItemAction2();
+	virtual void OnItemSkillAction();
+	virtual void OffItemSkillAction();
+
+	void OnItemAction(int32 Num);
+
+	void MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate);
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;

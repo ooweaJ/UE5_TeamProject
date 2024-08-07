@@ -85,6 +85,19 @@ FActionData* AItem::GetDefaultAction(uint32 Num)
 	return nullptr;
 }
 
+FActionData* AItem::GetDefaultAction2(uint32 Num)
+{
+	FGameplayTag TargetTag = FGameplayTag::RequestGameplayTag(FName("Ability.Default2." + FString::FromInt(Num)));
+
+	if (FActionData* FoundData = ActionTagMap.Find(TargetTag))
+	{
+		CurrentData = FoundData;
+		return FoundData;
+	}
+
+	return nullptr;
+}
+
 FActionData* AItem::GetSkillAction(uint32 Num)
 {
 	FGameplayTag TargetTag = FGameplayTag::RequestGameplayTag(FName("Ability.Skill." + FString::FromInt(Num)));
@@ -204,9 +217,46 @@ void AItem::OffUltimateAction()
 
 void AItem::EndAction()
 {
-
+	
 }
 
 void AItem::ItemAction()
 {
+}
+
+void AItem::ItemAction2()
+{
+}
+
+void AItem::OnItemSkillAction()
+{
+}
+
+void AItem::OffItemSkillAction()
+{
+}
+
+void AItem::OnItemAction(int32 Num)
+{
+	switch (Num)
+	{
+		case 1:
+		{
+			ItemAction();
+			break;
+		}
+		case 2:
+		{
+			ItemAction2();
+			break;
+		}
+	}
+}
+
+void AItem::MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate)
+{
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_SetPlayRate(CurrentData->AnimMontage, PlayRate);
+	}
 }

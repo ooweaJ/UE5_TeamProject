@@ -40,11 +40,14 @@ void ABasePlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InPutDataConfig->Move, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Look, ETriggerEvent::Triggered, this, &ThisClass::OnLookMouse);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Jump, ETriggerEvent::Started, this, &ThisClass::OnJump);
+			EnhancedInputComponent->BindAction(InPutDataConfig->Space, ETriggerEvent::Started, this, &ThisClass::OnEvade);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Started, this, &ThisClass::OnMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Started, this, &ThisClass::OnMouseR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Completed, this, &ThisClass::OffMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Completed, this, &ThisClass::OffMouseR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Q, ETriggerEvent::Started, this, &ThisClass::OnQ);
+			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Triggered, this, &ThisClass::OnShift);
+			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Completed, this, &ThisClass::OffShift);
 		}
 	}
 }
@@ -90,9 +93,9 @@ void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 		ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y * AngleDampingSpeed);
 		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X * AngleDampingSpeed);
 
-		Player->ForwardInput = ForwardDirection * MovementVector.Y;
-		Player->RightInput = RightDirection * MovementVector.X;
-		Player->MoveDirection = (Player->ForwardInput + Player->RightInput).GetSafeNormal();
+		Player->ForwardInput = MovementVector.Y;
+		Player->RightInput = MovementVector.X;
+		Player->MoveDirection = (ForwardDirection * Player->ForwardInput + RightDirection * Player->RightInput).GetSafeNormal();
 		Player->WalkingDirectionAngle = UKismetAnimationLibrary::CalculateDirection(Player->MoveDirection, Player->GetActorRotation());
 		if (!Player->bLockOn)
 		{
@@ -118,10 +121,20 @@ void ABasePlayerController::OnJump(const FInputActionValue& InputActionValue)
 		Player->Jump();
 }
 
+void ABasePlayerController::OnEvade(const FInputActionValue& InputActionValue)
+{
+	FVector LastInput = Player->GetLastMovementInputVector();
+	if (!Player) return;
+	if (LastInput.IsNearlyZero())
+		Player->OnStepBack();
+	else
+		Player->OnEvade();
+}
+
 void ABasePlayerController::OnMouseL(const FInputActionValue& InputActionValue)
 {
-	if (ABasePlayer* player = Cast<ABasePlayer>(GetPawn()))
-		player->OnMouseL();
+	if (Player)
+		Player->OnMouseL();
 
 }
 
@@ -129,6 +142,18 @@ void ABasePlayerController::OnMouseR(const FInputActionValue& InputActionValue)
 {
 	if(Player)
 		Player->OnMouseR();
+}
+
+void ABasePlayerController::OnShift(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->OnShift();
+}
+
+void ABasePlayerController::OffShift(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->OffShift();
 }
 
 void ABasePlayerController::OffMouseL(const FInputActionValue& InputActionValue)

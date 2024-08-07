@@ -50,7 +50,6 @@ UASGameInstance::UASGameInstance(const FObjectInitializer& ObjectInitializer)
 	}*/
 
 	CharacterClassMap.Add(ECharacterClass::Spearman, ASpearman::StaticClass());
-
 }
 
 void UASGameInstance::Init()
@@ -97,6 +96,7 @@ void UASGameInstance::LoadinGameMenu()
 
 	if (!InGameMenu) { return; }
 	InGameMenu->AddToViewport(); 
+	InGameMenu->Setup();
 }
 
 void UASGameInstance::Host(FString InServerName)
@@ -155,6 +155,11 @@ void UASGameInstance::StartSession()
 		SessionInterface->StartSession(SESSION_NAME);
 }
 
+void UASGameInstance::SetClassName(FString InName)
+{
+	ClassName = InName;
+}
+
 void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSuccess)
 {
 	if (InSuccess == false)
@@ -174,7 +179,8 @@ void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSucces
 
 	UWorld* world = GetWorld();
 	if (world == nullptr) return;
-	world->ServerTravel("/Game/_dev/Level/MainWorld?listen");
+	UGameplayStatics::OpenLevel(world, FName("/Game/_dev/Level/MainWorld?listen"), true, ClassName);
+
 }
 
 void UASGameInstance::OnDestroySessionComplete(FName InSessionName, bool InSuccess)
@@ -233,7 +239,9 @@ void UASGameInstance::OnJoinSessionComplete(FName InSessionName, EOnJoinSessionC
 
 	APlayerController* controller = GetFirstLocalPlayerController();
 	if (controller == nullptr) return;
-	controller->ClientTravel(address, ETravelType::TRAVEL_Absolute);
+
+	UGameplayStatics::OpenLevel(GetWorld(), FName(address), true, ClassName);
+	//controller->ClientTravel(address, ETravelType::TRAVEL_Absolute);
 }
 
 void UASGameInstance::OnNetworkFailure(UWorld* InWorld, UNetDriver* InNetDriver, ENetworkFailure::Type InType, const FString& ErrorSting)

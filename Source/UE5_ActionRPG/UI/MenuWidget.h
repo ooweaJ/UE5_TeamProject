@@ -28,7 +28,7 @@ public:
 	virtual void NativeConstruct() override; 
 
 	void SetButtonNormalStyle(UButton* InButton, FLinearColor InLinearColor = FLinearColor(1.f, 1.f, 1.f, 0.f)); 
-
+	void Setup();
 public:
 	UFUNCTION()
 	void OnConnectButtonClicked();

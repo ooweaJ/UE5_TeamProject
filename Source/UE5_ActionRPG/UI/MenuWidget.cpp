@@ -57,6 +57,24 @@ void UMenuWidget::SetButtonNormalStyle(UButton* InButton, FLinearColor InLinearC
 	InButton->SetStyle(ButtonStyle); 
 }
 
+void UMenuWidget::Setup()
+{
+	AddToViewport();
+	bIsFocusable = true;
+
+	FInputModeUIOnly inputMode;
+	inputMode.SetWidgetToFocus(TakeWidget());
+	inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+
+	UWorld* world = GetWorld();
+	if (world == nullptr) return;
+
+	APlayerController* controller = world->GetFirstPlayerController();
+	if (controller == nullptr) return;
+	controller->SetInputMode(inputMode);
+	controller->bShowMouseCursor = true;
+}
+
 
 void UMenuWidget::OnConnectButtonClicked()
 {

@@ -10,9 +10,26 @@ void LevelTransitionUtils::OpenLevelWithData(UObject* WorldContextObject, const 
 	{
 		if (UASGameInstance* ASGameInstance = Cast<UASGameInstance>(GameInstance))
 		{
-			ASGameInstance->CharacterData = Data; 
+			FString Option;
+			switch (Data.CharacterClassName)
+			{
+			case ECharacterClass::Warrior:
+				Option = "Warrior";
+				break;
+			case ECharacterClass::Assassin:
+				Option = "Assassin";
+				break;
+			case ECharacterClass::Katana:
+				Option = "Katana";
+				break;
+			case ECharacterClass::Spearman:
+				Option = "Spear";
+				break;
+			}
+			FString ClassName(TEXT("Class=") + Option);
+			ASGameInstance->SetClassName(ClassName);
+			UGameplayStatics::OpenLevel(WorldContextObject, FName(*LevelName)); 
 		}
 	}
 
-	UGameplayStatics::OpenLevel(WorldContextObject, FName(*LevelName)); 
 }

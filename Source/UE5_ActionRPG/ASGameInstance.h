@@ -41,11 +41,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	FCharacterData CharacterData; 
 
-	UPROPERTY(EditAnywhere)
-	TMap<ECharacterClass, TSubclassOf<class ABasePlayer>> CharacterClassMap; 
+	//UPROPERTY(EditAnywhere)
+	//TMap<ECharacterClass, TSubclassOf<class ABasePlayer>> CharacterClassMap; 
 
 	UFUNCTION(BlueprintCallable)
 	void LoadinGameMenu();
+
+	void SetClassName(FString InName);
 
 private:
 	void OnCreateSessionComplete(FName InSessionName, bool InSuccess);
@@ -80,4 +82,5 @@ private:
 	class UUI_ServerMenu* MainMenu;
 	class UMenuWidget* InGameMenu; 
 	FString DesiredServerName;
+	FString ClassName;
 };

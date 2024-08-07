@@ -24,7 +24,6 @@ EBTNodeResult::Type UTask_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 	if (!state) return EBTNodeResult::Failed;
 	State = state;
 
-	if (!state->IsIdleMode()) return EBTNodeResult::Failed;
 	controller->OnMeleeAttack();
 
 	return EBTNodeResult::InProgress;
@@ -33,6 +32,14 @@ EBTNodeResult::Type UTask_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 void UTask_MeleeAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	if (State->IsActionMode())
+	{
+		if (State->IsCanCombo())
+		{
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		}
+	}
 
 	if (State->IsIdleMode())
 	{

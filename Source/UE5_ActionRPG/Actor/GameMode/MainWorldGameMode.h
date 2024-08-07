@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Actor/Character/Player/BasePlayer.h"
 #include "MainWorldGameMode.generated.h"
 
 UCLASS()
@@ -14,11 +15,15 @@ public:
 
 public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
-
+	virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
 	uint32 NumberOfPlayers = 0;
+	FString ClassName;
+
+	UPROPERTY(EditAnywhere)
+	TMap<FString, TSubclassOf<ABasePlayer>> ClassMap;
 };

@@ -1,6 +1,8 @@
 #include "StateComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Component/EquipComponent.h"
+#include "Actor/Item/Weapon/BaseWeapon.h"
 
 UStateComponent::UStateComponent()
 {
@@ -21,7 +23,6 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 }
 
-
 void UStateComponent::SetIdleMode()
 {
 	ChangeType(EStateType::Idle);
@@ -40,6 +41,16 @@ void UStateComponent::SetActionMode()
 void UStateComponent::SetHittedMode()
 {
 	ChangeType(EStateType::Hitted);
+}
+
+void UStateComponent::SetEvadeMode()
+{
+	ChangeType(EStateType::Evade);
+}
+
+void UStateComponent::SetStepBackMode()
+{
+	ChangeType(EStateType::StepBack);
 }
 
 void UStateComponent::SetDeadMode()
@@ -63,4 +74,15 @@ void UStateComponent::ChangeType(EStateType InNewType)
 {
 	EStateType prevType = Type;
 	Type = InNewType;
+}
+
+bool UStateComponent::IsCanCombo()
+{
+	UEquipComponent* equip = OwnerCharacter->GetComponentByClass<UEquipComponent>();
+	if (!equip) return false;
+
+	ABaseWeapon* weapon = Cast<ABaseWeapon>(equip->GetCurrentItem());
+	if (!weapon) return false;
+
+	return weapon->IsCanCombo();
 }

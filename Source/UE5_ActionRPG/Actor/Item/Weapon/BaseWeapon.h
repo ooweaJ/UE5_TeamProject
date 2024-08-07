@@ -20,12 +20,14 @@ public:
 	virtual void BeginPlay() override;
 
 	FORCEINLINE void ReSetHitted() { HittedCharacters.Empty(); }
+	FORCEINLINE bool IsCanCombo() { return bCanCombo; }
 
 	UFUNCTION()
-	void OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter);
+	virtual void OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter);
 	virtual void OnDefaultAction();
 	virtual void EndAction();
 	virtual void ItemAction();
+	virtual void ItemAction2();
 public:
 	TArray<class ACharacter*> HittedCharacters;
 	uint32 ComboCount = 1;

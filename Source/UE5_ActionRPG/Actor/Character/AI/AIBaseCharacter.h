@@ -27,11 +27,17 @@ public:
 	virtual void OffSkill();
 	virtual void OffUltimate();
 
+	void TargetRotation();
+	void RotateToTarget();
 public:
 	FORCEINLINE void SetMoveDirection(FVector InDirection) { Direction = InDirection; }
 	FORCEINLINE void SetStrafe(bool InStrafe) { bStrafe = InStrafe; }
+	FORCEINLINE void SetRotate(bool InRotate) { bRotate = InRotate; }
 
-private:
+protected:
+	class ABaseAIController* BaseController;
 	FVector Direction;
 	bool bStrafe = false;
+	bool bRotate = false;
+	FVector TargetLocation;
 };

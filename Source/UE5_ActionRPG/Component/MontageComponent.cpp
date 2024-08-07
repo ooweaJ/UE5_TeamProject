@@ -26,10 +26,15 @@ void UMontageComponent::PlayHit()
 	PlayAnimMontage("Hit");
 }
 
+void UMontageComponent::PlayStun()
+{
+	PlayAnimMontage("Stun");
+}
+
 void UMontageComponent::PlayAnimMontage(FName Key)
 {
 	ACharacter* character = Cast<ACharacter>(GetOwner());
-	FMontageData* data = MotageData->FindRow<FMontageData>(Key, "");
+	FMontageData* data = MontageData->FindRow<FMontageData>(Key, "");
 	if (!data) return ;
 
 	UStateComponent* state = character->GetComponentByClass<UStateComponent>();

@@ -29,6 +29,10 @@ public:
 	void OffMouseL();
 	void OffMouseR();
 	void OnQ(); 
+	void OnShift();
+	void OffShift();
+	void OnEvade();
+	void OnStepBack();
 
 	UFUNCTION(Server, Reliable)
 	void ServerOnMouseL();
@@ -37,6 +41,11 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastOnDefaultAction();
 	void MulticastOnDefaultAction_Implementation();
+
+	UFUNCTION(BlueprintCallable)
+	void LockOn();
+	
+	void TickLockOn();
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;
@@ -45,10 +54,10 @@ public:
 	class UCameraComponent* Camera;
 
 	UPROPERTY(BlueprintReadOnly)
-	FVector ForwardInput;
+	float ForwardInput;
 
 	UPROPERTY(BlueprintReadOnly)
-	FVector RightInput;
+	float RightInput;
 
 	UPROPERTY(BlueprintReadOnly)
 	FVector MoveDirection;
@@ -57,7 +66,7 @@ public:
 	float WalkingDirectionAngle;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool bLockOn;
+	bool bLockOn = false;
 	
 	UPROPERTY(BlueprintReadWrite)
 	bool bEquipState;
@@ -70,4 +79,20 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	float UpperWeight;
+
+	UPROPERTY(BlueprintReadWrite)
+	AActor* TargetActor = nullptr;
+
+	UPROPERTY(BlueprintReadWrite)
+	float LockOnCameraArmLength = 300.0f;
+	float LockOnRadius = 900;
+
+	UPROPERTY(BlueprintReadWrite)
+	float TESTNum = 0;
+
+	bool Condition = true;
+	
+	FVector ArmPos;
+	FVector ActorPos;
+
 };
