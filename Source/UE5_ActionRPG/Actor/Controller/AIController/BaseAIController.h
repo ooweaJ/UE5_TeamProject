@@ -30,7 +30,7 @@ public:
 	void SetTargetKey(class ACharacter* InCharacter);
 
 	virtual void OnMeleeAttack();
-	virtual void OnSkill();
+	virtual void OnSkill(uint32 Num);
 	virtual void OnUltimate();
 
 	class ACharacter* GetTarget();
@@ -44,6 +44,8 @@ protected:
 	UFUNCTION()
 	void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
 
+	UFUNCTION()
+	void CooldownSkill();
 protected:
 	UPROPERTY(EditAnywhere)
 	class UBehaviorTree* BTAsset;

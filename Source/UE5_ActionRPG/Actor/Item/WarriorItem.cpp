@@ -2,6 +2,7 @@
 #include "Actor/Character/Player/BasePlayer.h"
 #include "Actor/Character/BaseCharacter.h"
 #include "Engine/DamageEvents.h"
+#include "Actor/Item/DamageType/DefaultDamageType.h"
 
 void AWarriorItem::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
 {
@@ -12,8 +13,9 @@ void AWarriorItem::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter
 		 {
 			 if (Target->GetParrying())
 			 {
+				 if (!DDT) return;
 				 FDamageEvent de;
-				 de.DamageTypeClass = CurrentData->DamageType;
+				 de.DamageTypeClass = DDT;
 				 InOtherCharacter->TakeDamage(0, de, InAttacker->GetController(), InCauser);
 			 }
 		 }

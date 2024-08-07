@@ -39,7 +39,7 @@ public:
 	FORCEINLINE bool IsStepBackMode() { return Type == EStateType::StepBack; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE bool IsDeadMode() { return Type == EStateType::Dead; }
-	
+	bool IsCanCombo();
 
 public:
 	void SetIdleMode();

@@ -12,6 +12,9 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction, "Ability.Default.1");
 	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction2, "Ability.Default.2");
 	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction3, "Ability.Default.3");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction2_1, "Ability.Default2.1");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction2_2, "Ability.Default2.2");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_DefaultAction2_3, "Ability.Default2.3");
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Skill, "Ability.Skill.1");
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Skill2, "Ability.Skill.2");
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Skill3, "Ability.Skill.3");

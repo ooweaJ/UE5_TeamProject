@@ -90,6 +90,7 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 	HitPlayMontage(DamageEvent.DamageTypeClass);
 
-	return 0;
-}
+	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
 
+	return DamageAmount;
+}

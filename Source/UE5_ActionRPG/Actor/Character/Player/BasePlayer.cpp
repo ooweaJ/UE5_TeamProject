@@ -117,6 +117,22 @@ void ABasePlayer::OffMouseR()
 	}
 }
 
+void ABasePlayer::OnShift()
+{
+	if (Status)
+	{
+		Status->SetSpeed(EWalkSpeedTpye::Run);
+	}
+}
+
+void ABasePlayer::OffShift()
+{
+	if (Status)
+	{
+		Status->SetSpeed(EWalkSpeedTpye::Walk);
+	}
+}
+
 void ABasePlayer::OnEvade()
 {
 	if (!State->IsIdleMode()) return;

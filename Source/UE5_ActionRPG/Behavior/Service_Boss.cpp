@@ -2,6 +2,7 @@
 #include "Actor/Controller/AIController/BaseAIController.h"
 #include "Actor/Character/AI/AIBaseCharacter.h"
 #include "Component/BehaviorComponent.h"
+#include "Component/StateComponent.h"
 
 UService_Boss::UService_Boss()
 {
@@ -23,8 +24,6 @@ void UService_Boss::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 	ACharacter* Target = behavior->GetTarget();
 
 	float distance = aiPawn->GetDistanceTo(Target);
-
-
 
 	if (Target == nullptr)
 	{

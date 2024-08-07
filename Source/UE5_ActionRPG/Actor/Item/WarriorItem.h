@@ -32,4 +32,7 @@ public:
 	virtual void OffItemSkillAction();
 
 	bool Parry;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UDefaultDamageType> DDT;
 };

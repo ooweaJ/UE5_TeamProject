@@ -3,6 +3,8 @@
 #include "Component/StateComponent.h"
 #include "Component/EquipComponent.h"
 #include "Actor/Item/Item.h"
+#include "Actor/Controller/AIController/BaseAIController.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
  : Super(ObjectInitializer)
@@ -15,6 +17,11 @@ AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
 void AAIBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (ABaseAIController* controller = Cast<ABaseAIController>(GetController()))
+	{
+		BaseController = controller;
+	}
 }
 
 void AAIBaseCharacter::Tick(float DeltaTime)
@@ -31,6 +38,11 @@ void AAIBaseCharacter::Tick(float DeltaTime)
 			}
 		}
 	}
+
+	if (bRotate)
+	{
+		TargetRotation();
+	}
 }
 
 void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -42,7 +54,6 @@ void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void AAIBaseCharacter::OnMelee(uint32 Num)
 {
 	if (!State && !Equip) return;
-	if (!State->IsIdleMode()) return;
 	
 	if (AItem* Item = Equip->GetCurrentItem())
 	{
@@ -112,4 +123,30 @@ void AAIBaseCharacter::OffSkill()
 
 void AAIBaseCharacter::OffUltimate()
 {
+}
+
+void AAIBaseCharacter::TargetRotation()
+{
+	if (!BaseController) return;
+	ACharacter* Target = BaseController->GetTarget();
+	if (!Target) return;
+
+	TargetLocation = Target->GetActorLocation();
+	RotateToTarget();
+}
+
+void AAIBaseCharacter::RotateToTarget()
+{
+	FVector AILocation = GetActorLocation();
+
+	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(AILocation, TargetLocation);
+	FRotator CurrentRotation = GetActorRotation();
+
+	FQuat CurrentQuat = CurrentRotation.Quaternion();
+	FQuat TargetQuat = FRotator(CurrentRotation.Pitch, TargetRotation.Yaw, CurrentRotation.Roll).Quaternion();
+
+	FQuat NewQuat = FMath::QInterpTo(CurrentQuat, TargetQuat, GetWorld()->GetDeltaSeconds(), 8.f);
+
+	FRotator NewRotation = NewQuat.Rotator();
+	SetActorRotation(NewRotation);
 }
