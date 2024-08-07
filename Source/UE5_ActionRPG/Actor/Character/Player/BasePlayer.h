@@ -28,6 +28,7 @@ public:
 	void OnMouseR();
 	void OffMouseL();
 	void OffMouseR();
+	void OnQ(); 
 	void OnShift();
 	void OffShift();
 	void OnEvade();

@@ -6,15 +6,41 @@
 #include "Actor/Character/Player/BasePlayer.h"
 #include "Spearman.generated.h"
 
-/**
- * 
- */
+class USceneCaptureComponent2D; 
+class ASpearProjectile; 
+class ASpearWeapon;
+class UCameraComponent; 
+
 UCLASS()
 class UE5_ACTIONRPG_API ASpearman : public ABasePlayer
 {
 	GENERATED_BODY()
 
+public:
+	ASpearman(const FObjectInitializer& ObjectInitializer); 
+
+public:
+	ASpearProjectile* GetSpearProjectile() const { return SpearProjectile; }
+	ASpearWeapon* GetSpearWeapon() const;
+	UCameraComponent* GetCamera() const { return Camera; }
+
+	void ThrowSpear();
+
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override; 
+
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	void SetupSpearProjectile(); 
+
+
+protected:
+	UPROPERTY()
+	USceneCaptureComponent2D* SceneCaptureComponent2D = nullptr; 
+
+	UPROPERTY()
+	ASpearProjectile* SpearProjectile = nullptr; 
+
+	bool bCanCombo = false; 
 	
 };

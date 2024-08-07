@@ -82,5 +82,11 @@ UInPutDataConfig::UInPutDataConfig()
 		check(Asset.Succeeded());
 		T = Asset.Object;
 	}
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_Q.IA_Q'") };
+		check(Asset.Succeeded());
+		Q = Asset.Object;
+	}
 }
 

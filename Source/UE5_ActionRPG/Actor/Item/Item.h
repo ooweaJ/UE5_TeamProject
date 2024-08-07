@@ -22,6 +22,8 @@ public:
 	FORCEINLINE void SetOwnerCharacter(ACharacter* InCharacter) { OwnerCharacter = InCharacter; }
 	FORCEINLINE class AAttachment* GetAttachment() { return Attachment; }
 	FORCEINLINE FActionData* GetCurrentData() { return CurrentData; }
+	FORCEINLINE class ACharacter* GetOwnerCharacter() { return OwnerCharacter; }
+
 
 protected:
 	virtual void BeginPlay() override;

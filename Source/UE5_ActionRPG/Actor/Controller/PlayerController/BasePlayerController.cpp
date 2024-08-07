@@ -45,6 +45,7 @@ void ABasePlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Started, this, &ThisClass::OnMouseR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Completed, this, &ThisClass::OffMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Completed, this, &ThisClass::OffMouseR);
+			EnhancedInputComponent->BindAction(InPutDataConfig->Q, ETriggerEvent::Started, this, &ThisClass::OnQ);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Triggered, this, &ThisClass::OnShift);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Completed, this, &ThisClass::OffShift);
 		}
@@ -165,4 +166,10 @@ void ABasePlayerController::OffMouseR(const FInputActionValue& InputActionValue)
 {
 	if (Player)
 		Player->OffMouseR();
+}
+
+void ABasePlayerController::OnQ(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->OnQ(); 
 }

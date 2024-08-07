@@ -30,6 +30,7 @@ protected:
 	void OffShift(const FInputActionValue& InputActionValue);
 	void OffMouseL(const FInputActionValue& InputActionValue);
 	void OffMouseR(const FInputActionValue& InputActionValue);
+	void OnQ(const FInputActionValue& InputActionValue); 
 	
 private:
 	class ABasePlayer* Player;

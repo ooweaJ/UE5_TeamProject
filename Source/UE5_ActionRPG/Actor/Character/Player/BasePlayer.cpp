@@ -117,6 +117,14 @@ void ABasePlayer::OffMouseR()
 	}
 }
 
+void ABasePlayer::OnQ()
+{
+	if (AItem* item = Equip->GetCurrentItem())
+	{
+		item->OnSkillAction2();
+	}
+}
+
 void ABasePlayer::OnShift()
 {
 	if (Status)
