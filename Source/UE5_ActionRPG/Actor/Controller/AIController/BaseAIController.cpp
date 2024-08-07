@@ -36,7 +36,7 @@ ABaseAIController::ABaseAIController()
 void ABaseAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 15.f, false);
+	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 20.f, false);
 }
 
 void ABaseAIController::Tick(float DeltaTime)

@@ -4,6 +4,8 @@
 #include "Actor/Character/AI/AIBaseCharacter.h"
 #include "Grux.generated.h"
 
+struct FActionData;
+
 UCLASS()
 class UE5_ACTIONRPG_API AGrux : public AAIBaseCharacter
 {
@@ -15,20 +17,25 @@ protected:
 public:
 	virtual void Tick(float DeltaTime);
 
-	void OnFlySkill();
+	void OnFlySkill(FActionData* InData);
 
 	UFUNCTION()
 	void SpawnActorsAround(float Distance, int32 NumberOfActors);
 
-	FVector TarGetLocation;
+	UFUNCTION()
+	void FinishFlySkill();
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class AGruxMeteor> ActorToSpawn;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* FlyAttack;
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bFly = false;
 
 	FTimerHandle TimerHandle;
 	FTimerDelegate TimerDel;
-
+	FVector TarGetLocation;
+	FActionData* Data;
 };

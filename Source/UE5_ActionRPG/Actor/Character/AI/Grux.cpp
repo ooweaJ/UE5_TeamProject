@@ -8,7 +8,7 @@
 void AGrux::BeginPlay()
 {
     Super::BeginPlay();
-    TimerDel.BindUFunction(this, FName("SpawnActorsAround"), 500.f, int32(8));
+    TimerDel.BindUFunction(this, FName("SpawnActorsAround"), 500.f, int32(6));
 
 }
 
@@ -16,12 +16,16 @@ void AGrux::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    FVector location = UKismetMathLibrary::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, 2.f);
-    SetActorLocation(location);
+    if (bFly)
+    {
+        FVector location = UKismetMathLibrary::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, 2.f);
+        SetActorLocation(location);
+    }
 }
 
-void AGrux::OnFlySkill()
+void AGrux::OnFlySkill(FActionData* InData)
 {
+    Data = InData;
     FVector CurrentLocation = GetActorLocation();
 
     // 캐릭터의 뒷대각 위 방향 벡터를 계산합니다.
@@ -41,14 +45,22 @@ void AGrux::OnFlySkill()
     GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 3.0f, false);
 }
 
+void AGrux::FinishFlySkill()
+{
+    if (FlyAttack)
+    {
+        bFly = false;
+        GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+        PlayAnimMontage(FlyAttack);
+    }
+}
+
 void AGrux::SpawnActorsAround(float Distance, int32 NumberOfActors)
 {
-    GetCharacterMovement()->Velocity = FVector::ZeroVector;
-
     FVector Origin = GetActorLocation();
     FRotator Rotation = GetActorRotation();
 
-    for (int32 i = 0; i < NumberOfActors; ++i)
+    for (int32 i = 1; i <= NumberOfActors; ++i)
     {
         float Angle = i * (360.0f / NumberOfActors);
         float Radian = FMath::DegreesToRadians(Angle);
@@ -63,7 +75,10 @@ void AGrux::SpawnActorsAround(float Distance, int32 NumberOfActors)
         {
             AGruxMeteor* Meteor = GetWorld()->SpawnActor<AGruxMeteor>(ActorToSpawn, SpawnLocation, SpawnRotation);
             Meteor->SetTarget(BaseController->GetTarget());
+            Meteor->SetOwner(this);
+            Meteor->SetData(Data);
             Meteor->OnTarget(i);
         }
     }
+    UKismetSystemLibrary::K2_SetTimer(this, "FinishFlySkill", 4.f, false);
 }

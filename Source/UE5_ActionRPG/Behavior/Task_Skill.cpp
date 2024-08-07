@@ -27,6 +27,7 @@ EBTNodeResult::Type UTask_Skill::ExecuteTask(UBehaviorTreeComponent& OwnerComp, 
 
 	if (!state->IsIdleMode()) return EBTNodeResult::Failed;
 	controller->OnSkill(AbilityNum);
+	controller->K2_SetFocus(controller->GetTarget());
 
 	return EBTNodeResult::InProgress;
 }
@@ -37,6 +38,11 @@ void UTask_Skill::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory,
 
 	if (State->IsIdleMode())
 	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		ABaseAIController* controller = Cast<ABaseAIController>(OwnerComp.GetOwner());
+		if (controller)
+		{
+			controller->K2_ClearFocus();
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		}
 	}
 }
