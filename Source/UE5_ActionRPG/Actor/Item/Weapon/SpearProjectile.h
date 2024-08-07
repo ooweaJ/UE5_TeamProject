@@ -44,10 +44,10 @@ protected:
 	USkeletalMeshComponent* SkeletalMesh; 
 
 	UPROPERTY()
-	UNiagaraComponent* NiagaraComponent; 
+	UNiagaraComponent* NiagaraAura; 
 
 	UPROPERTY()
-	UNiagaraSystem* NiagaraSystem; 
+	UNiagaraComponent* NiagaraSpark;
 
 	UPROPERTY(EditAnywhere)
 	UProjectileMovementComponent* ProjectileComp;

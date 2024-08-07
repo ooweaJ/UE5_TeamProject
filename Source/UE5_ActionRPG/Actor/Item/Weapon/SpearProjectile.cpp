@@ -21,6 +21,12 @@ ASpearProjectile::ASpearProjectile()
 		Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 		SetRootComponent(Box);
 		Box->SetBoxExtent(FVector(180., 430., 180.)); 
+
+		/*Box->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		Box->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
+		Box->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+		Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);*/
 	}
 
 	// Skeletal Mesh
@@ -33,15 +39,25 @@ ASpearProjectile::ASpearProjectile()
 		SkeletalMesh->SetSkeletalMesh(SkeletalAsset.Object); 
 	}
 
-	// Niagara System Component
+	// Niagara System Component - Aura
 	{
-		NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent")); 
-		NiagaraComponent->SetupAttachment(SkeletalMesh); 
+		NiagaraAura = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraAura")); 
+		NiagaraAura->SetupAttachment(SkeletalMesh); 
 
-		static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraAsset(TEXT("/Script/Niagara.NiagaraSystem'/Game/_dev/Effect/Spear/Niagara/NS_SparkAura.NS_SparkAura'"));
-		ensure(NiagaraAsset.Object); 
-		NiagaraComponent->SetAsset(NiagaraAsset.Object); 
+		static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraAuraAsset(TEXT("/Script/Niagara.NiagaraSystem'/Game/_dev/Effect/Spear/Niagara/NS_SparkAura.NS_SparkAura'"));
+		ensure(NiagaraAuraAsset.Object); 
+		NiagaraAura->SetAsset(NiagaraAuraAsset.Object); 
 	}
+
+	// Niagara System Component - Spark
+	/*{
+		NiagaraSpark = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraSpark"));
+		NiagaraSpark->SetupAttachment(SkeletalMesh);
+
+		static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSparkAsset(TEXT("/Script/Niagara.NiagaraSystem'/Game/_dev/Effect/Spear/Niagara/NS_SpearSpark2.NS_SpearSpark2'"));
+		ensure(NiagaraSparkAsset.Object);
+		NiagaraSpark->SetAsset(NiagaraSparkAsset.Object);
+	}*/
 
 	// Projectile Movement Component
 	{

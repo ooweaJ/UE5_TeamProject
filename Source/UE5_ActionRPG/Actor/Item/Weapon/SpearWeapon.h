@@ -19,4 +19,7 @@ public:
 	
 	virtual void OnSkillAction();
 	virtual void OnSkillAction2();
+
+private:
+	bool bCanThrowSpear = false; 
 };
