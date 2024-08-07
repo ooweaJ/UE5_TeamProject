@@ -6,6 +6,7 @@
 #include "Component/StatusComponent.h"
 #include "Component/StateComponent.h"
 #include "Component/EquipComponent.h"
+#include "Component/MontageComponent.h"
 #include "Actor/Item/Item.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -20,6 +21,7 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationRoll = false;
 		
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate.Yaw = 720;
 	
 
 	{
@@ -144,7 +146,15 @@ void ABasePlayer::OffShift()
 void ABasePlayer::OnEvade()
 {
 	if (!State->IsIdleMode()) return;
-	State->SetEvadeMode();
+	if (bLockOn)
+	{
+		State->SetEvadeMode();
+	}
+	else
+	{
+		State->SetEvadeMode();
+		MontageComponent->PlayAvoid();
+	}
 }
 
 void ABasePlayer::OnStepBack()
