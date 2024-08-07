@@ -41,9 +41,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	FCharacterData CharacterData; 
 
-	//UPROPERTY(EditAnywhere)
-	//TMap<ECharacterClass, TSubclassOf<class ABasePlayer>> CharacterClassMap; 
-
 	UFUNCTION(BlueprintCallable)
 	void LoadinGameMenu();
 

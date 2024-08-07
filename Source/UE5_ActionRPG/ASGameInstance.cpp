@@ -24,32 +24,6 @@ UASGameInstance::UASGameInstance(const FObjectInitializer& ObjectInitializer)
 		InGameMenuClass = MenuClass.Class; 
 	}
 
-	static ConstructorHelpers::FClassFinder<ABasePlayer> WarriorClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Warrior/BP_Warrior.BP_Warrior_C'"));
-	static ConstructorHelpers::FClassFinder<ABasePlayer> AssassinClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Assassin/BP_Assassin.BP_Assassin_C'"));
-	static ConstructorHelpers::FClassFinder<ABasePlayer> KatanaClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Katana/BP_Katana.BP_Katana_C'"));
-	// static ConstructorHelpers::FClassFinder<ABasePlayer> SpearmanClass(TEXT("/Script/Engine.Blueprint'/Game/_dev/Actor/Character/Player/Spear/BP_Spear.BP_Spear_C'"));
-
-	if (WarriorClass.Succeeded())
-	{
-		CharacterClassMap.Add(ECharacterClass::Warrior, WarriorClass.Class); 
-	}
-
-	if (AssassinClass.Succeeded())
-	{
-		CharacterClassMap.Add(ECharacterClass::Assassin, AssassinClass.Class);
-	}
-
-	if (KatanaClass.Succeeded())
-	{
-		CharacterClassMap.Add(ECharacterClass::Katana, KatanaClass.Class);
-	}
-
-	/*if (SpearmanClass.Succeeded())
-	{
-		CharacterClassMap.Add(ECharacterClass::Spearman, SpearmanClass.Class);
-	}*/
-
-	CharacterClassMap.Add(ECharacterClass::Spearman, ASpearman::StaticClass());
 }
 
 void UASGameInstance::Init()
