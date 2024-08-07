@@ -53,34 +53,46 @@ void AGruxMeteor::Activate()
 
 void AGruxMeteor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (ImpactParticle)
-	{
-		FVector location = Hit.Location;
-		FRotator Rotation = Projectile->Velocity.GetSafeNormal().Rotation();
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ImpactParticle, location, Rotation);
+    if (ImpactParticle)
+    {
+        FVector Location = Hit.Location;
+        FRotator Rotation = GetActorForwardVector().Rotation();
 
-		{
-			TArray<FHitResult> HitResults;
-			TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-			ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
-			if(UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), location, location, 300.f, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, HitResults, true))
-			{
-				for (const FHitResult& Hit : HitResults)
-				{
-					AActor* HitActor = Hit.GetActor();
-					if (HitActor->ActorHasTag("Player"))
-					{
-						//Damage
-						float LocalDamage = Data->Power;
-						LocalDamage = LocalDamage * FMath::FRandRange(0.9f, 1.1f);
+        if (HasAuthority())
+        {
+            // 멀티캐스트 RPC로 이펙트 생성
+            MultiCast_SpawnImpactEffect(Location, Rotation);
 
-						FDamageEvent de;
-						de.DamageTypeClass = Data->DamageType;
-						HitActor->TakeDamage(LocalDamage, de, GetOwner()->GetInstigatorController(), this);
-					}
-				}
-			}
-		}
-	}
-	Destroy();
+            // Sphere Trace
+            TArray<FHitResult> HitResults;
+            TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+            ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+            if (UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Location, Location, 300.f, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, HitResults, true))
+            {
+                for (const FHitResult& HitResult : HitResults)
+                {
+                    AActor* HitActor = HitResult.GetActor();
+                    if (HitActor && HitActor->ActorHasTag("Player"))
+                    {
+                        //Damage
+                        float LocalDamage = Data->Power;
+                        LocalDamage = LocalDamage * FMath::FRandRange(0.9f, 1.1f);
+
+                        FDamageEvent de;
+                        de.DamageTypeClass = Data->DamageType;
+                        HitActor->TakeDamage(LocalDamage, de, GetOwner()->GetInstigatorController(), this);
+                    }
+                }
+            }
+        }
+        Destroy();
+    }
+}
+
+void AGruxMeteor::MultiCast_SpawnImpactEffect_Implementation(FVector Location, FRotator Rotation)
+{
+    if (ImpactParticle)
+    {
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ImpactParticle, Location, Rotation);
+    }
 }

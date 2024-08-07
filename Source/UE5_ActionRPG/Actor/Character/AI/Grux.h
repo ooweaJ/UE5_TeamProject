@@ -19,11 +19,15 @@ public:
 
 	void OnFlySkill(FActionData* InData);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	UFUNCTION()
 	void SpawnActorsAround(float Distance, int32 NumberOfActors);
 
-	UFUNCTION()
+	UFUNCTION(Server,Reliable)
 	void FinishFlySkill();
+	UFUNCTION(NetMulticast,Reliable)
+	void MultiFinishFlySkill();
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class AGruxMeteor> ActorToSpawn;
@@ -31,7 +35,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* FlyAttack;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(Replicated,BlueprintReadOnly)
 	bool bFly = false;
 
 	FTimerHandle TimerHandle;

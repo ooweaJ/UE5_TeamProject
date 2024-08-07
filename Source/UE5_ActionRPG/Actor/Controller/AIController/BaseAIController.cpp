@@ -97,8 +97,15 @@ void ABaseAIController::SetTargetKey(ACharacter* InCharacter)
 
 void ABaseAIController::OnMeleeAttack()
 {
-	uint32 num = FMath::RandRange(1, 2);
-	OwnerAI->OnMelee(num);
+	if (HasAuthority())
+	{
+		uint32 num = FMath::RandRange(1, 2);
+
+		if (AAIBaseCharacter* AI = Cast<AAIBaseCharacter>(GetPawn()))
+		{
+			AI->OnMelee(num);
+		}
+	}
 }
 
 void ABaseAIController::OnSkill(uint32 Num)

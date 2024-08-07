@@ -6,6 +6,7 @@
 #include "Component/StatusComponent.h"
 #include "Component/StateComponent.h"
 #include "Component/EquipComponent.h"
+#include "Component/MontageComponent.h"
 #include "Actor/Item/Item.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -42,6 +43,13 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		SpringArm->TargetArmLength = 300.f;
 		SpringArm->bDoCollisionTest = true;
 		SpringArm->bUsePawnControlRotation = true;
+	}
+	{
+		static ConstructorHelpers::FObjectFinder<UDataTable> Asset(TEXT("/Script/Engine.DataTable'/Game/_dev/Data/DT/Montage/DT_BasePlayerMontage.DT_BasePlayerMontage'"));
+		if (Asset.Succeeded())
+		{
+			MontageComponent->SetMontageData(Asset.Object);
+		}
 	}
 	Tags.Add("Player");
 }
@@ -93,7 +101,12 @@ void ABasePlayer::OnMouseL()
 	}
 }
 
-void ABasePlayer::OnMouseR()
+void ABasePlayer::OnMouseR_Implementation()
+{
+	MultiOnMouseR();
+}
+
+void ABasePlayer::MultiOnMouseR_Implementation()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{

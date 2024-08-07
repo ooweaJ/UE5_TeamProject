@@ -7,7 +7,7 @@
 UENUM(BlueprintType)
 enum class EBehaviorType : uint8
 {
-	Wait, patrol, Approach, Melee, Skill, Ultimate, Hitted, KnockBack, Equip
+	Wait, patrol, Approach, Melee, Skill, Ultimate, Hitted, KnockBack, Equip, Strafe
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBehaviorTypeChanged, EBehaviorType, ChangeType);
@@ -36,6 +36,7 @@ public:
 	UFUNCTION(BlueprintPure) bool IsPatrolMode();
 	UFUNCTION(BlueprintPure) bool IsHittedMode();
 	UFUNCTION(BlueprintPure) bool IsKnockBackMode();
+	UFUNCTION(BlueprintPure) bool IsStrafeMode();
 
 
 public:
@@ -56,6 +57,7 @@ public:
 	void SetHittedMode();
 	void SetKnockBackMode();
 	void SetEquipMode();
+	void SetStrafeMode();
 
 private:
 	// 위에 Set 시리즈에서 값을 받아와서 블랙보드 값에 써주는 함수

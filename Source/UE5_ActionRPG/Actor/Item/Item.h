@@ -31,7 +31,6 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-
 public:
 	virtual FActionData* GetDefaultAction(uint32 Num = 1);
 	virtual FActionData* GetDefaultAction2(uint32 Num = 1);
@@ -68,9 +67,8 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;
-
-protected:
 	class ACharacter* OwnerCharacter;
+protected:
 	class AAttachment* Attachment;
 	class UStateComponent* OwnerState;
 	class UStatusComponent* OwnerStatus;

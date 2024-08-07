@@ -20,8 +20,16 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(Server, Reliable)
 	virtual void OnMelee(uint32 Num = 1);
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MultiOnMelee(uint32 Num = 1);
+	UFUNCTION(Server, Reliable)
 	virtual void OnSkill(uint32 Num = 1);
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MultiOnSkill(uint32 Num = 1);
+
 	virtual void OnUltimate();
 	virtual void OffMelee();
 	virtual void OffSkill();

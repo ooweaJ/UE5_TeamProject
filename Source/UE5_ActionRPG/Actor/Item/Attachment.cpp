@@ -83,6 +83,7 @@ void AAttachment::OffCollisions()
 
 void AAttachment::AttachToCollision(USceneComponent* InComponent, FName InSocketName)
 {
+	if(OwnerCharacter)
 	InComponent->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), InSocketName);
 }
 

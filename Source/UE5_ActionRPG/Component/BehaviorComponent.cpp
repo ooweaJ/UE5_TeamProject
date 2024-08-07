@@ -29,6 +29,7 @@ bool UBehaviorComponent::IsUltimateMode() { return GetType() == EBehaviorType::U
 bool UBehaviorComponent::IsPatrolMode() { return GetType() == EBehaviorType::patrol; }
 bool UBehaviorComponent::IsHittedMode() { return GetType() == EBehaviorType::Hitted; }
 bool UBehaviorComponent::IsKnockBackMode() { return GetType() == EBehaviorType::KnockBack; }
+bool UBehaviorComponent::IsStrafeMode() { return GetType() == EBehaviorType::Strafe; }
 
 ACharacter* UBehaviorComponent::GetTarget()
 {
@@ -52,6 +53,7 @@ void UBehaviorComponent::SetPatrolMode() { ChangeType(EBehaviorType::patrol); }
 void UBehaviorComponent::SetHittedMode() { ChangeType(EBehaviorType::Hitted); }
 void UBehaviorComponent::SetKnockBackMode() { ChangeType(EBehaviorType::KnockBack); }
 void UBehaviorComponent::SetEquipMode() { ChangeType(EBehaviorType::Equip); }
+void UBehaviorComponent::SetStrafeMode() { ChangeType(EBehaviorType::Strafe); }
 
 void UBehaviorComponent::ChangeType(EBehaviorType InType)
 {

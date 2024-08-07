@@ -4,23 +4,33 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actor/ProJectile/GruxMeteor.h"
 #include "Actor/Controller/AIController/BaseAIController.h"
+#include "Net/UnrealNetwork.h"
 
 void AGrux::BeginPlay()
 {
     Super::BeginPlay();
     TimerDel.BindUFunction(this, FName("SpawnActorsAround"), 500.f, int32(6));
-
+ 
 }
 
 void AGrux::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if (bFly)
+    if (HasAuthority())
     {
-        FVector location = UKismetMathLibrary::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, 2.f);
-        SetActorLocation(location);
+        if (bFly)
+        {
+            FVector location = UKismetMathLibrary::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, 2.f);
+            SetActorLocation(location);
+        }
     }
+}
+
+void AGrux::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+    DOREPLIFETIME(AGrux, bFly);
 }
 
 void AGrux::OnFlySkill(FActionData* InData)
@@ -45,16 +55,6 @@ void AGrux::OnFlySkill(FActionData* InData)
     GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 3.0f, false);
 }
 
-void AGrux::FinishFlySkill()
-{
-    if (FlyAttack)
-    {
-        bFly = false;
-        GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-        PlayAnimMontage(FlyAttack);
-    }
-}
-
 void AGrux::SpawnActorsAround(float Distance, int32 NumberOfActors)
 {
     FVector Origin = GetActorLocation();
@@ -73,6 +73,7 @@ void AGrux::SpawnActorsAround(float Distance, int32 NumberOfActors)
 
         if (ActorToSpawn)
         {
+            if (!BaseController) return;
             AGruxMeteor* Meteor = GetWorld()->SpawnActor<AGruxMeteor>(ActorToSpawn, SpawnLocation, SpawnRotation);
             Meteor->SetTarget(BaseController->GetTarget());
             Meteor->SetOwner(this);
@@ -81,4 +82,20 @@ void AGrux::SpawnActorsAround(float Distance, int32 NumberOfActors)
         }
     }
     UKismetSystemLibrary::K2_SetTimer(this, "FinishFlySkill", 4.f, false);
+}
+
+
+void AGrux::FinishFlySkill_Implementation()
+{
+    MultiFinishFlySkill();
+}
+
+void AGrux::MultiFinishFlySkill_Implementation()
+{
+    if (FlyAttack)
+    {
+        bFly = false;
+        GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+        PlayAnimMontage(FlyAttack);
+    }
 }

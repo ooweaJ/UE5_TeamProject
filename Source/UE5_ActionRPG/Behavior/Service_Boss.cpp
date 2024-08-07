@@ -23,8 +23,6 @@ void UService_Boss::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 
 	ACharacter* Target = behavior->GetTarget();
 
-	float distance = aiPawn->GetDistanceTo(Target);
-
 	if (Target == nullptr)
 	{
 		behavior->SetWaitMode();
@@ -32,6 +30,8 @@ void UService_Boss::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 	}
 	else
 	{
+		float distance = aiPawn->GetDistanceTo(Target);
+
 		if (controller->IsOnUltimate())
 		{
 			behavior->SetUltimateMode();
@@ -44,8 +44,17 @@ void UService_Boss::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 		}
 		else if (controller->GetAttackRange() > distance)
 		{
-			behavior->SetMeleeMode();
-			return;
+			float RandomValue = FMath::FRand();
+			if (RandomValue > 0.5f)
+			{
+				behavior->SetStrafeMode();
+				return;
+			}
+			else
+			{
+				behavior->SetMeleeMode();
+				return;
+			}
 		}
 		else
 		{
