@@ -22,7 +22,6 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate.Yaw = 720;
-	
 
 	{
 		USkeletalMeshComponent* mesh = GetMesh();
