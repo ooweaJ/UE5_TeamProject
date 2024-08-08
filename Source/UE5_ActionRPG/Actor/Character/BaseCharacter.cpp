@@ -92,5 +92,9 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
 
+	Status->StatusModify(Status->HP, -DamageAmount);
+
 	return DamageAmount;
 }
+
+
