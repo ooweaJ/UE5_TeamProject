@@ -140,6 +140,7 @@ void ASpearman::ThrowSpear()
 
 	FName SocketName = TEXT("Hand_Spear_R");
 
+	if (!GetController()) return;
 	const FRotator& SpearControlRotation = GetController()->GetControlRotation();
 	const FVector& SpearControlVector = SpearControlRotation.Vector(); 
 
