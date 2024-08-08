@@ -23,16 +23,16 @@ ASpearWeapon::ASpearWeapon()
 
 void ASpearWeapon::OnSkillAction()
 {
-	if (bCanThrowSpear)
+	ACharacter* CharacterOwner = GetOwnerCharacter();
+	if (ASpearman* SpearOwner = Cast<ASpearman>(CharacterOwner))
 	{
-		bCanThrowSpear = false; 
-		ACharacter* CharacterOwner = GetOwnerCharacter(); 
-		if (ASpearman* SpearOwner = Cast<ASpearman>(CharacterOwner))
-		{
-			// Play AnimMontage
-			FActionData* Data = GetSkillAction(2);
-			if (!Data) { return; }
+		// Play AnimMontage
+		FActionData* Data = GetSkillAction(2);
+		if (!Data) { return; }
 
+		if (SpearOwner->bCanThrowSpear)
+		{
+			SpearOwner->bCanThrowSpear = false;
 			SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.f);
 			OwnerState->SetIdleMode();
 		}
@@ -41,8 +41,6 @@ void ASpearWeapon::OnSkillAction()
 
 void ASpearWeapon::OnSkillAction2()
 {
-	bCanThrowSpear = true;
-
 	ACharacter* CharacterOwner = GetOwnerCharacter();
 	if (ASpearman* SpearOwner = Cast<ASpearman>(CharacterOwner))
 	{
@@ -57,6 +55,7 @@ void ASpearWeapon::OnSkillAction2()
 
 
 		SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.25f);
+		SpearOwner->bCanThrowSpear = true;
 		OwnerState->SetActionMode();
 	}
 }

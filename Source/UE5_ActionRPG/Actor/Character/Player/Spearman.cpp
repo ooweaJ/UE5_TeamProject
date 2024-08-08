@@ -13,6 +13,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Notifies/AN_ThrowSpear.h"
+#include "Components/BoxComponent.h"
 
 ASpearman::ASpearman(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -95,6 +96,7 @@ void ASpearman::SetupSpearProjectile()
 	}
 
 	SpearProjectile->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+	SpearProjectile->GetBoxComp()->IgnoreActorWhenMoving(this, true); 
 	SpearProjectile->SetComponentsVisibility(false);
 }
 
@@ -128,6 +130,8 @@ void ASpearman::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 			}
 		}
 	}
+
+	bCanThrowSpear = true; 
 }
 
 void ASpearman::ThrowSpear()

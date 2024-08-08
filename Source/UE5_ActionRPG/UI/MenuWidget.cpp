@@ -3,6 +3,10 @@
 
 #include "UI/MenuWidget.h"
 #include "UI/CharacterSelectWidget.h"
+#include "Components/WidgetSwitcher.h"
+#include "Components/UniformGridPanel.h"
+#include "Components/Button.h"
+#include "Components/TextBlock.h"
 #include "ASGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"

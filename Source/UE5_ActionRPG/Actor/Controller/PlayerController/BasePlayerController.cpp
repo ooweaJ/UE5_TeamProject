@@ -9,10 +9,15 @@
 #include "KismetAnimationLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Camera/CameraComponent.h"
+#include "UI/PauseMenuWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 ABasePlayerController::ABasePlayerController()
 {
 	
+	static ConstructorHelpers::FClassFinder<UPauseMenuWidget> PauseMenuWidgetObject(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/UI_PauseMenu.UI_PauseMenu_C'"));
+	ensure(PauseMenuWidgetObject.Class); 
+	PauseMenuWidgetClass = PauseMenuWidgetObject.Class; 
 }
 
 void ABasePlayerController::BeginPlay()
@@ -27,6 +32,14 @@ void ABasePlayerController::BeginPlay()
 
 	if (ABasePlayer* player = Cast<ABasePlayer>(GetPawn()))
 		Player = player;
+
+	if (PauseMenuWidgetClass)
+	{
+		PauseMenuWidget = CreateWidget<UPauseMenuWidget>(this, PauseMenuWidgetClass); 
+	}
+
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
 }
 
 void ABasePlayerController::SetupInputComponent()
@@ -46,6 +59,7 @@ void ABasePlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Completed, this, &ThisClass::OffMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Completed, this, &ThisClass::OffMouseR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Q, ETriggerEvent::Started, this, &ThisClass::OnQ);
+			EnhancedInputComponent->BindAction(InPutDataConfig->ESC, ETriggerEvent::Started, this, &ThisClass::OnESC);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Triggered, this, &ThisClass::OnShift);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Completed, this, &ThisClass::OffShift);
 		}
@@ -172,4 +186,30 @@ void ABasePlayerController::OnQ(const FInputActionValue& InputActionValue)
 {
 	if (Player)
 		Player->OnQ(); 
+}
+
+void ABasePlayerController::OnESC(const FInputActionValue& InputActionValue)
+{
+	if (PauseMenuWidget)
+	{
+		if (!bPauseMenuOpened)
+		{
+			bPauseMenuOpened = true;
+			PauseMenuWidget->AddToViewport();
+			FInputModeGameAndUI GameAndUI;
+			GameAndUI.SetWidgetToFocus(PauseMenuWidget->TakeWidget());
+			SetInputMode(GameAndUI); 
+			SetShowMouseCursor(true); 
+			// UGameplayStatics::SetGamePaused(this, true); 
+		}
+		else
+		{
+			bPauseMenuOpened = false;
+			PauseMenuWidget->RemoveFromParent(); 
+			// UGameplayStatics::SetGamePaused(this, false); 
+			SetInputMode(FInputModeGameOnly()); 
+			SetShowMouseCursor(false); 
+		}
+	}
+	
 }

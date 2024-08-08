@@ -25,6 +25,7 @@ public:
 public:
 	void SetComponentsVisibility(bool bVisible);
 
+	UBoxComponent* GetBoxComp() const { return Box; }
 	UProjectileMovementComponent* GetProjectileComp() const { return ProjectileComp; }
 
 	UFUNCTION()

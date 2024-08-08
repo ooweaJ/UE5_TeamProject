@@ -26,6 +26,8 @@ public:
 
 	void ThrowSpear();
 
+	bool bCanThrowSpear = false; 
+
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override; 
 
@@ -44,6 +46,5 @@ protected:
 
 private:
 	UFUNCTION()
-	void OnMontageEnded(UAnimMontage* Montage, bool bInterrupted); 
-	
+	void OnMontageEnded(UAnimMontage* Montage, bool bInterrupted); 	
 };
