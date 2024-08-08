@@ -130,7 +130,12 @@ void ABasePlayer::OffMouseR()
 	}
 }
 
-void ABasePlayer::OnQ()
+void ABasePlayer::OnQ_Implementation()
+{
+	MultiOnQ();
+}
+
+void ABasePlayer::MultiOnQ_Implementation()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{

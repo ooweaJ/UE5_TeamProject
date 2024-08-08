@@ -15,7 +15,8 @@ ASpearProjectile::ASpearProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	bReplicates = true;
+	SetReplicateMovement(true);
 	// Box Collision
 	{
 		Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
@@ -87,7 +88,7 @@ void ASpearProjectile::BeginPlay()
 	Super::BeginPlay(); 
 
 	Box->OnComponentHit.AddDynamic(this, &ASpearProjectile::OnHit);
-
+	SetComponentsVisibility(false);
 }
 
 void ASpearProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
