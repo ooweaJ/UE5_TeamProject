@@ -23,15 +23,16 @@ ASpearWeapon::ASpearWeapon()
 
 void ASpearWeapon::OnSkillAction()
 {
-	if (true/*bCanCombo*/)
+	ACharacter* CharacterOwner = GetOwnerCharacter();
+	if (ASpearman* SpearOwner = Cast<ASpearman>(CharacterOwner))
 	{
-		ACharacter* CharacterOwner = GetOwnerCharacter(); 
-		if (ASpearman* SpearOwner = Cast<ASpearman>(CharacterOwner))
-		{
-			// Play AnimMontage
-			FActionData* Data = GetSkillAction(2);
-			if (!Data) { return; }
+		// Play AnimMontage
+		FActionData* Data = GetSkillAction(2);
+		if (!Data) { return; }
 
+		if (SpearOwner->bCanThrowSpear)
+		{
+			SpearOwner->bCanThrowSpear = false;
 			SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.f);
 			OwnerState->SetIdleMode();
 		}
@@ -40,27 +41,22 @@ void ASpearWeapon::OnSkillAction()
 
 void ASpearWeapon::OnSkillAction2()
 {
-	if (true)
+	ACharacter* CharacterOwner = GetOwnerCharacter();
+	if (ASpearman* SpearOwner = Cast<ASpearman>(CharacterOwner))
 	{
-		ACharacter* CharacterOwner = GetOwnerCharacter();
-		if (ASpearman* SpearOwner = Cast<ASpearman>(CharacterOwner))
-		{
-			// Visibility
-			ASpearProjectile* SpearProjectile = SpearOwner->GetSpearProjectile();
-			SpearProjectile->SetComponentsVisibility(true);
-			AAttachment* SpearAttachment = GetAttachment(); 
-			Attachment->SetActorHiddenInGame(true); 
+		// Visibility
+		ASpearProjectile* SpearProjectile = SpearOwner->GetSpearProjectile();
+		SpearProjectile->SetComponentsVisibility(true);
+		Attachment->SetActorHiddenInGame(true);
 
-			// Play AnimMontage
-			FActionData* Data = GetSkillAction(1);
-			if (!Data) { return; }
+		// Play AnimMontage
+		FActionData* Data = GetSkillAction(1);
+		if (!Data) { return; }
 
 
-			SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.25f);
-			OwnerState->SetActionMode();
-		}
-
-
+		SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.25f);
+		SpearOwner->bCanThrowSpear = true;
+		OwnerState->SetActionMode();
 	}
 }
 

@@ -8,22 +8,16 @@
 #include "Animation/AnimBlueprint.h"
 #include "Actor/Item/Weapon/SpearProjectile.h"
 #include "Actor/Item/Weapon/SpearWeapon.h"
+#include "Actor/Item/Attachment.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Camera/CameraComponent.h"
+#include "Notifies/AN_ThrowSpear.h"
+#include "Components/BoxComponent.h"
 
 ASpearman::ASpearman(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
 {
-	SceneCaptureComponent2D = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent2D")); 
-	SceneCaptureComponent2D->SetupAttachment(GetRootComponent()); 
-
-	{
-		static ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> RenderTarget(TEXT("/Script/Engine.TextureRenderTarget2D'/Game/_dev/Actor/Character/Player/Spear/RT_Spear.RT_Spear'"));
-		ensure(RenderTarget.Object);
-		SceneCaptureComponent2D->TextureTarget = RenderTarget.Object; 
-	}
-
 	{
 		static ConstructorHelpers::FClassFinder<UAnimInstance> ABPClass(TEXT("/Script/Engine.AnimBlueprint'/Game/Retargeted_Asset/ABP_Spearman.ABP_Spearman_C'"));
 		ensure(ABPClass.Class); 
@@ -61,8 +55,19 @@ void ASpearman::OnConstruction(const FTransform& Transform)
 	}
 
 	DefaultItemClass = ASpearWeapon::StaticClass(); 
-
+	
 	SetupSpearProjectile();
+}
+
+void ASpearman::BeginPlay()
+{
+	Super::BeginPlay(); 
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance(); 
+	if (AnimInstance)
+	{
+		AnimInstance->OnMontageEnded.AddDynamic(this, &ASpearman::OnMontageEnded); 
+	}
 }
 
 float ASpearman::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -81,7 +86,7 @@ void ASpearman::SetupSpearProjectile()
 	const FTransform& SocketTransform = GetMesh()->GetSocketTransform(SocketName, ERelativeTransformSpace::RTS_ParentBoneSpace);
 	const FVector& SocketLocation = SocketTransform.GetLocation(); 
 	
-	SpearProjectile = GetWorld()->SpawnActor<ASpearProjectile>(SocketLocation, GetControlRotation(), SpawnParams);
+	SpearProjectile = GetWorld()->SpawnActor<ASpearProjectile>(SocketLocation, FRotator::ZeroRotator, SpawnParams);
 	SpearProjectile->SetActorEnableCollision(false);
 
 	UProjectileMovementComponent* ProjectileMovement = SpearProjectile->FindComponentByClass<UProjectileMovementComponent>();
@@ -91,7 +96,42 @@ void ASpearman::SetupSpearProjectile()
 	}
 
 	SpearProjectile->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+	SpearProjectile->GetBoxComp()->IgnoreActorWhenMoving(this, true); 
 	SpearProjectile->SetComponentsVisibility(false);
+}
+
+void ASpearman::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	if (Montage)
+	{
+		const TArray<FAnimNotifyEvent>& NotifyEvents = Montage->Notifies; 
+
+		for (const FAnimNotifyEvent& NotifyEvent : NotifyEvents)
+		{
+			UAnimNotify* AnimNotify = NotifyEvent.Notify; 
+			if (UAN_ThrowSpear* ThrowSpearNotify = Cast<UAN_ThrowSpear>(AnimNotify))
+			{
+				SpearProjectile->Destroy(); 
+				/*ASpearWeapon* SpearWeapon = GetSpearWeapon(); 
+				AAttachment* SpearAttachment = SpearWeapon->GetAttachment();
+				SpearAttachment->SetActorHiddenInGame(false);*/
+
+				TArray<AActor*> AttachedActors; 
+				GetAttachedActors(AttachedActors); 
+				for (AActor* AttachedActor : AttachedActors)
+				{
+					if (AAttachment* SpearAttachment = Cast<AAttachment>(AttachedActor))
+					{
+						SpearAttachment->SetActorHiddenInGame(false); 
+					}
+				}
+
+				SetupSpearProjectile(); 
+			}
+		}
+	}
+
+	bCanThrowSpear = true; 
 }
 
 void ASpearman::ThrowSpear()

@@ -13,6 +13,9 @@ class UE5_ACTIONRPG_API ABasePlayerController : public APlayerController
 public:
 	ABasePlayerController();
 
+public:
+	void SetPauseMenuOpened(bool bOpen) { bPauseMenuOpened = bOpen; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -31,7 +34,15 @@ protected:
 	void OffMouseL(const FInputActionValue& InputActionValue);
 	void OffMouseR(const FInputActionValue& InputActionValue);
 	void OnQ(const FInputActionValue& InputActionValue); 
+	void OnESC(const FInputActionValue& InputActionValue); 
 	
 private:
 	class ABasePlayer* Player;
+
+	TSubclassOf<class UPauseMenuWidget> PauseMenuWidgetClass; 
+
+	UPROPERTY()
+	class UPauseMenuWidget* PauseMenuWidget; 
+
+	bool bPauseMenuOpened = false; 
 };

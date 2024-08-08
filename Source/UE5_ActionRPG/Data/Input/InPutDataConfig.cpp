@@ -88,5 +88,12 @@ UInPutDataConfig::UInPutDataConfig()
 		check(Asset.Succeeded());
 		Q = Asset.Object;
 	}
+
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_ESC.IA_ESC'") };
+		check(Asset.Succeeded());
+		ESC = Asset.Object;
+	}
 }
 

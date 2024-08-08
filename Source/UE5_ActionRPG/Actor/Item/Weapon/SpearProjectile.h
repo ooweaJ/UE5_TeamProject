@@ -25,6 +25,7 @@ public:
 public:
 	void SetComponentsVisibility(bool bVisible);
 
+	UBoxComponent* GetBoxComp() const { return Box; }
 	UProjectileMovementComponent* GetProjectileComp() const { return ProjectileComp; }
 
 	UFUNCTION()
@@ -44,10 +45,10 @@ protected:
 	USkeletalMeshComponent* SkeletalMesh; 
 
 	UPROPERTY()
-	UNiagaraComponent* NiagaraComponent; 
+	UNiagaraComponent* NiagaraAura; 
 
 	UPROPERTY()
-	UNiagaraSystem* NiagaraSystem; 
+	UNiagaraComponent* NiagaraSpark;
 
 	UPROPERTY(EditAnywhere)
 	UProjectileMovementComponent* ProjectileComp;

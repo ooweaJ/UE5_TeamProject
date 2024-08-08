@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/WidgetSwitcher.h"
-#include "Components/UniformGridPanel.h"
-#include "Components/Button.h"
-#include "Components/TextBlock.h"
+
 #include "MenuWidget.generated.h"
 
 class UCharacterSelectWidget; 
+class UWidgetSwitcher; 
+class UUniformGridPanel; 
+class UButton; 
+class UTextBlock; 
 
 UENUM() 
 enum class EMenu : uint8

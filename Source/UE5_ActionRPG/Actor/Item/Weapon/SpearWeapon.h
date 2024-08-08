@@ -19,4 +19,5 @@ public:
 	
 	virtual void OnSkillAction();
 	virtual void OnSkillAction2();
+
 };
