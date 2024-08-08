@@ -32,6 +32,9 @@ public:
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiCast_SpawnImpactEffect(FVector Location, FRotator Rotation);
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 	class USphereComponent* Sphere;

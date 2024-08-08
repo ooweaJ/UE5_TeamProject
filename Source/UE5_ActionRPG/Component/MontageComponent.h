@@ -36,6 +36,8 @@ class UE5_ACTIONRPG_API UMontageComponent : public UActorComponent
 public:	
 	UMontageComponent();
 
+	FORCEINLINE void SetMontageData(UDataTable* InData) { MontageData = InData; }
+
 	void PlayKnockBack();
 	void PlayAvoid();
 	void PlayRoll();

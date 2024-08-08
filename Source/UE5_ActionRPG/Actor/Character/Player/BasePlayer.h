@@ -25,7 +25,10 @@ public:
 
 public:
 	void OnMouseL();
+	UFUNCTION(Server, Reliable)
 	void OnMouseR();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiOnMouseR();
 	void OffMouseL();
 	void OffMouseR();
 	void OnQ(); 
@@ -36,11 +39,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerOnMouseL();
-	void ServerOnMouseL_Implementation();
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastOnDefaultAction();
-	void MulticastOnDefaultAction_Implementation();
 
 	UFUNCTION(BlueprintCallable)
 	void LockOn();

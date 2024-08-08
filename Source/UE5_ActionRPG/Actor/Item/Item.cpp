@@ -4,10 +4,10 @@
 #include "Data/ActionData/CombatActionDataAsset.h"
 #include "Component/StateComponent.h"
 #include "Component/StatusComponent.h"
+
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
 }
 
 void AItem::SetupItemData()
@@ -70,7 +70,6 @@ void AItem::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
 
 FActionData* AItem::GetDefaultAction(uint32 Num)
 {

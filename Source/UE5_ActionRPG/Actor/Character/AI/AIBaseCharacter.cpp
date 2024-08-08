@@ -51,34 +51,44 @@ void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-void AAIBaseCharacter::OnMelee(uint32 Num)
+void AAIBaseCharacter::OnMelee_Implementation(uint32 Num)
+{
+	MultiOnMelee(Num);
+}
+
+void AAIBaseCharacter::MultiOnMelee_Implementation(uint32 Num)
 {
 	if (!State && !Equip) return;
-	
+
 	if (AItem* Item = Equip->GetCurrentItem())
 	{
 		switch (Num)
 		{
-			case 1:
-			{
-				Item->OnDefaultAction();
-				break;
-			}
-			case 2:
-			{
-				Item->OnDefaultAction2();
-				break;
-			}
-			case 3:
-			{
-				Item->OnDefaultAction3();
-				break;
-			}
+		case 1:
+		{
+			Item->OnDefaultAction();
+			break;
+		}
+		case 2:
+		{
+			Item->OnDefaultAction2();
+			break;
+		}
+		case 3:
+		{
+			Item->OnDefaultAction3();
+			break;
+		}
 		}
 	}
 }
 
-void AAIBaseCharacter::OnSkill(uint32 Num)
+void AAIBaseCharacter::OnSkill_Implementation(uint32 Num)
+{
+	MultiOnSkill(Num);
+}
+
+void AAIBaseCharacter::MultiOnSkill_Implementation(uint32 Num)
 {
 	if (!State && !Equip) return;
 	State->SetActionMode();
