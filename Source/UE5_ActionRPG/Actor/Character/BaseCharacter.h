@@ -30,6 +30,9 @@ public:
 	
 	void EndAction();
 	void HitPlayMontage(TSubclassOf<UDamageType> InDamageType);
+
+	UFUNCTION(Server,Reliable)
+	void SpawnBaseItem();
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AItem> DefaultItemClass;

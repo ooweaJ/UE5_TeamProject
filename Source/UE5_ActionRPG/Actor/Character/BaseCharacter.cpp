@@ -14,6 +14,7 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 
 	Equip = ObjectInitializer.CreateDefaultSubobject<UEquipComponent>(this, TEXT("EquipComponent"));
+	Equip->SetIsReplicated(true);
 	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
 	Status = ObjectInitializer.CreateDefaultSubobject<UStatusComponent>(this, TEXT("StatusComponent"));
 	MontageComponent = ObjectInitializer.CreateDefaultSubobject<UMontageComponent>(this, TEXT("MontageComponent"));
@@ -25,14 +26,7 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (DefaultItemClass)
-	{
-		FTransform DefaultTransform;
-		AItem* Item = GetWorld()->SpawnActorDeferred<AItem>(DefaultItemClass, DefaultTransform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		Item->SetOwnerCharacter(this);
-		Item->FinishSpawning(DefaultTransform, true);
-		Equip->SetSelectItem(Item);
-	}
+	SpawnBaseItem();
 }
 
 // Called every frame
@@ -79,6 +73,18 @@ void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
 		case EDamageType::Knockdown:
 			break;
 		}
+	}
+}
+
+void ABaseCharacter::SpawnBaseItem_Implementation()
+{
+	if (DefaultItemClass)
+	{
+		FTransform DefaultTransform;
+		AItem* Item = GetWorld()->SpawnActorDeferred<AItem>(DefaultItemClass, DefaultTransform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		Item->SetOwnerCharacter(this);
+		Item->FinishSpawning(DefaultTransform, true);
+		Equip->SetSelectItem(Item);
 	}
 }
 

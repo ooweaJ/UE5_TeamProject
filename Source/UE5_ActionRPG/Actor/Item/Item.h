@@ -18,10 +18,9 @@ class UE5_ACTIONRPG_API AItem : public AActor
 public:	
 	AItem();
 
-	FORCEINLINE void SetItemInfoData(FItemInfoData* InData) { ItemInfoData = InData; }
 	FORCEINLINE void SetOwnerCharacter(ACharacter* InCharacter) { OwnerCharacter = InCharacter; }
 	FORCEINLINE class AAttachment* GetAttachment() { return Attachment; }
-	FORCEINLINE FActionData* GetCurrentData() { return CurrentData; }
+	FORCEINLINE FActionData* GetCurrentData() { return &CurrentData; }
 	FORCEINLINE class ACharacter* GetOwnerCharacter() { return OwnerCharacter; }
 
 
@@ -67,12 +66,14 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;
+	UPROPERTY(Replicated)
 	class ACharacter* OwnerCharacter;
 protected:
+	UPROPERTY(Replicated)
 	class AAttachment* Attachment;
 	class UStateComponent* OwnerState;
 	class UStatusComponent* OwnerStatus;
-	FItemInfoData* ItemInfoData;
 	TMap<FGameplayTag, FActionData> ActionTagMap;
-	FActionData* CurrentData;
+	UPROPERTY(Replicated)
+	FActionData CurrentData;
 };
