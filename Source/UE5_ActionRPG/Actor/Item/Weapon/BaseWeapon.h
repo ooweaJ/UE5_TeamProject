@@ -30,9 +30,9 @@ public:
 	virtual void ItemAction2();
 public:
 	TArray<class ACharacter*> HittedCharacters;
-	uint32 ComboCount = 1;
 	float WeaponDamage = 100.f;
 	float AttackSpeed = 1.f;
+	uint32 ComboCount = 1;
 	bool bCanCombo;
 	bool bSucceed;
 };

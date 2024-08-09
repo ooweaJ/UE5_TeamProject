@@ -11,6 +11,11 @@ void UMontageComponent::PlayKnockBack()
 	PlayAnimMontage("KnockBack");
 }
 
+void UMontageComponent::PlayKnockDown()
+{
+	PlayAnimMontage("KnockDown");
+}
+
 void UMontageComponent::PlayAvoid()
 {
 	PlayAnimMontage("Avoid");
@@ -34,6 +39,7 @@ void UMontageComponent::PlayStun()
 void UMontageComponent::PlayAnimMontage(FName Key)
 {
 	ACharacter* character = Cast<ACharacter>(GetOwner());
+	if (!MontageData) return;
 	FMontageData* data = MontageData->FindRow<FMontageData>(Key, "");
 	if (!data) return ;
 

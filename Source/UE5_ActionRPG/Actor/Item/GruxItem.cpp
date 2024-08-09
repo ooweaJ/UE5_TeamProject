@@ -119,6 +119,6 @@ void AGruxItem::OffUltimateAction()
 
 void AGruxItem::OnItemSkillAction()
 {
-	Grux->OnFlySkill(CurrentData);
+	Grux->OnFlySkill(&CurrentData);
 }
 

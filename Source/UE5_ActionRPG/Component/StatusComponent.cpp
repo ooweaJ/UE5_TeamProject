@@ -3,7 +3,7 @@
 
 UStatusComponent::UStatusComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 
 }
 
