@@ -95,8 +95,17 @@ void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 
 	if (Player)
 	{
-		ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
-		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);
+		if (Player->WalkingDirectionAngle < 45 && Player->WalkingDirectionAngle > -45)
+		{
+			AngleDampingSpeed = 1.0;
+
+		}
+		else
+		{
+			AngleDampingSpeed = 0.75;
+		}
+		ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y * AngleDampingSpeed);
+		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X * AngleDampingSpeed);
 
 		Player->ForwardInput = MovementVector.Y;
 		Player->RightInput = MovementVector.X;

@@ -21,7 +21,7 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationRoll = false;
 		
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate.Yaw = 720;
+	
 
 	{
 		USkeletalMeshComponent* mesh = GetMesh();
@@ -162,15 +162,7 @@ void ABasePlayer::OffShift()
 void ABasePlayer::OnEvade()
 {
 	if (!State->IsIdleMode()) return;
-	if (bLockOn)
-	{
-		State->SetEvadeMode();
-	}
-	else
-	{
-		State->SetEvadeMode();
-		MontageComponent->PlayAvoid();
-	}
+	State->SetEvadeMode();
 }
 
 void ABasePlayer::OnStepBack()

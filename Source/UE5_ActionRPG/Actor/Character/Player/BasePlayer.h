@@ -99,7 +99,4 @@ public:
 	FVector ArmPos;
 	FVector ActorPos;
 
-protected:
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
-	AActor* InteractableObject;
 };
