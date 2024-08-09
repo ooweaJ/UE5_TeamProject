@@ -11,6 +11,11 @@ void UMontageComponent::PlayKnockBack()
 	PlayAnimMontage("KnockBack");
 }
 
+void UMontageComponent::PlayKnockDown()
+{
+	PlayAnimMontage("KnockDown");
+}
+
 void UMontageComponent::PlayAvoid()
 {
 	PlayAnimMontage("Avoid");

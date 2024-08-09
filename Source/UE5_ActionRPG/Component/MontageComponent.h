@@ -39,6 +39,7 @@ public:
 	FORCEINLINE void SetMontageData(UDataTable* InData) { MontageData = InData; }
 
 	void PlayKnockBack();
+	void PlayKnockDown();
 	void PlayAvoid();
 	void PlayRoll();
 	void PlayHit();
