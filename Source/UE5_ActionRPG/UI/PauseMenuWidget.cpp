@@ -2,12 +2,14 @@
 
 
 #include "UI/PauseMenuWidget.h"
+#include "Components/WidgetSwitcher.h"
 #include "Components/BackgroundBlur.h"
 #include "Components/Image.h"
 #include "Components/VerticalBox.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Actor/Controller/PlayerController/BasePlayerController.h"
+#include "UI/ConfigMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 void UPauseMenuWidget::NativeConstruct()
@@ -37,6 +39,33 @@ void UPauseMenuWidget::NativeConstruct()
 
 }
 
+void UPauseMenuWidget::NativeDestruct()
+{
+	Super::NativeDestruct(); 
+
+
+	if (ResumeButton)
+	{
+		ResumeButton->OnClicked.RemoveDynamic(this, &UPauseMenuWidget::OnResumeButtonClicked);
+	}
+
+	if (ConfigButton)
+	{
+		ConfigButton->OnClicked.RemoveDynamic(this, &UPauseMenuWidget::OnConfigButtonClicked);
+	}
+
+	if (ConnectExitButton)
+	{
+		ConnectExitButton->OnClicked.RemoveDynamic(this, &UPauseMenuWidget::OnConnectExitButtonClicked);
+	}
+
+	if (GameExitButton)
+	{
+		GameExitButton->OnClicked.RemoveDynamic(this, &UPauseMenuWidget::OnGameExitButtonClicked);
+	}
+
+}
+
 void UPauseMenuWidget::OnResumeButtonClicked()
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -52,7 +81,7 @@ void UPauseMenuWidget::OnResumeButtonClicked()
 
 void UPauseMenuWidget::OnConfigButtonClicked()
 {
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	PauseMenuWidgetSwitcher->SetActiveWidgetIndex(static_cast<int32>(EPauseMenu::Config));
 }
 
 void UPauseMenuWidget::OnConnectExitButtonClicked()

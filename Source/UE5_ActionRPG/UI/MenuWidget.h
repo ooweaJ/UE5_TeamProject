@@ -8,6 +8,7 @@
 #include "MenuWidget.generated.h"
 
 class UCharacterSelectWidget; 
+class UConfigMenuWidget; 
 class UWidgetSwitcher; 
 class UUniformGridPanel; 
 class UButton; 
@@ -17,7 +18,8 @@ UENUM()
 enum class EMenu : uint8
 {
 	Main,
-	CharacterSelect
+	CharacterSelect,
+	Config
 };
 
 UCLASS()
@@ -27,6 +29,8 @@ class UE5_ACTIONRPG_API UMenuWidget : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override; 
+
+	virtual void NativeDestruct() override; 
 
 	void SetButtonNormalStyle(UButton* InButton, FLinearColor InLinearColor = FLinearColor(1.f, 1.f, 1.f, 0.f)); 
 	void Setup();
@@ -38,7 +42,7 @@ public:
 	void OnExitButtonClicked();
 
 	UFUNCTION()
-	void OnOptionButtonClicked();
+	void OnConfigButtonClicked();
 
 	UFUNCTION()
 	void OnSelectStartButtonClicked();
@@ -58,7 +62,7 @@ protected:
 	UButton* ExitButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UButton* OptionButton;
+	UButton* ConfigButton;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* SelectStartButton;
@@ -73,8 +77,14 @@ protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UUniformGridPanel* CharacterGridPanel; 
 
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UConfigMenuWidget* ConfigMenu; 
+
 	UPROPERTY()
 	TSubclassOf<UCharacterSelectWidget> CharacterSelectWidgetClass; 
+
+	UPROPERTY()
+	TSubclassOf<UConfigMenuWidget> ConfigMenuWidgetClass; 
 
 protected:
 	virtual void PopulateGrid(); 
