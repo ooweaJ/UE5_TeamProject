@@ -21,7 +21,7 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationRoll = false;
 		
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	
+	GetCharacterMovement()->RotationRate.Yaw = 720;
 
 	{
 		USkeletalMeshComponent* mesh = GetMesh();
@@ -43,13 +43,6 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		SpringArm->TargetArmLength = 300.f;
 		SpringArm->bDoCollisionTest = true;
 		SpringArm->bUsePawnControlRotation = true;
-	}
-	{
-		static ConstructorHelpers::FObjectFinder<UDataTable> Asset(TEXT("/Script/Engine.DataTable'/Game/_dev/Data/DT/Montage/DT_BasePlayerMontage.DT_BasePlayerMontage'"));
-		if (Asset.Succeeded())
-		{
-			MontageComponent->SetMontageData(Asset.Object);
-		}
 	}
 	Tags.Add("Player");
 }
@@ -101,12 +94,7 @@ void ABasePlayer::OnMouseL()
 	}
 }
 
-void ABasePlayer::OnMouseR_Implementation()
-{
-	MultiOnMouseR();
-}
-
-void ABasePlayer::MultiOnMouseR_Implementation()
+void ABasePlayer::OnMouseR()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{
@@ -130,12 +118,7 @@ void ABasePlayer::OffMouseR()
 	}
 }
 
-void ABasePlayer::OnQ_Implementation()
-{
-	MultiOnQ();
-}
-
-void ABasePlayer::MultiOnQ_Implementation()
+void ABasePlayer::OnQ()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{
@@ -162,7 +145,15 @@ void ABasePlayer::OffShift()
 void ABasePlayer::OnEvade()
 {
 	if (!State->IsIdleMode()) return;
-	State->SetEvadeMode();
+	if (bLockOn)
+	{
+		State->SetEvadeMode();
+	}
+	else
+	{
+		State->SetEvadeMode();
+		MontageComponent->PlayAvoid();
+	}
 }
 
 void ABasePlayer::OnStepBack()

@@ -25,16 +25,10 @@ public:
 
 public:
 	void OnMouseL();
-	UFUNCTION(Server, Reliable)
 	void OnMouseR();
-	UFUNCTION(NetMulticast, Reliable)
-	void MultiOnMouseR();
 	void OffMouseL();
 	void OffMouseR();
-	UFUNCTION(Server, Reliable)
 	void OnQ(); 
-	UFUNCTION(NetMulticast, Reliable)
-	void MultiOnQ(); 
 	void OnShift();
 	void OffShift();
 	void OnEvade();
@@ -42,9 +36,11 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerOnMouseL();
+	void ServerOnMouseL_Implementation();
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastOnDefaultAction();
+	void MulticastOnDefaultAction_Implementation();
 
 	UFUNCTION(BlueprintCallable)
 	void LockOn();
@@ -99,4 +95,7 @@ public:
 	FVector ArmPos;
 	FVector ActorPos;
 
+protected:
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	AActor* InteractableObject;
 };

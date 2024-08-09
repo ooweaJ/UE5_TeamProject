@@ -8,6 +8,18 @@
 
 class AItem;
 
+USTRUCT(BlueprintType)
+struct FPotion
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Amount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float HealAmount;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE5_ACTIONRPG_API UEquipComponent : public UActorComponent
 {
@@ -32,4 +44,8 @@ public:
 private:
 	TArray<AItem*> EquipItems;
 	AItem* SelectItem;
+
+protected:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FPotion Potion;
 };
