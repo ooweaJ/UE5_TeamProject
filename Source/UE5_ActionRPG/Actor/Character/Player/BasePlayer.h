@@ -33,6 +33,8 @@ public:
 	void OffShift();
 	void OnEvade();
 	void OnStepBack();
+	void OnInteraction();
+	void UsePotion();
 
 	UFUNCTION(Server, Reliable)
 	void ServerOnMouseL();
@@ -95,7 +97,7 @@ public:
 	FVector ArmPos;
 	FVector ActorPos;
 
-protected:
+public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 	AActor* InteractableObject;
 };

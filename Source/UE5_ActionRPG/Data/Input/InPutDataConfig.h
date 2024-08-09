@@ -30,5 +30,7 @@ public:
 	UInputAction* G = nullptr;
 	UInputAction* T = nullptr;
 	UInputAction* Q = nullptr; 
+	UInputAction* E = nullptr; 
+	UInputAction* R = nullptr; 
 	UInputAction* ESC = nullptr; 
 };

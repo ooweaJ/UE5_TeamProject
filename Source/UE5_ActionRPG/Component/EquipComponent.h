@@ -41,6 +41,10 @@ public:
 	FORCEINLINE void SetSelectItem(AItem* InItem) { SelectItem = InItem; }
 	void EndAction();
 
+	FORCEINLINE bool CanUsePotion() { return Potion.Amount > 0; }
+	FORCEINLINE void UsePotion() { Potion.Amount--; }
+	FORCEINLINE void SetPotionHealAmount(float InAmount) { Potion.HealAmount = InAmount; }
+	FORCEINLINE float GetPotionHealAmount() { return Potion.HealAmount; }
 private:
 	TArray<AItem*> EquipItems;
 	AItem* SelectItem;
