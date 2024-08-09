@@ -43,6 +43,7 @@ public:
 
 private:
 	TArray<AItem*> EquipItems;
+	UPROPERTY(Replicated)
 	AItem* SelectItem;
 
 protected:

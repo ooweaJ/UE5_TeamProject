@@ -94,7 +94,12 @@ void ABasePlayer::OnMouseL()
 	}
 }
 
-void ABasePlayer::OnMouseR()
+void ABasePlayer::OnMouseR_Implementation()
+{
+	MultiOnMouseR();
+}
+
+void ABasePlayer::MultiOnMouseR_Implementation()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{

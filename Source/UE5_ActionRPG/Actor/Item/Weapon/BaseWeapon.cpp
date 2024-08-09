@@ -5,9 +5,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Component/StatusComponent.h"
 #include "Component/StateComponent.h"
+#include "Net/UnrealNetwork.h"
 
 ABaseWeapon::ABaseWeapon()
 {
+	bReplicates = true;
 }
 
 void ABaseWeapon::BeginPlay()
@@ -103,3 +105,13 @@ void ABaseWeapon::ItemAction2()
 		Data->bCanMove ? OwnerStatus->SetMove() : OwnerStatus->SetStop();
 	}
 }
+
+void ABaseWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ABaseWeapon, ComboCount);
+	DOREPLIFETIME(ABaseWeapon, bCanCombo);
+	DOREPLIFETIME(ABaseWeapon, bSucceed);
+}
+

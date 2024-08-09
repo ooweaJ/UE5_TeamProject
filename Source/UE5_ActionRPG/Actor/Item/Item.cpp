@@ -4,29 +4,26 @@
 #include "Data/ActionData/CombatActionDataAsset.h"
 #include "Component/StateComponent.h"
 #include "Component/StatusComponent.h"
+#include "Net/UnrealNetwork.h"
 
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
 }
 
 void AItem::SetupItemData()
 {
 	if (ItemData)
 	{
-		ItemData->SetData(this);
 		AddActionData();
-
-		if (ItemInfoData)
 		{
-			{
-				FTransform DefaultTransform;
-				AAttachment* Actor = GetWorld()->SpawnActorDeferred<AAttachment>(ItemInfoData->Attachment, DefaultTransform, OwnerCharacter, OwnerCharacter, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-				Actor->SetOwnerCharacter(OwnerCharacter);
-				Actor->FinishSpawning(DefaultTransform, true);
-				Attachment = Actor;
-				Attachment->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), ItemInfoData->SocketName);
-			}
+			FTransform DefaultTransform;
+			AAttachment* Actor = GetWorld()->SpawnActorDeferred<AAttachment>(ItemData->ItemInfoData.Attachment, DefaultTransform, OwnerCharacter, OwnerCharacter, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+			Actor->SetOwnerCharacter(OwnerCharacter);
+			Actor->FinishSpawning(DefaultTransform, true);
+			Attachment = Actor;
+			Attachment->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), ItemData->ItemInfoData.SocketName);
 		}
 	}
 }
@@ -51,7 +48,7 @@ void AItem::BeginPlay()
 void AItem::AddActionData()
 {
 	TArray<FActionDataTableRow*> row;
-	ItemInfoData->Data->GetAllRows<FActionDataTableRow>("", row);
+	ItemData->ItemInfoData.Data->GetAllRows<FActionDataTableRow>("", row);
 
 	for (FActionDataTableRow* DataRow : row)
 	{
@@ -258,4 +255,12 @@ void AItem::MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate)
 	{
 		AnimInstance->Montage_SetPlayRate(CurrentData->AnimMontage, PlayRate);
 	}
+}
+
+void AItem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AItem, OwnerCharacter);
+	DOREPLIFETIME(AItem, Attachment);
 }

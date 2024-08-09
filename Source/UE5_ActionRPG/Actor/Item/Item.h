@@ -67,12 +67,13 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;
+	UPROPERTY(Replicated)
 	class ACharacter* OwnerCharacter;
 protected:
+	UPROPERTY(Replicated)
 	class AAttachment* Attachment;
 	class UStateComponent* OwnerState;
 	class UStatusComponent* OwnerStatus;
-	FItemInfoData* ItemInfoData;
 	TMap<FGameplayTag, FActionData> ActionTagMap;
 	FActionData* CurrentData;
 };
