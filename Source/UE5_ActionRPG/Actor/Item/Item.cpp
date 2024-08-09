@@ -9,7 +9,7 @@
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	bReplicates = true;
+	bReplicates = false;
 }
 
 void AItem::SetupItemData()
