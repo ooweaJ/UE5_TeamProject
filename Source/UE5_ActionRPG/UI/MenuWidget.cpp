@@ -3,6 +3,7 @@
 
 #include "UI/MenuWidget.h"
 #include "UI/CharacterSelectWidget.h"
+#include "UI/ConfigMenuWidget.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/Button.h"
@@ -28,17 +29,26 @@ void UMenuWidget::NativeConstruct()
 	// Place character class on grid in CharacterSelectWidget
 	PopulateGrid(); 
 
+	// Load and Find CharacterSelectWidget
+	LoadClass<UClass>(nullptr,
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/Menu/UI_ConfigMenu.UI_ConfigMenu_C'"), nullptr, LOAD_None, nullptr);
+
+	CharacterSelectWidgetClass = FindObject<UClass>(
+		nullptr,
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/Menu/UI_CharacterSelect.UI_CharacterSelect_C'"));
+
 
 	// Bind a function pointer to the buttons
-	if (ExitButton)
-	{
-		ExitButton->OnClicked.AddDynamic(this, &UMenuWidget::OnExitButtonClicked); 
-	}
-
 	if (ConnectButton)
 	{
-		ConnectButton->OnClicked.AddDynamic(this, &UMenuWidget::OnConnectButtonClicked); 
+		ConnectButton->OnClicked.AddDynamic(this, &UMenuWidget::OnConnectButtonClicked);
 	}
+
+	if (ConfigButton)
+	{
+		ConfigButton->OnClicked.AddDynamic(this, &UMenuWidget::OnConfigButtonClicked); 
+	}
+
 
 	if (SelectStartButton)
 	{
@@ -50,6 +60,42 @@ void UMenuWidget::NativeConstruct()
 		SelectGoBackButton->OnClicked.AddDynamic(this, &UMenuWidget::OnSelectGoBackButtonClicked); 
 	}
 
+	if (ExitButton)
+	{
+		ExitButton->OnClicked.AddDynamic(this, &UMenuWidget::OnExitButtonClicked);
+	}
+
+}
+
+void UMenuWidget::NativeDestruct()
+{
+	Super::NativeDestruct(); 
+
+	if (ConnectButton)
+	{
+		ConnectButton->OnClicked.RemoveDynamic(this, &UMenuWidget::OnConnectButtonClicked);
+	}
+
+	if (ConfigButton)
+	{
+		ConfigButton->OnClicked.RemoveDynamic(this, &UMenuWidget::OnConfigButtonClicked);
+	}
+
+
+	if (SelectStartButton)
+	{
+		SelectStartButton->OnClicked.RemoveDynamic(this, &UMenuWidget::OnSelectStartButtonClicked);
+	}
+
+	if (SelectGoBackButton)
+	{
+		SelectGoBackButton->OnClicked.RemoveDynamic(this, &UMenuWidget::OnSelectGoBackButtonClicked);
+	}
+
+	if (ExitButton)
+	{
+		ExitButton->OnClicked.RemoveDynamic(this, &UMenuWidget::OnExitButtonClicked);
+	}
 }
 
 void UMenuWidget::SetButtonNormalStyle(UButton* InButton, FLinearColor InLinearColor)
@@ -82,7 +128,7 @@ void UMenuWidget::Setup()
 
 void UMenuWidget::OnConnectButtonClicked()
 {
-	MenuSwitcher->SetActiveWidgetIndex(static_cast<int32>(EMenu::CharacterSelect));
+	MenuSwitcher->SetActiveWidgetIndex(static_cast<uint8>(EMenu::CharacterSelect));
 }
 
 void UMenuWidget::OnExitButtonClicked()
@@ -97,8 +143,9 @@ void UMenuWidget::OnExitButtonClicked()
 	}
 }
 
-void UMenuWidget::OnOptionButtonClicked()
+void UMenuWidget::OnConfigButtonClicked()
 {
+	MenuSwitcher->SetActiveWidgetIndex(static_cast<uint8>(EMenu::Config));
 }
 
 void UMenuWidget::OnSelectStartButtonClicked()

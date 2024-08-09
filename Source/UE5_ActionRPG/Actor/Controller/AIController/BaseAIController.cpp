@@ -92,6 +92,7 @@ void ABaseAIController::SetLoactionKey(FVector InLoaction)
 
 void ABaseAIController::SetTargetKey(ACharacter* InCharacter)
 {
+
 	Blackboard->SetValueAsObject(FBlackBoardKeyNameTable::TargetKey, InCharacter);
 }
 
