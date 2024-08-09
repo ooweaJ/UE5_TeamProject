@@ -32,10 +32,7 @@ public:
 	TArray<class ACharacter*> HittedCharacters;
 	float WeaponDamage = 100.f;
 	float AttackSpeed = 1.f;
-	UPROPERTY(Replicated)
 	uint32 ComboCount = 1;
-	UPROPERTY(Replicated)
 	bool bCanCombo;
-	UPROPERTY(Replicated)
 	bool bSucceed;
 };

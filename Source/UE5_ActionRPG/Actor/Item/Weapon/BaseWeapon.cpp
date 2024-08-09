@@ -9,7 +9,6 @@
 
 ABaseWeapon::ABaseWeapon()
 {
-	bReplicates = true;
 }
 
 void ABaseWeapon::BeginPlay()
@@ -26,21 +25,19 @@ void ABaseWeapon::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter*
 
 	if (hittedCharactersNum == HittedCharacters.Num()) return;
 
-	if (CurrentData == nullptr) return;
-
 	//Damage
 	float LocalDamage = OwnerStatus->GetDamage() + WeaponDamage;
 	LocalDamage = LocalDamage * FMath::FRandRange(0.9f, 1.1f);
 
 	FDamageEvent de;
-	de.DamageTypeClass = CurrentData->DamageType;
+	de.DamageTypeClass = CurrentData.DamageType;
 	InOtherCharacter->TakeDamage(LocalDamage, de, InAttacker->GetController(), InCauser);
 
 	//Effect
-	UParticleSystem* hitEffect = CurrentData->Effect;
+	UParticleSystem* hitEffect = CurrentData.Effect;
 	if (!!hitEffect)
 	{
-		FTransform transform = CurrentData->EffectTransform;
+		FTransform transform = CurrentData.EffectTransform;
 		transform.AddToTranslation(InOtherCharacter->GetActorLocation());
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), hitEffect, transform);
 	}
@@ -48,7 +45,7 @@ void ABaseWeapon::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter*
 	if (APlayerController* PC = Cast<APlayerController>(InAttacker->GetController()))
 	{
 		//Camera Shake
-		TSubclassOf<UCameraShakeBase> shake = CurrentData->ShakeClass;
+		TSubclassOf<UCameraShakeBase> shake = CurrentData.ShakeClass;
 		if (!!shake)
 		{
 			PC->PlayerCameraManager->StartCameraShake(shake);
@@ -104,14 +101,5 @@ void ABaseWeapon::ItemAction2()
 		OwnerCharacter->PlayAnimMontage(Data->AnimMontage);
 		Data->bCanMove ? OwnerStatus->SetMove() : OwnerStatus->SetStop();
 	}
-}
-
-void ABaseWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(ABaseWeapon, ComboCount);
-	DOREPLIFETIME(ABaseWeapon, bCanCombo);
-	DOREPLIFETIME(ABaseWeapon, bSucceed);
 }
 

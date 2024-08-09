@@ -74,7 +74,7 @@ FActionData* AItem::GetDefaultAction(uint32 Num)
 
 	if (FActionData* FoundData = ActionTagMap.Find(TargetTag))
 	{
-		CurrentData = FoundData;
+		CurrentData = *FoundData;
 		return FoundData;
 	}
 
@@ -87,7 +87,7 @@ FActionData* AItem::GetDefaultAction2(uint32 Num)
 
 	if (FActionData* FoundData = ActionTagMap.Find(TargetTag))
 	{
-		CurrentData = FoundData;
+		CurrentData = *FoundData;
 		return FoundData;
 	}
 
@@ -100,7 +100,7 @@ FActionData* AItem::GetSkillAction(uint32 Num)
 
 	if (FActionData* FoundData = ActionTagMap.Find(TargetTag))
 	{
-		CurrentData = FoundData;
+		CurrentData = *FoundData;
 		return FoundData;
 	}
 
@@ -113,7 +113,7 @@ FActionData* AItem::GetUltimateAction()
 
 	if (FActionData* FoundData = ActionTagMap.Find(TargetTag))
 	{
-		CurrentData = FoundData;
+		CurrentData = *FoundData;
 		return FoundData;
 	}
 
@@ -253,7 +253,7 @@ void AItem::MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate)
 {
 	if (AnimInstance)
 	{
-		AnimInstance->Montage_SetPlayRate(CurrentData->AnimMontage, PlayRate);
+		AnimInstance->Montage_SetPlayRate(CurrentData.AnimMontage, PlayRate);
 	}
 }
 
@@ -263,4 +263,5 @@ void AItem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 
 	DOREPLIFETIME(AItem, OwnerCharacter);
 	DOREPLIFETIME(AItem, Attachment);
+	DOREPLIFETIME(AItem, CurrentData);
 }
