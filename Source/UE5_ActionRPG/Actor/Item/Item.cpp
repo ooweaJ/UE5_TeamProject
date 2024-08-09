@@ -253,6 +253,7 @@ void AItem::MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate)
 {
 	if (AnimInstance)
 	{
+		if (int32 Num = FMath::RandRange(0, 1)) return;
 		AnimInstance->Montage_SetPlayRate(CurrentData.AnimMontage, PlayRate);
 	}
 }
