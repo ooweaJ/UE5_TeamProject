@@ -10,7 +10,7 @@
 #include "Actor/Item/Item.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Interface/Interaction.h"
+#include "Others/InteractiveActor.h"
 
 ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -55,6 +55,7 @@ void ABasePlayer::BeginPlay()
 	if (Status && Equip)
 	{
 		Status->SetSpeed(EWalkSpeedTpye::Walk);
+		Equip->SupplyPotion();
 		Equip->SetPotionHealAmount(Status->GetMaxHP() * 0.3f);
 	}
 }
@@ -171,8 +172,7 @@ void ABasePlayer::OnInteraction()
 {
 	if (InteractableObject)
 	{
-		IInteraction* InteractionObject = Cast<IInteraction>(InteractableObject);
-		InteractionObject->Interaction();
+		InteractableObject->OnInteraction();
 	}
 }
 
@@ -258,5 +258,3 @@ void ABasePlayer::TickLockOn()
 	
 	
 }
-
-

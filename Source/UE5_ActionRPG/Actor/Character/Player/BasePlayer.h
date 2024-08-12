@@ -99,5 +99,5 @@ public:
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
-	AActor* InteractableObject;
+	class AInteractiveActor* InteractableObject;
 };
