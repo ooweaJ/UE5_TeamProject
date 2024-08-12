@@ -19,7 +19,6 @@ void UANS_MontagePlayRate::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 	{
 		if (UAnimInstance* AnimInstance = MeshComp->GetAnimInstance())
 		{
-			if (int32 Num = FMath::RandRange(0, 1)) return;
 			Item->MontagePlayRate(AnimInstance, 0.3f);
 		}
 	}

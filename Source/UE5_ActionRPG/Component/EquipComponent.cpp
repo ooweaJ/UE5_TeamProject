@@ -3,6 +3,7 @@
 
 #include "Component/EquipComponent.h"
 #include "Actor/Item/Item.h"
+#include "Net/UnrealNetwork.h"
 // Sets default values for this component's properties
 UEquipComponent::UEquipComponent()
 {
@@ -40,3 +41,10 @@ void UEquipComponent::EndAction()
 	}
 }
 
+//
+//void UEquipComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//
+//	DOREPLIFETIME(UEquipComponent, SelectItem);
+//}

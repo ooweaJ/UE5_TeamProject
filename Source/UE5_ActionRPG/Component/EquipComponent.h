@@ -48,6 +48,7 @@ public:
 	FORCEINLINE float GetPotionHealAmount() { return Potion.HealAmount; }
 private:
 	TArray<AItem*> EquipItems;
+	//UPROPERTY(Replicated)
 	AItem* SelectItem;
 
 protected:

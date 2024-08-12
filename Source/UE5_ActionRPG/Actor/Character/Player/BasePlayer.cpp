@@ -34,6 +34,13 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		mesh->SetRelativeRotation(FRotator(0, -90, 0));
 	}
 	{
+		ConstructorHelpers::FObjectFinder<UDataTable> Asset(TEXT("/Script/Engine.DataTable'/Game/_dev/Data/DT/Montage/DT_BasePlayerMontage.DT_BasePlayerMontage'"));
+		if (Asset.Succeeded())
+		{
+			MontageComponent->SetMontageData(Asset.Object);
+		}
+	}
+	{
 		SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 		SpringArm->SetupAttachment(RootComponent);
 
@@ -100,7 +107,12 @@ void ABasePlayer::OnMouseL()
 	}
 }
 
-void ABasePlayer::OnMouseR()
+void ABasePlayer::OnMouseR_Implementation()
+{
+	MultiOnMouseR();
+}
+
+void ABasePlayer::MultiOnMouseR_Implementation()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{

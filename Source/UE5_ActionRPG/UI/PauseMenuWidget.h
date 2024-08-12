@@ -6,11 +6,20 @@
 #include "Blueprint/UserWidget.h"
 #include "PauseMenuWidget.generated.h"
 
+class UWidgetSwitcher; 
 class UBackgroundBlur; 
 class UImage; 
 class UButton; 
 class UVerticalBox; 
 class UTextBlock; 
+class UConfigMenuWidget; 
+
+UENUM()
+enum class EPauseMenu : uint8
+{
+	Pause,
+	Config
+};
 
 UCLASS()
 class UE5_ACTIONRPG_API UPauseMenuWidget : public UUserWidget
@@ -19,6 +28,8 @@ class UE5_ACTIONRPG_API UPauseMenuWidget : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override; 
+
+	virtual void NativeDestruct() override;
 
 public:
 	UFUNCTION()
@@ -33,6 +44,11 @@ public:
 	UFUNCTION()
 	void OnGameExitButtonClicked();
 
+protected:
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UWidgetSwitcher* PauseMenuWidgetSwitcher; 
+
+// Pause Menu 
 protected:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UBackgroundBlur* BackGroundBlur; 
@@ -57,4 +73,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* PauseMenuText; 
+
+
+// Config Menu
+protected:
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UConfigMenuWidget* ConfigMenu; 
 };

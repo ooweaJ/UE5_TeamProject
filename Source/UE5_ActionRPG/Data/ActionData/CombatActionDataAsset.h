@@ -33,8 +33,6 @@ class UE5_ACTIONRPG_API UCombatActionDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-	void SetData(AItem* InItem);
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FItemInfoData ItemInfoData;
 };
