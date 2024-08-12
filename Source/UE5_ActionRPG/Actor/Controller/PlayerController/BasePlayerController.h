@@ -23,7 +23,7 @@ protected:
 	virtual void SetupInputComponent() override;
 
 	virtual void OnPossess(APawn* aPawn) override;
-	virtual void OnUnPossess();
+	virtual void OnUnPossess() override;
 protected:
 	void OnMove(const FInputActionValue& InputActionValue);
 	void OnLookMouse(const FInputActionValue& InputActionValue);

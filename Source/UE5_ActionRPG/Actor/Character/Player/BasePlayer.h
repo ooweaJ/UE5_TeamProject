@@ -101,4 +101,7 @@ public:
 protected:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 	AActor* InteractableObject;
+
+	UPROPERTY(EditAnywhere)
+	class UNiagaraSystem* DeathDissolveEffect; 
 };
