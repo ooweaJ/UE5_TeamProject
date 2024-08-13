@@ -163,12 +163,15 @@ void ABasePlayer::OffShift()
 void ABasePlayer::OnEvade()
 {
 	if (!State->IsIdleMode()) return;
+	if (Status->SP.Current < -Status->GetEvadeCost()) return;
 	if (bLockOn)
 	{
+		Status->StatusModify(Status->SP, Status->GetEvadeCost());
 		State->SetEvadeMode();
 	}
 	else
 	{
+		Status->StatusModify(Status->SP, Status->GetEvadeCost());
 		State->SetEvadeMode();
 		MontageComponent->PlayAvoid();
 	}
@@ -177,6 +180,8 @@ void ABasePlayer::OnEvade()
 void ABasePlayer::OnStepBack()
 {
 	if (!State->IsIdleMode()) return;
+	if (Status->SP.Current < -Status->GetEvadeCost()) return;
+	Status->StatusModify(Status->SP, Status->GetEvadeCost());
 	State->SetStepBackMode();
 }
 
@@ -206,7 +211,10 @@ void ABasePlayer::MulticastOnDefaultAction_Implementation()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{
+		if (Status->SP.Current < -Status->GetAttackCost()) return;
+
 		item->OnDefaultAction();
+		Status->StatusModify(Status->SP, Status->GetAttackCost());
 	}
 }
 
