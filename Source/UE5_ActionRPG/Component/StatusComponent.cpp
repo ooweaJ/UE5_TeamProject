@@ -58,14 +58,20 @@ void UStatusComponent::IncreaseHealth(float InAmount)
 {
 	Health += InAmount;
 	Health = FMath::Clamp(Health, 0.f, MaxHealth);
-	OnRep_Update();
+	if (GetOwner()->HasAuthority())
+	{
+		OnRep_Update();
+	}
 }
 
 void UStatusComponent::DecreaseHealth(float InAmount)
 {
 	Health -= InAmount;
 	Health = FMath::Clamp(Health, 0.f, MaxHealth);
-	OnRep_Update();
+	if (GetOwner()->HasAuthority())
+	{
+		OnRep_Update();
+	}
 }
 
 void UStatusComponent::OnRep_Update()

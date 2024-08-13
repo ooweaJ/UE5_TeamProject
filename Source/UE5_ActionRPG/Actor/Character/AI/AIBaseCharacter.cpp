@@ -179,11 +179,3 @@ void AAIBaseCharacter::UpdateHP()
 		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
 	}
 }
-
-float AAIBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	//UpdateHP();
-	return 0.0f;
-}
-

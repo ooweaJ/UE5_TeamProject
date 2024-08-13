@@ -109,21 +109,24 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	if (!DamageEvent.DamageTypeClass) return 0;
-
 	HitPlayMontage(DamageEvent.DamageTypeClass);
 
-	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
-
-	Status->StatusModify(Status->HP, -DamageAmount);
-	Status->DecreaseHealth(DamageAmount);
-
-	if (Status->GetHealth() == 0.f)
+	if (HasAuthority())
 	{
-		State->SetDeadMode();
-		Dead();
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
+
+		Status->StatusModify(Status->HP, -DamageAmount);
+		Status->DecreaseHealth(DamageAmount);
+
+		if (Status->GetHealth() == 0.f)
+		{
+			State->SetDeadMode();
+			Dead();
+		}
+		return DamageAmount;
 	}
 
-	return DamageAmount;
+	return 0;
 }
 
 

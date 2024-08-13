@@ -38,7 +38,6 @@ public:
 	void TargetRotation();
 	void RotateToTarget();
 	virtual void UpdateHP();
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 public:
 	FORCEINLINE void SetMoveDirection(FVector InDirection) { Direction = InDirection; }
 	FORCEINLINE void SetStrafe(bool InStrafe) { bStrafe = InStrafe; }
