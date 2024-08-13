@@ -106,4 +106,5 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UNiagaraSystem* DeathDissolveEffect; 
+
 };

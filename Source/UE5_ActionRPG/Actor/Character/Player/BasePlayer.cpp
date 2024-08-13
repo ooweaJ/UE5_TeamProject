@@ -103,7 +103,7 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	/* TODO */
-	Status->HP.Current -= TempDamage;
+	Status->StatusModify(Status->HP, -TempDamage);
 
 	if (Status->HP.Current <= 0.)
 	{

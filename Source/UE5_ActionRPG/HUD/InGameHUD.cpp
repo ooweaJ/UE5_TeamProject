@@ -13,5 +13,4 @@ void AInGameHUD::BeginPlay()
 	MainUI = CreateWidget(PC, WidgetClass);
 
 	MainUI->AddToViewport();
-
 }

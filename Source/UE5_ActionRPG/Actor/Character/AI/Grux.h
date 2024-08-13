@@ -29,6 +29,9 @@ public:
 	UFUNCTION(NetMulticast,Reliable)
 	void MultiFinishFlySkill();
 
+	UFUNCTION()
+	void OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class AGruxMeteor> ActorToSpawn;
 

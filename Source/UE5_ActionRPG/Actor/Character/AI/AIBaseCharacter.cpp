@@ -7,12 +7,16 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/InGame/UI_BossStatus.h"
 #include "Components/WidgetComponent.h"
+#include "Components/SphereComponent.h"
 
 AAIBaseCharacter::AAIBaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
 	HealthWidget->SetupAttachment(RootComponent);
+	UIPopCollision = CreateDefaultSubobject<USphereComponent>(TEXT("UIPopCollision"));
+	UIPopCollision->SetupAttachment(GetRootComponent());
+	UIPopCollision->SetSphereRadius(1000.f);
 	ConstructorHelpers::FClassFinder<UUserWidget> Class(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/InGame/BPUI_BossStatus.BPUI_BossStatus_C'"));
 	if(Class.Succeeded())
 		HealthWidget->SetWidgetClass(Class.Class);
@@ -59,6 +63,17 @@ void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+#include "Actor/Character/Player/BasePlayer.h"
+float AAIBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	ABasePlayer* Player = Cast<ABasePlayer>(DamageCauser->GetOwner());
+
+
+
+	return TempDamage;
 }
 
 void AAIBaseCharacter::OnMelee_Implementation(uint32 Num)

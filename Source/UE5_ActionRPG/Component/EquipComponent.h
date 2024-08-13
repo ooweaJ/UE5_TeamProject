@@ -41,11 +41,14 @@ public:
 	FORCEINLINE void SetSelectItem(AItem* InItem) { SelectItem = InItem; }
 	void EndAction();
 
+	// Potion
 	FORCEINLINE bool CanUsePotion() { return Potion.Amount > 0; }
 	FORCEINLINE void UsePotion() { Potion.Amount--; }
 	FORCEINLINE void SupplyPotion() { Potion.Amount = 10; }
 	FORCEINLINE void SetPotionHealAmount(float InAmount) { Potion.HealAmount = InAmount; }
 	FORCEINLINE float GetPotionHealAmount() { return Potion.HealAmount; }
+	FORCEINLINE FPotion* GetPotion() { return &Potion; }
+
 private:
 	TArray<AItem*> EquipItems;
 	//UPROPERTY(Replicated)

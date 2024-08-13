@@ -5,12 +5,16 @@
 #include "Actor/ProJectile/GruxMeteor.h"
 #include "Actor/Controller/AIController/BaseAIController.h"
 #include "Net/UnrealNetwork.h"
+#include "Components/SphereComponent.h"
+#include "Actor/Character/Player/BasePlayer.h"
+#include "Kismet/GameplayStatics.h"
+#include "HUD/InGameHUD.h"
 
 void AGrux::BeginPlay()
 {
     Super::BeginPlay();
     TimerDel.BindUFunction(this, FName("SpawnActorsAround"), 500.f, int32(6));
- 
+    //UIPopCollision->OnComponentBeginOverlap.AddDynamic(this, &AGrux::OnUIPopUP);
 }
 
 void AGrux::Tick(float DeltaTime)
@@ -82,6 +86,18 @@ void AGrux::SpawnActorsAround(float Distance, int32 NumberOfActors)
         }
     }
     UKismetSystemLibrary::K2_SetTimer(this, "FinishFlySkill", 4.f, false);
+}
+
+void AGrux::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    ABasePlayer* BP = Cast<ABasePlayer>(OtherActor);
+    if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+    {
+        if (AInGameHUD* InGameHUD = Cast<AInGameHUD>(PC->GetHUD()))
+        {
+            GEngine->AddOnScreenDebugMessage(0, 3.f, FColor::Blue, TEXT("UIPOPUP"));
+        }
+    }
 }
 
 

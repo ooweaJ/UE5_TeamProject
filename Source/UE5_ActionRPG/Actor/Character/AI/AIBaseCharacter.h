@@ -20,6 +20,8 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 	UFUNCTION(Server, Reliable)
 	virtual void OnMelee(uint32 Num = 1);
 
@@ -52,6 +54,11 @@ protected:
 	FName NameTag;
 protected:
 	class ABaseAIController* BaseController;
+
+	UPROPERTY(EditAnyWhere)
+	class USphereComponent* UIPopCollision;
+
+protected:
 	FVector Direction;
 	bool bStrafe = false;
 	bool bRotate = false;

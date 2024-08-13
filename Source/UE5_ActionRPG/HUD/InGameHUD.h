@@ -14,7 +14,7 @@ class UE5_ACTIONRPG_API AInGameHUD : public AHUD
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
