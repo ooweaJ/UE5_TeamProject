@@ -82,7 +82,7 @@ private:
 	bool bCanMove = true;
 
 public:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Status")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Status", ReplicatedUsing = "OnRep_Update")
 	FStatus HP;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Status")

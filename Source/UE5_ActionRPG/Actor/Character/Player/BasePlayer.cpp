@@ -318,6 +318,12 @@ void ABasePlayer::TickLockOn()
 	
 }
 
+void ABasePlayer::UpdateHP()
+{
+	AInGameHUD* MyHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+}
+
 void ABasePlayer::SetPrimitiveComponentsVisibility(bool bVisible)
 {
 	TArray<UActorComponent*> Components;

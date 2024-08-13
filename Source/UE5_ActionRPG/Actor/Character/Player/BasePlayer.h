@@ -51,6 +51,7 @@ public:
 	void LockOn();
 	
 	void TickLockOn();
+	virtual void UpdateHP();
 
 	void SetPrimitiveComponentsVisibility(bool bVisible); 
 
