@@ -18,6 +18,8 @@ public:
 
 	class UConfigMenuWidget* GetConfigMenu() const { return ConfigMenuWidget; }
 
+	void SetRespawnedPlayer(class ABasePlayer* InPlayer) { Player = InPlayer; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;

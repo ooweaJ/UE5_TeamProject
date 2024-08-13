@@ -18,6 +18,7 @@ public:
 	virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 	void SpawnRelevantPlayer(APlayerController* NewPlayer, bool bInit); 
 	void Respawn(APlayerController* InPlayerController);
+
 public:
 	void SetPlayerClassName(FString InClassName) { ClassName = InClassName; }
 protected:
@@ -32,4 +33,6 @@ private:
 	TMap<FString, TSubclassOf<ABasePlayer>> ClassMap;
 
 	FTimerHandle RespawnTimerHandle; 
+
+	bool bInit = true;
 };

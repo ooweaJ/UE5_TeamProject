@@ -21,7 +21,15 @@ void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	SpawnRelevantPlayer(NewPlayer, true);
+	if (bInit)
+	{
+		SpawnRelevantPlayer(NewPlayer, true); 
+		bInit = false; 
+	}
+	else
+	{
+		SpawnRelevantPlayer(NewPlayer, false);
+	}
 }
 
 APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
@@ -32,7 +40,7 @@ APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemo
 	return PC;
 }
 
-void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer, bool bInit)
+void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer, bool InInit)
 {
 	TSubclassOf<ABasePlayer>* BasePlayer = ClassMap.Find(ClassName);
 	if (!BasePlayer) { return; }
@@ -48,16 +56,20 @@ void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer, bool 
 	ABasePlayer* NewBasePlayer = GetWorld()->SpawnActor<ABasePlayer>(*BasePlayer, SpawnLocation, SpawnRotation, SpawnParams);
 
 	if (!NewBasePlayer) { return; }
-
-	if (bInit)
+	if (InInit)
 	{
 		AActor* OldPawn = NewPlayer->GetPawn();
 		OldPawn->Destroy();
 	}
 
-	NewPlayer->Possess(NewBasePlayer);
-	NewPlayer->SetIgnoreMoveInput(false);
-	NewPlayer->SetIgnoreLookInput(false);
+	if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(NewPlayer))
+	{
+		BasePlayerController->Possess(NewBasePlayer);
+		BasePlayerController->SetIgnoreMoveInput(false);
+		BasePlayerController->SetIgnoreLookInput(false);
+		BasePlayerController->SetRespawnedPlayer(NewBasePlayer);
+	}
+
 }
 
 void AMainWorldGameMode::Respawn(APlayerController* InPlayerController)

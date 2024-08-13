@@ -107,8 +107,6 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 		ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
 		AMainWorldGameMode* GameMode = Cast<AMainWorldGameMode>(UGameplayStatics::GetGameMode(this));
 
-		
-
 		if (BasePlayerController)
 		{
 			BasePlayerController->UnPossess();
@@ -118,6 +116,13 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 
 		UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
 			GetMesh(), FName("None"), FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
+
+		TArray<AActor*> AttachedActors;
+		GetAttachedActors(AttachedActors);
+		for (AActor* AttachedActor : AttachedActors)
+		{
+			AttachedActor->Destroy(); 
+		}
 
 
 		Destroy();
