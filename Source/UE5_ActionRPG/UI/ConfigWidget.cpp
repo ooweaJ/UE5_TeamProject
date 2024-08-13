@@ -4,6 +4,7 @@
 #include "UI/ConfigWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Scalability.h"
 
 void UConfigWidget::NativeConstruct()
 {
@@ -74,7 +75,6 @@ void UConfigWidget::SetConfigNameText(EConfigName ConfigName)
 	}
 }
 
-
 void UConfigWidget::SetConfigQualityText(EConfigQuality ConfigQuality)
 {
 	if (!ConfigQualityTextBlock) { check(false); return; }
@@ -111,16 +111,16 @@ void UConfigWidget::SetConfigQualityText(EConfigQuality ConfigQuality)
 
 void UConfigWidget::OnConfigMinusButtonClicked()
 {
-	if (CurrentConfigQualityIndex >= static_cast<uint8>(EConfigQuality::_End)) { check(false); return; }
-	if (CurrentConfigQualityIndex == 0) { return; }
+	if (ConfigQualityIndex >= static_cast<uint8>(EConfigQuality::_End)) { check(false); return; }
+	if (ConfigQualityIndex == 0) { return; }
 
-	SetConfigQualityText(static_cast<EConfigQuality>(--CurrentConfigQualityIndex));
+	SetConfigQualityText(static_cast<EConfigQuality>(--ConfigQualityIndex));
 }
 
 void UConfigWidget::OnConfigPlusButtonClicked() 
 {
-	if (CurrentConfigQualityIndex == static_cast<uint8>(EConfigQuality::_End)) { check(false); return; }
-	if (CurrentConfigQualityIndex == static_cast<uint8>(EConfigQuality::_End) - 1) { return; }
+	if (ConfigQualityIndex == static_cast<uint8>(EConfigQuality::_End)) { check(false); return; }
+	if (ConfigQualityIndex == static_cast<uint8>(EConfigQuality::_End) - 1) { return; }
 
-	SetConfigQualityText(static_cast<EConfigQuality>(++CurrentConfigQualityIndex));
+	SetConfigQualityText(static_cast<EConfigQuality>(++ConfigQualityIndex));
 }

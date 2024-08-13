@@ -52,62 +52,10 @@ void UConfigMenuWidget::InitVerticalBox()
 	{
 		if (UConfigWidget* Config = Cast<UConfigWidget>(ConfigChildren[i]))
 		{
-			Config->SetConfigNameText(static_cast<EConfigName>(i));
-			Config->SetConfigNameIndex(i);
-
-			uint8 LastConfigQualityIndex = Config->GetLastQualityIndex(); 
-
-			if (Config->GetbInit())
-			{
-				Config->SetConfigQualityText(static_cast<EConfigQuality>(LastConfigQualityIndex));
-				Config->SetConfigQualityIndex(LastConfigQualityIndex);
-			}
-			else
-			{
-				Scalability::FQualityLevels QualityLevels = Scalability::GetQualityLevels(); 
-				const EConfigName& ConfigName = static_cast<EConfigName>(i);
-
-				switch (ConfigName)
-				{
-				case EConfigName::Texture:
-				{
-					Config->SetConfigQualityText(static_cast<EConfigQuality>(QualityLevels.TextureQuality)); 
-					Config->SetConfigQualityIndex(QualityLevels.TextureQuality);
-					break; 
-				}
-				case EConfigName::AntiAliasing:
-				{
-					Config->SetConfigQualityText(static_cast<EConfigQuality>(QualityLevels.AntiAliasingQuality));
-					Config->SetConfigQualityIndex(QualityLevels.AntiAliasingQuality);
-					break;
-				}
-				case EConfigName::Shadow:
-				{
-					Config->SetConfigQualityText(static_cast<EConfigQuality>(QualityLevels.ShadowQuality));
-					Config->SetConfigQualityIndex(QualityLevels.ShadowQuality);
-					break;
-				}
-				case EConfigName::Shading:
-				{
-					Config->SetConfigQualityText(static_cast<EConfigQuality>(QualityLevels.ShadingQuality));
-					Config->SetConfigQualityIndex(QualityLevels.ShadingQuality);
-					break;
-				}
-				case EConfigName::Effect:
-				{
-					Config->SetConfigQualityText(static_cast<EConfigQuality>(QualityLevels.EffectsQuality));
-					Config->SetConfigQualityIndex(QualityLevels.EffectsQuality);
-					break;
-				}
-				case EConfigName::GlobalIllumination:
-				{
-					Config->SetConfigQualityText(static_cast<EConfigQuality>(QualityLevels.GlobalIlluminationQuality));
-					Config->SetConfigQualityIndex(QualityLevels.GlobalIlluminationQuality);
-					break;
-				}
-				}
-				Config->SetbInit(true); 
-			}
+			Config->SetConfigNameText(static_cast<EConfigName>(i)); 
+			Config->SetConfigQualityText(EConfigQuality::high); 
+			Config->SetConfigNameIndex(i); 
+			Config->SetConfigQualityIndex(static_cast<uint8>(EConfigQuality::high)); 
 		}
 	}
 }
@@ -161,8 +109,6 @@ void UConfigMenuWidget::OnApplyButtonClicked()
 				break; 
 			}
 			}
-
-			Config->SetLastQualityIndex(CurrentQualityIndex); 
 		}
 	}
 	Scalability::SetQualityLevels(QualityLevels);
