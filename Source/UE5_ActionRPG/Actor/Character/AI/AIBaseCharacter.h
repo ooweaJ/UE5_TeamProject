@@ -55,7 +55,7 @@ protected:
 protected:
 	class ABaseAIController* BaseController;
 
-	UPROPERTY(EditAnyWhere)
+	UPROPERTY(EditAnywhere)
 	class USphereComponent* UIPopCollision;
 
 protected:

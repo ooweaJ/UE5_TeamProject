@@ -6,15 +6,22 @@
 #include "Actor/Controller/AIController/BaseAIController.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/SphereComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Component/StatusComponent.h"
 #include "Actor/Character/Player/BasePlayer.h"
 #include "Kismet/GameplayStatics.h"
 #include "HUD/InGameHUD.h"
+#include "UI/InGame/UI_MainInGame.h"
+#include "UI/InGame/UI_BossStatus.h"
 
 void AGrux::BeginPlay()
 {
     Super::BeginPlay();
+
     TimerDel.BindUFunction(this, FName("SpawnActorsAround"), 500.f, int32(6));
-    //UIPopCollision->OnComponentBeginOverlap.AddDynamic(this, &AGrux::OnUIPopUP);
+    
+    if(UIPopCollision)
+        UIPopCollision->OnComponentBeginOverlap.AddDynamic(this, &AGrux::OnUIPopUP);
 }
 
 void AGrux::Tick(float DeltaTime)
@@ -95,7 +102,12 @@ void AGrux::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherAct
     {
         if (AInGameHUD* InGameHUD = Cast<AInGameHUD>(PC->GetHUD()))
         {
-            GEngine->AddOnScreenDebugMessage(0, 3.f, FColor::Blue, TEXT("UIPOPUP"));
+            if (UUI_MainInGame* UI = Cast<UUI_MainInGame>(InGameHUD->MainUI))
+            {
+                UI->UI_BossStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject());
+                UI->UI_BossStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+                UI->UI_BossStatus->SetVisibility(ESlateVisibility::Visible);
+            }
         }
     }
 }

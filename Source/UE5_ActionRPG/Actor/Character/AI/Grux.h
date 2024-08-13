@@ -45,4 +45,5 @@ public:
 	FTimerDelegate TimerDel;
 	FVector TarGetLocation;
 	FActionData* Data;
+
 };

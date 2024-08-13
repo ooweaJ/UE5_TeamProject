@@ -14,9 +14,11 @@ AAIBaseCharacter::AAIBaseCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
 	HealthWidget->SetupAttachment(RootComponent);
+	
 	UIPopCollision = CreateDefaultSubobject<USphereComponent>(TEXT("UIPopCollision"));
-	UIPopCollision->SetupAttachment(GetRootComponent());
+	UIPopCollision->SetupAttachment(RootComponent);
 	UIPopCollision->SetSphereRadius(1000.f);
+
 	ConstructorHelpers::FClassFinder<UUserWidget> Class(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/InGame/BPUI_BossStatus.BPUI_BossStatus_C'"));
 	if(Class.Succeeded())
 		HealthWidget->SetWidgetClass(Class.Class);

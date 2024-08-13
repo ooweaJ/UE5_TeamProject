@@ -13,7 +13,7 @@ void UUI_MainInGame::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	
-	//UI_BossStatus->SetVisibility(ESlateVisibility::Collapsed);
+	UI_BossStatus->SetVisibility(ESlateVisibility::Collapsed);
 	UI_Text->SetVisibility(ESlateVisibility::Collapsed);
 }
 

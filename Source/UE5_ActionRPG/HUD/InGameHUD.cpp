@@ -4,6 +4,7 @@
 #include "HUD/InGameHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetComponent.h"
+#include "UI/InGame/UI_MainInGame.h"
 
 void AInGameHUD::BeginPlay()
 {
