@@ -71,8 +71,8 @@ void ABaseAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors
 	ACharacter* player = nullptr;
 	for (AActor* actor : actors)
 	{
-		player = Cast<ACharacter>(actor);
-
+		if (actor->ActorHasTag("Player"))
+			player = Cast<ACharacter>(actor);
 		if (!!player)
 			break;
 	}
@@ -119,6 +119,16 @@ void ABaseAIController::OnSkill(uint32 Num)
 void ABaseAIController::OnUltimate()
 {
 	OwnerAI->OnUltimate();
+}
+
+void ABaseAIController::MontagePlayRate()
+{
+	if (AAIBaseCharacter* AI = Cast<AAIBaseCharacter>(GetPawn()))
+	{
+		uint32 num = FMath::RandRange(0, 1);
+		if (num) return;
+		AI->PlayRateMontage();
+	}
 }
 
 ACharacter* ABaseAIController::GetTarget()

@@ -10,7 +10,7 @@ class UE5_ACTIONRPG_API ABasePlayer : public ABaseCharacter
 	GENERATED_BODY()
 
 public:
-	ABasePlayer(const FObjectInitializer& ObjectInitializer);
+	ABasePlayer();
 
 protected:
 	virtual void BeginPlay() override;
@@ -36,6 +36,8 @@ public:
 	void OffShift();
 	void OnEvade();
 	void OnStepBack();
+	void OnInteraction();
+	void UsePotion();
 
 	UFUNCTION(Server, Reliable)
 	void ServerOnMouseL();
@@ -49,6 +51,13 @@ public:
 	void LockOn();
 	
 	void TickLockOn();
+	virtual void UpdateHP();
+
+	void SetPrimitiveComponentsVisibility(bool bVisible); 
+
+	void SetAttachedActorsVisiblity(bool bVisible); 
+
+	void DestroyAttachedActors(); 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;
@@ -98,7 +107,10 @@ public:
 	FVector ArmPos;
 	FVector ActorPos;
 
-protected:
+public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
-	AActor* InteractableObject;
+	class AInteractiveActor* InteractableObject;
+
+	UPROPERTY(EditAnywhere)
+	class UNiagaraSystem* DeathDissolveEffect; 
 };

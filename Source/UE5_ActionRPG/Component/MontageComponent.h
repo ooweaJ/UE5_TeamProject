@@ -44,6 +44,7 @@ public:
 	void PlayRoll();
 	void PlayHit();
 	void PlayStun();
+	void PlayDead();
 
 private:
 	void PlayAnimMontage(FName Key);

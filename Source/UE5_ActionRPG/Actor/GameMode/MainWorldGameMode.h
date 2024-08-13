@@ -16,6 +16,11 @@ public:
 public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
+	void SpawnRelevantPlayer(APlayerController* NewPlayer); 
+	void Respawn(APlayerController* InPlayerController);
+
+public:
+	void SetPlayerClassName(FString InClassName) { ClassName = InClassName; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -26,4 +31,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TMap<FString, TSubclassOf<ABasePlayer>> ClassMap;
+
+	FTimerHandle RespawnTimerHandle; 
 };

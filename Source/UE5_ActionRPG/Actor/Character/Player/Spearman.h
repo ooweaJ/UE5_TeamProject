@@ -17,7 +17,7 @@ class UE5_ACTIONRPG_API ASpearman : public ABasePlayer
 	GENERATED_BODY()
 
 public:
-	ASpearman(const FObjectInitializer& ObjectInitializer); 
+	ASpearman(); 
 
 public:
 	ASpearProjectile* GetSpearProjectile() const { return SpearProjectile; }
@@ -32,8 +32,6 @@ protected:
 	virtual void OnConstruction(const FTransform& Transform) override; 
 
 	virtual void BeginPlay() override; 
-
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	void SetupSpearProjectile(); 
 

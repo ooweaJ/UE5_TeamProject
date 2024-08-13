@@ -1,6 +1,10 @@
 #include "Actor/Character/Player/BasePlayer.h"
+#include "Actor/Controller/PlayerController/BasePlayerController.h"
+#include "Actor/GameMode/MainWorldGameMode.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "NiagaraSystem.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Component/StatusComponent.h"
@@ -8,11 +12,14 @@
 #include "Component/EquipComponent.h"
 #include "Component/MontageComponent.h"
 #include "Actor/Item/Item.h"
+#include "Actor/Item/Attachment.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Others/InteractiveActor.h"
+#include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
 
-ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+ABasePlayer::ABasePlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -51,6 +58,13 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		SpringArm->bDoCollisionTest = true;
 		SpringArm->bUsePawnControlRotation = true;
 	}
+	{
+		ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(TEXT("/Script/Niagara.NiagaraSystem'/Game/_dev/Effect/Death/NS_DeathDissolve.NS_DeathDissolve'"));
+		if (NiagaraSystemAsset.Succeeded())
+		{
+			DeathDissolveEffect = NiagaraSystemAsset.Object; 
+		}
+	}
 	Tags.Add("Player");
 }
 
@@ -58,7 +72,12 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Status->SetSpeed(EWalkSpeedTpye::Walk);
+	if (Status && Equip)
+	{
+		Status->SetSpeed(EWalkSpeedTpye::Walk);
+		Equip->SupplyPotion();
+		Equip->SetPotionHealAmount(Status->GetMaxHP() * 0.3f);
+	}
 }
 
 void ABasePlayer::PossessedBy(AController* NewController)
@@ -85,6 +104,40 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	/* TODO */
+	Status->HP.Current -= TempDamage;
+
+	// When HP is less or equal than 0 
+	if (Status->HP.Current <= 0.)
+	{
+		State->SetDeadMode();
+
+		ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
+		AMainWorldGameMode* GameMode = Cast<AMainWorldGameMode>(UGameplayStatics::GetGameMode(this));
+
+		if (BasePlayerController)
+		{
+			BasePlayerController->UnPossess();
+			BasePlayerController->SetIgnoreMoveInput(true); 
+			BasePlayerController->SetIgnoreLookInput(true); 
+		}
+
+		UNiagaraComponent* DeathDissolveComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
+			GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
+
+		SetPrimitiveComponentsVisibility(false);
+
+		SetAttachedActorsVisiblity(false);
+
+		DeathDissolveComponent->SetVisibility(true); 
+
+		SetActorEnableCollision(false); 
+
+		if (GameMode && BasePlayerController)
+		{
+			GameMode->Respawn(BasePlayerController);
+		}
+
+	}
 
 	return TempDamage;
 }
@@ -174,6 +227,23 @@ void ABasePlayer::OnStepBack()
 	State->SetStepBackMode();
 }
 
+void ABasePlayer::OnInteraction()
+{
+	if (InteractableObject)
+	{
+		InteractableObject->OnInteraction();
+	}
+}
+
+void ABasePlayer::UsePotion()
+{
+	if (Equip && Equip->CanUsePotion() && Status->GetCurrentHP()!=Status->GetMaxHP())
+	{
+		Equip->UsePotion();
+		Status->StatusModify(Status->HP, Equip->GetPotionHealAmount());
+	}
+}
+
 void ABasePlayer::ServerOnMouseL_Implementation()
 {
 	MulticastOnDefaultAction();
@@ -248,4 +318,61 @@ void ABasePlayer::TickLockOn()
 	
 }
 
+void ABasePlayer::UpdateHP()
+{
+	AInGameHUD* MyHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
+}
+
+void ABasePlayer::SetPrimitiveComponentsVisibility(bool bVisible)
+{
+	TArray<UActorComponent*> Components;
+	GetComponents(Components);
+
+	if (Components.Num() == 0) { return;  }
+
+	for (UActorComponent* Component : Components)
+	{
+		UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(Component);
+		if (PrimitiveComponent)
+		{
+			PrimitiveComponent->SetVisibility(bVisible, true);
+		}
+	}
+}
+
+void ABasePlayer::SetAttachedActorsVisiblity(bool bVisible)
+{
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+
+	if (AttachedActors.Num() == 0) { return; }
+
+	for (AActor* AttachedActor : AttachedActors)
+	{
+		TArray<UActorComponent*> AttachedComponents;
+		GetComponents(AttachedComponents);
+
+		for (UActorComponent* AttachedComponent : AttachedComponents)
+		{
+			UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(AttachedComponent);
+			if (PrimitiveComponent)
+			{
+				PrimitiveComponent->SetVisibility(bVisible, true);
+			}
+		}
+	}
+}
+
+void ABasePlayer::DestroyAttachedActors()
+{
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+
+	if (AttachedActors.Num() == 0) { return; }
+
+	for (AActor* AttachedActor : AttachedActors)
+	{
+		AttachedActor->Destroy(); 
+	}
+}

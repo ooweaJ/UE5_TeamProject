@@ -12,6 +12,7 @@
 #include "UI/PauseMenuWidget.h"
 #include "UI/ConfigMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/WidgetSwitcher.h"
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -73,6 +74,8 @@ void ABasePlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Completed, this, &ThisClass::OffMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Completed, this, &ThisClass::OffMouseR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Q, ETriggerEvent::Started, this, &ThisClass::OnQ);
+			EnhancedInputComponent->BindAction(InPutDataConfig->E, ETriggerEvent::Started, this, &ThisClass::OnE);
+			EnhancedInputComponent->BindAction(InPutDataConfig->R, ETriggerEvent::Started, this, &ThisClass::OnR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->ESC, ETriggerEvent::Started, this, &ThisClass::OnESC);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Triggered, this, &ThisClass::OnShift);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Completed, this, &ThisClass::OffShift);
@@ -83,12 +86,11 @@ void ABasePlayerController::SetupInputComponent()
 void ABasePlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
-
-	
 }
 
 void ABasePlayerController::OnUnPossess()
 {
+	Super::OnUnPossess(); 
 }
 
 void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
@@ -96,6 +98,8 @@ void ABasePlayerController::OnMove(const FInputActionValue& InputActionValue)
 	FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 	
 	ABasePlayer* ControlledPawn = Cast<ABasePlayer>(GetPawn());
+
+	if (!ControlledPawn) { return; }
 
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -202,9 +206,21 @@ void ABasePlayerController::OnQ(const FInputActionValue& InputActionValue)
 		Player->OnQ(); 
 }
 
+void ABasePlayerController::OnE(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->OnInteraction();
+}
+
+void ABasePlayerController::OnR(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->UsePotion();
+}
+
 void ABasePlayerController::OnESC(const FInputActionValue& InputActionValue)
 {
-	if (PauseMenuWidget)
+	if (PauseMenuWidget && PauseMenuWidget->GetPauseMenuWidgetSwitcher()->GetActiveWidgetIndex() == 0)
 	{
 		if (!bPauseMenuOpened)
 		{

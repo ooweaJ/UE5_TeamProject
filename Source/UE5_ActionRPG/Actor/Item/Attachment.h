@@ -32,7 +32,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AttachToCollision(class USceneComponent* InComponent, FName InSocketName);
 
-	TArray<AActor*> GetTargets();
 private:
 	// 충돌 바인딩 함수
 	UFUNCTION()

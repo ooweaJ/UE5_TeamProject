@@ -18,12 +18,14 @@ public:
 
 	class UConfigMenuWidget* GetConfigMenu() const { return ConfigMenuWidget; }
 
+	void SetRespawnedPlayer(class ABasePlayer* InPlayer) { Player = InPlayer; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
 	virtual void OnPossess(APawn* aPawn) override;
-	virtual void OnUnPossess();
+	virtual void OnUnPossess() override;
 protected:
 	void OnMove(const FInputActionValue& InputActionValue);
 	void OnLookMouse(const FInputActionValue& InputActionValue);
@@ -36,6 +38,8 @@ protected:
 	void OffMouseL(const FInputActionValue& InputActionValue);
 	void OffMouseR(const FInputActionValue& InputActionValue);
 	void OnQ(const FInputActionValue& InputActionValue); 
+	void OnE(const FInputActionValue& InputActionValue); 
+	void OnR(const FInputActionValue& InputActionValue); 
 	void OnESC(const FInputActionValue& InputActionValue); 
 	
 private:
