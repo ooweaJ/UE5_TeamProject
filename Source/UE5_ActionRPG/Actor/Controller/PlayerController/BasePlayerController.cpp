@@ -10,14 +10,23 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "UI/PauseMenuWidget.h"
+#include "UI/ConfigMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 ABasePlayerController::ABasePlayerController()
 {
-	
-	static ConstructorHelpers::FClassFinder<UPauseMenuWidget> PauseMenuWidgetObject(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/UI_PauseMenu.UI_PauseMenu_C'"));
-	ensure(PauseMenuWidgetObject.Class); 
-	PauseMenuWidgetClass = PauseMenuWidgetObject.Class; 
+	{
+		static ConstructorHelpers::FClassFinder<UPauseMenuWidget> PauseMenuWidgetObject(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/Menu/UI_PauseMenu.UI_PauseMenu_C'"));
+		ensure(PauseMenuWidgetObject.Class);
+		PauseMenuWidgetClass = PauseMenuWidgetObject.Class;
+	}
+
+	{
+		static ConstructorHelpers::FClassFinder<UConfigMenuWidget> ConfigMenuWidgetObject(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/Menu/UI_ConfigMenu.UI_ConfigMenu_C'")); 
+		ensure(ConfigMenuWidgetObject.Class); 
+		ConfigMenuWidgetClass = ConfigMenuWidgetObject.Class; 
+	}
+	 
 }
 
 void ABasePlayerController::BeginPlay()
@@ -36,6 +45,11 @@ void ABasePlayerController::BeginPlay()
 	if (PauseMenuWidgetClass)
 	{
 		PauseMenuWidget = CreateWidget<UPauseMenuWidget>(this, PauseMenuWidgetClass); 
+	}
+
+	if (ConfigMenuWidgetClass)
+	{
+		ConfigMenuWidget = CreateWidget<UConfigMenuWidget>(this, ConfigMenuWidgetClass);
 	}
 
 	bEnableClickEvents = true;

@@ -10,7 +10,7 @@ class UE5_ACTIONRPG_API ABasePlayer : public ABaseCharacter
 	GENERATED_BODY()
 
 public:
-	ABasePlayer(const FObjectInitializer& ObjectInitializer);
+	ABasePlayer();
 
 protected:
 	virtual void BeginPlay() override;

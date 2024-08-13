@@ -12,7 +12,7 @@ class UE5_ACTIONRPG_API ABaseCharacter : public ACharacter , public ICombatInter
 	GENERATED_BODY()
 
 public:
-	ABaseCharacter(const FObjectInitializer& ObjectInitializer);
+	ABaseCharacter();
 
 	FORCEINLINE void SetParrying(bool InParry) { Parrying = InParry; }
 	FORCEINLINE bool GetParrying() { return Parrying; }

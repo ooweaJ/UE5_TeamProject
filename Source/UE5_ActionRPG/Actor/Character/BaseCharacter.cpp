@@ -8,16 +8,16 @@
 #include "Engine/DamageEvents.h"
 #include "Actor/Item/DamageType/DefaultDamageType.h"
 
-ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Equip = ObjectInitializer.CreateDefaultSubobject<UEquipComponent>(this, TEXT("EquipComponent"));
+	Equip = CreateDefaultSubobject<UEquipComponent>(TEXT("EquipComponent"));
 	Equip->SetIsReplicated(true);
-	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
-	Status = ObjectInitializer.CreateDefaultSubobject<UStatusComponent>(this, TEXT("StatusComponent"));
-	MontageComponent = ObjectInitializer.CreateDefaultSubobject<UMontageComponent>(this, TEXT("MontageComponent"));
+	State = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
+	Status = CreateDefaultSubobject<UStatusComponent>(TEXT("StatusComponent"));
+	Status->SetIsReplicated(true);
+	MontageComponent = CreateDefaultSubobject<UMontageComponent>(TEXT("MontageComponent"));
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 }
 
@@ -26,7 +26,16 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnBaseItem();
+	if (DefaultItemClass)
+	{
+		FTransform DefaultTransform;
+		AItem* Item = GetWorld()->SpawnActorDeferred<AItem>(DefaultItemClass, DefaultTransform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		Item->SetOwnerCharacter(this);
+		Item->FinishSpawning(DefaultTransform, true);
+		Equip->SetSelectItem(Item);
+	}
+
+	//SpawnBaseItem();
 }
 
 // Called every frame
@@ -71,6 +80,8 @@ void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
 			MontageComponent->PlayKnockBack();
 			break;
 		case EDamageType::Knockdown:
+			MontageComponent->PlayKnockDown();
+
 			break;
 		}
 	}
@@ -99,7 +110,7 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
 
 	Status->StatusModify(Status->HP, -DamageAmount);
-
+	Status->DecreaseHealth(DamageAmount);
 	return DamageAmount;
 }
 

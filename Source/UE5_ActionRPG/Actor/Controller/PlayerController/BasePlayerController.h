@@ -16,6 +16,8 @@ public:
 public:
 	void SetPauseMenuOpened(bool bOpen) { bPauseMenuOpened = bOpen; }
 
+	class UConfigMenuWidget* GetConfigMenu() const { return ConfigMenuWidget; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -40,9 +42,13 @@ private:
 	class ABasePlayer* Player;
 
 	TSubclassOf<class UPauseMenuWidget> PauseMenuWidgetClass; 
+	TSubclassOf<class UConfigMenuWidget> ConfigMenuWidgetClass; 
 
 	UPROPERTY()
 	class UPauseMenuWidget* PauseMenuWidget; 
+
+	UPROPERTY()
+	class UConfigMenuWidget* ConfigMenuWidget; 
 
 	bool bPauseMenuOpened = false; 
 };

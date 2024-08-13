@@ -11,8 +11,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+ABasePlayer::ABasePlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -31,6 +30,13 @@ ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
 		mesh->SetSkeletalMesh(Asset.Object);
 		mesh->SetRelativeLocation(FVector(0, 0, -88));
 		mesh->SetRelativeRotation(FRotator(0, -90, 0));
+	}
+	{
+		ConstructorHelpers::FObjectFinder<UDataTable> Asset(TEXT("/Script/Engine.DataTable'/Game/_dev/Data/DT/Montage/DT_BasePlayerMontage.DT_BasePlayerMontage'"));
+		if (Asset.Succeeded())
+		{
+			MontageComponent->SetMontageData(Asset.Object);
+		}
 	}
 	{
 		SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");

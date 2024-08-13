@@ -22,6 +22,7 @@ public class UE5_ActionRPG : ModuleRules
              "OnlineSubsystemSteam",
              "Slate", 
              "SlateCore", 
+             "UMG"
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
