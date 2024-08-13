@@ -17,7 +17,6 @@ public:
 	FORCEINLINE void SetParrying(bool InParry) { Parrying = InParry; }
 	FORCEINLINE bool GetParrying() { return Parrying; }
 	FORCEINLINE class UStateComponent* GetState() { return State; }
-	FORCEINLINE class UEquipComponent* GetEquip() { return Equip; }
 	FORCEINLINE class UStatusComponent* GetStatus() { return Status; }
 
 protected:
