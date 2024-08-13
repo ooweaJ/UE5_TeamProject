@@ -4,6 +4,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "NiagaraSystem.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Component/StatusComponent.h"
@@ -120,14 +121,16 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 			BasePlayerController->SetIgnoreLookInput(true); 
 		}
 
-		UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
-			GetMesh(), FName("None"), FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
+		UNiagaraComponent* DeathDissolveComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
+			GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
+
+		SetPrimitiveComponentsVisibility(false);
+
+		SetAttachedActorsVisiblity(false);
+
+		DeathDissolveComponent->SetVisibility(true); 
 
 		SetActorEnableCollision(false); 
-
-		SetPrimitiveComponentsVisibility(false); 
-
-		SetAttachedActorsVisiblity(false); 
 
 		if (GameMode && BasePlayerController)
 		{
