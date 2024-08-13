@@ -21,15 +21,7 @@ void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	if (bInit)
-	{
-		SpawnRelevantPlayer(NewPlayer, true); 
-		bInit = false; 
-	}
-	else
-	{
-		SpawnRelevantPlayer(NewPlayer, false);
-	}
+	SpawnRelevantPlayer(NewPlayer); 
 }
 
 APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
@@ -37,10 +29,11 @@ APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemo
 	APlayerController* PC = Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
 	const FString Class = UGameplayStatics::ParseOption(Options, "Class");
 	SetPlayerClassName(Class); 
+
 	return PC;
 }
 
-void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer, bool InInit)
+void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer)
 {
 	TSubclassOf<ABasePlayer>* BasePlayer = ClassMap.Find(ClassName);
 	if (!BasePlayer) { return; }
@@ -56,12 +49,14 @@ void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer, bool 
 	ABasePlayer* NewBasePlayer = GetWorld()->SpawnActor<ABasePlayer>(*BasePlayer, SpawnLocation, SpawnRotation, SpawnParams);
 
 	if (!NewBasePlayer) { return; }
-	if (InInit)
+	
+	AActor* OldPawn = NewPlayer->GetPawn();
+	if (ABasePlayer* OldBasePlayer = Cast<ABasePlayer>(OldPawn))
 	{
-		AActor* OldPawn = NewPlayer->GetPawn();
-		OldPawn->Destroy();
+		OldBasePlayer->DestroyAttachedActors(); 
+		OldBasePlayer->Destroy(); 
 	}
-
+	
 	if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(NewPlayer))
 	{
 		BasePlayerController->Possess(NewBasePlayer);
@@ -77,7 +72,7 @@ void AMainWorldGameMode::Respawn(APlayerController* InPlayerController)
 	FTimerDelegate TimerDelegate; 
 	TimerDelegate.BindLambda([this, InPlayerController]()
 		{
-			SpawnRelevantPlayer(InPlayerController, false); 
+			SpawnRelevantPlayer(InPlayerController); 
 		});
 	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, TimerDelegate, 3.f, false);
 }
