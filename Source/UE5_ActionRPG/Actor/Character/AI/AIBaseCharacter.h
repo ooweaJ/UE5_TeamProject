@@ -38,6 +38,12 @@ public:
 	void TargetRotation();
 	void RotateToTarget();
 	virtual void UpdateHP();
+
+	UFUNCTION(Server, Reliable)
+	void PlayRateMontage();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiPlayRateMontage();
+
 public:
 	FORCEINLINE void SetMoveDirection(FVector InDirection) { Direction = InDirection; }
 	FORCEINLINE void SetStrafe(bool InStrafe) { bStrafe = InStrafe; }

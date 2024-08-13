@@ -75,7 +75,7 @@ public:
 	void OnRep_Update();
 private:
 	UPROPERTY(EditAnywhere, Category = "Speed")
-	float Speed[(int32)EWalkSpeedTpye::Max] = { 300, 600, 900, 1200 };
+	float Speed[(int32)EWalkSpeedTpye::Max] = { 150, 300, 600, 900 };
 
 private:
 	float Damage;

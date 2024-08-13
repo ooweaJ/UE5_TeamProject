@@ -32,6 +32,7 @@ public:
 	virtual void OnMeleeAttack();
 	virtual void OnSkill(uint32 Num);
 	virtual void OnUltimate();
+	void MontagePlayRate();
 
 	class ACharacter* GetTarget();
 protected:
