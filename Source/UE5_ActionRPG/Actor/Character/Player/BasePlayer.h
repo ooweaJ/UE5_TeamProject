@@ -53,6 +53,11 @@ public:
 	void TickLockOn();
 	virtual void UpdateHP();
 
+	void SetPrimitiveComponentsVisibility(bool bVisible); 
+
+	void SetAttachedActorsVisiblity(bool bVisible); 
+
+	void DestroyAttachedActors(); 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;
