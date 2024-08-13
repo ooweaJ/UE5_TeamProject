@@ -1,17 +1,18 @@
 #include "Component/StatusComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interface/CombatInterface.h"
+#include "Net/UnrealNetwork.h"
 
 UStatusComponent::UStatusComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
 }
 
 void UStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	Health = MaxHealth;
 }
 
 void UStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -53,3 +54,31 @@ void UStatusComponent::SetDamage(float InAmount)
 }
 
 
+void UStatusComponent::IncreaseHealth(float InAmount)
+{
+	Health += InAmount;
+	Health = FMath::Clamp(Health, 0.f, MaxHealth);
+	OnRep_Update();
+}
+
+void UStatusComponent::DecreaseHealth(float InAmount)
+{
+	Health -= InAmount;
+	Health = FMath::Clamp(Health, 0.f, MaxHealth);
+	OnRep_Update();
+}
+
+void UStatusComponent::OnRep_Update()
+{
+	if (ICombatInterface* Combat = Cast<ICombatInterface>(GetOwner()))
+	{
+		Combat->UpdateHP();
+	}
+}
+
+void UStatusComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UStatusComponent, Health);
+}

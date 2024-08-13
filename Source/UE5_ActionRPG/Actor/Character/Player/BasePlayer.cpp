@@ -12,8 +12,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Others/InteractiveActor.h"
 
-ABasePlayer::ABasePlayer(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+ABasePlayer::ABasePlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
 

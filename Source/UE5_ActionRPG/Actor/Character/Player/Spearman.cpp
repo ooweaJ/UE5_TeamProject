@@ -15,8 +15,7 @@
 #include "Notifies/AN_ThrowSpear.h"
 #include "Components/BoxComponent.h"
 
-ASpearman::ASpearman(const FObjectInitializer& ObjectInitializer)
-	:Super(ObjectInitializer)
+ASpearman::ASpearman()
 {
 	{
 		static ConstructorHelpers::FClassFinder<UAnimInstance> ABPClass(TEXT("/Script/Engine.AnimBlueprint'/Game/Retargeted_Asset/ABP_Spearman.ABP_Spearman_C'"));

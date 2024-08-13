@@ -17,7 +17,7 @@ class UE5_ACTIONRPG_API ASpearman : public ABasePlayer
 	GENERATED_BODY()
 
 public:
-	ASpearman(const FObjectInitializer& ObjectInitializer); 
+	ASpearman(); 
 
 public:
 	ASpearProjectile* GetSpearProjectile() const { return SpearProjectile; }

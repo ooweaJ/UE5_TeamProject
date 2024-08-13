@@ -6,9 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "UI_ProgressBar.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class UE5_ACTIONRPG_API UUI_ProgressBar : public UUserWidget
 {

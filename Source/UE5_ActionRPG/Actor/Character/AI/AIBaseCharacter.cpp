@@ -5,12 +5,17 @@
 #include "Actor/Item/Item.h"
 #include "Actor/Controller/AIController/BaseAIController.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "UI/InGame/UI_BossStatus.h"
+#include "Components/WidgetComponent.h"
 
-AAIBaseCharacter::AAIBaseCharacter(const FObjectInitializer& ObjectInitializer)
- : Super(ObjectInitializer)
+AAIBaseCharacter::AAIBaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
+	HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
+	HealthWidget->SetupAttachment(RootComponent);
+	ConstructorHelpers::FClassFinder<UUserWidget> Class(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/InGame/BPUI_BossStatus.BPUI_BossStatus_C'"));
+	if(Class.Succeeded())
+		HealthWidget->SetWidgetClass(Class.Class);
 	Tags.Add("Boss");
 }
 
@@ -18,6 +23,11 @@ void AAIBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (UUI_BossStatus* AIStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject()))
+	{
+		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+		AIStatus->SetNameTag(NameTag);
+	}
 	if (ABaseAIController* controller = Cast<ABaseAIController>(GetController()))
 	{
 		BaseController = controller;
@@ -160,3 +170,20 @@ void AAIBaseCharacter::RotateToTarget()
 	FRotator NewRotation = NewQuat.Rotator();
 	SetActorRotation(NewRotation);
 }
+
+void AAIBaseCharacter::UpdateHP()
+{
+	Super::UpdateHP();
+	if (UUI_BossStatus* AIStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject()))
+	{
+		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+	}
+}
+
+float AAIBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	//UpdateHP();
+	return 0.0f;
+}
+

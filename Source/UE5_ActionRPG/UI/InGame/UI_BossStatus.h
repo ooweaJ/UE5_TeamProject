@@ -8,9 +8,6 @@
 #include "Components/TextBlock.h"
 #include "UI_BossStatus.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class UE5_ACTIONRPG_API UUI_BossStatus : public UUserWidget
 {
@@ -18,7 +15,7 @@ class UE5_ACTIONRPG_API UUI_BossStatus : public UUserWidget
 
 public:
 	void SetHP(const float CurrentHP, const float MaxHP);
-
+	void SetNameTag(FName InName);
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
 
 public:
@@ -29,7 +26,7 @@ public:
 	UProgressBar* HPSecond = nullptr;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UTextBlock* Amount;
+	UTextBlock* BossName;
 private:
 	float TargetPercent;
 };

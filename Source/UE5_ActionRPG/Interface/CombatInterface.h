@@ -22,4 +22,6 @@ class UE5_ACTIONRPG_API ICombatInterface
 {
 	GENERATED_BODY()
 
+public:
+	virtual void UpdateHP();
 };

@@ -36,6 +36,11 @@ void UMontageComponent::PlayStun()
 	PlayAnimMontage("Stun");
 }
 
+void UMontageComponent::PlayDead()
+{
+	PlayAnimMontage("Dead");
+}
+
 void UMontageComponent::PlayAnimMontage(FName Key)
 {
 	ACharacter* character = Cast<ACharacter>(GetOwner());
