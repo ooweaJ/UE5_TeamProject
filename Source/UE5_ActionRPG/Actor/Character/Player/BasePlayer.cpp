@@ -1,6 +1,9 @@
 #include "Actor/Character/Player/BasePlayer.h"
+#include "Actor/Controller/PlayerController/BasePlayerController.h"
+#include "Actor/GameMode/MainWorldGameMode.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "NiagaraSystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Component/StatusComponent.h"
@@ -8,6 +11,7 @@
 #include "Component/EquipComponent.h"
 #include "Component/MontageComponent.h"
 #include "Actor/Item/Item.h"
+#include "Actor/Item/Attachment.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Others/InteractiveActor.h"
@@ -53,6 +57,13 @@ ABasePlayer::ABasePlayer()
 		SpringArm->bDoCollisionTest = true;
 		SpringArm->bUsePawnControlRotation = true;
 	}
+	{
+		ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(TEXT("/Script/Niagara.NiagaraSystem'/Game/_dev/Effect/Death/NS_DeathDissolve.NS_DeathDissolve'"));
+		if (NiagaraSystemAsset.Succeeded())
+		{
+			DeathDissolveEffect = NiagaraSystemAsset.Object; 
+		}
+	}
 	Tags.Add("Player");
 }
 
@@ -92,6 +103,41 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	/* TODO */
+	Status->HP.Current -= TempDamage;
+
+	if (Status->HP.Current <= 0.)
+	{
+		State->SetDeadMode();
+
+		ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
+		AMainWorldGameMode* GameMode = Cast<AMainWorldGameMode>(UGameplayStatics::GetGameMode(this));
+
+		if (BasePlayerController)
+		{
+			BasePlayerController->UnPossess();
+			BasePlayerController->SetIgnoreMoveInput(true); 
+			BasePlayerController->SetIgnoreLookInput(true); 
+		}
+
+		UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
+			GetMesh(), FName("None"), FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
+
+		TArray<AActor*> AttachedActors;
+		GetAttachedActors(AttachedActors);
+		for (AActor* AttachedActor : AttachedActors)
+		{
+			AttachedActor->Destroy(); 
+		}
+
+
+		Destroy();
+
+		if (GameMode && BasePlayerController)
+		{
+			GameMode->Respawn(BasePlayerController);
+		}
+
+	}
 
 	return TempDamage;
 }

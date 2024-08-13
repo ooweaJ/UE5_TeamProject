@@ -14,6 +14,8 @@
 #include "Camera/CameraComponent.h"
 #include "Notifies/AN_ThrowSpear.h"
 #include "Components/BoxComponent.h"
+#include "Component/StatusComponent.h"
+#include "Component/StateComponent.h"
 
 ASpearman::ASpearman()
 {
@@ -67,13 +69,6 @@ void ASpearman::BeginPlay()
 	{
 		AnimInstance->OnMontageEnded.AddDynamic(this, &ASpearman::OnMontageEnded); 
 	}
-}
-
-float ASpearman::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
-	return Damage;
 }
 
 void ASpearman::SetupSpearProjectile()
