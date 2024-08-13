@@ -51,6 +51,8 @@ public:
 	void LockOn();
 	
 	void TickLockOn();
+	virtual void UpdateHP();
+
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;

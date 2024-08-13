@@ -18,8 +18,6 @@ void UStatusComponent::BeginPlay()
 void UStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	StatusRegen(HP);
-	StatusRegen(MP);
 	StatusRegen(SP);
 }
 
@@ -45,6 +43,10 @@ void UStatusComponent::StatusRegen(FStatus& Status)
 	if (Status.bRegen)
 	{
 		Status.Current = FMath::Clamp(Status.Current + (Status.Regen*GetWorld()->GetDeltaSeconds()), 0.f, Status.Max);
+	}
+	if (GetOwner()->HasAuthority())
+	{
+		OnRep_Update();
 	}
 }
 
@@ -87,4 +89,5 @@ void UStatusComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& O
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UStatusComponent, Health);
+	DOREPLIFETIME(UStatusComponent, HP);
 }

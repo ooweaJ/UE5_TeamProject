@@ -317,3 +317,9 @@ void ABasePlayer::TickLockOn()
 	
 	
 }
+
+void ABasePlayer::UpdateHP()
+{
+	AMyHUD* MyHUD = Cast<AMyHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+}
