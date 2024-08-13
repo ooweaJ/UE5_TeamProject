@@ -26,7 +26,16 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnBaseItem();
+	if (DefaultItemClass)
+	{
+		FTransform DefaultTransform;
+		AItem* Item = GetWorld()->SpawnActorDeferred<AItem>(DefaultItemClass, DefaultTransform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		Item->SetOwnerCharacter(this);
+		Item->FinishSpawning(DefaultTransform, true);
+		Equip->SetSelectItem(Item);
+	}
+
+	//SpawnBaseItem();
 }
 
 // Called every frame
@@ -71,6 +80,8 @@ void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
 			MontageComponent->PlayKnockBack();
 			break;
 		case EDamageType::Knockdown:
+			MontageComponent->PlayKnockDown();
+
 			break;
 		}
 	}

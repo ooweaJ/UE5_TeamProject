@@ -88,7 +88,18 @@ UInPutDataConfig::UInPutDataConfig()
 		check(Asset.Succeeded());
 		Q = Asset.Object;
 	}
-
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_E.IA_E'") };
+		check(Asset.Succeeded());
+		E = Asset.Object;
+	}
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
+		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_R.IA_R'") };
+		check(Asset.Succeeded());
+		R = Asset.Object;
+	}
 	{
 		static ConstructorHelpers::FObjectFinder<UInputAction> Asset
 		{ TEXT("/Script/EnhancedInput.InputAction'/Game/_dev/Input/Default/IA_ESC.IA_ESC'") };

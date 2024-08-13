@@ -74,6 +74,8 @@ void ABasePlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseL, ETriggerEvent::Completed, this, &ThisClass::OffMouseL);
 			EnhancedInputComponent->BindAction(InPutDataConfig->MouseR, ETriggerEvent::Completed, this, &ThisClass::OffMouseR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Q, ETriggerEvent::Started, this, &ThisClass::OnQ);
+			EnhancedInputComponent->BindAction(InPutDataConfig->E, ETriggerEvent::Started, this, &ThisClass::OnE);
+			EnhancedInputComponent->BindAction(InPutDataConfig->R, ETriggerEvent::Started, this, &ThisClass::OnR);
 			EnhancedInputComponent->BindAction(InPutDataConfig->ESC, ETriggerEvent::Started, this, &ThisClass::OnESC);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Triggered, this, &ThisClass::OnShift);
 			EnhancedInputComponent->BindAction(InPutDataConfig->Shift, ETriggerEvent::Completed, this, &ThisClass::OffShift);
@@ -202,6 +204,18 @@ void ABasePlayerController::OnQ(const FInputActionValue& InputActionValue)
 {
 	if (Player)
 		Player->OnQ(); 
+}
+
+void ABasePlayerController::OnE(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->OnInteraction();
+}
+
+void ABasePlayerController::OnR(const FInputActionValue& InputActionValue)
+{
+	if (Player)
+		Player->UsePotion();
 }
 
 void ABasePlayerController::OnESC(const FInputActionValue& InputActionValue)

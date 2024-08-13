@@ -38,6 +38,8 @@ protected:
 	void OffMouseL(const FInputActionValue& InputActionValue);
 	void OffMouseR(const FInputActionValue& InputActionValue);
 	void OnQ(const FInputActionValue& InputActionValue); 
+	void OnE(const FInputActionValue& InputActionValue); 
+	void OnR(const FInputActionValue& InputActionValue); 
 	void OnESC(const FInputActionValue& InputActionValue); 
 	
 private:

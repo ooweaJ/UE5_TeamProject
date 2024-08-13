@@ -9,7 +9,7 @@
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	bReplicates = true;
+	bReplicates = false;
 }
 
 void AItem::SetupItemData()
@@ -257,12 +257,12 @@ void AItem::MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate)
 		AnimInstance->Montage_SetPlayRate(CurrentData.AnimMontage, PlayRate);
 	}
 }
-
-void AItem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(AItem, OwnerCharacter);
-	DOREPLIFETIME(AItem, Attachment);
-	DOREPLIFETIME(AItem, CurrentData);
-}
+//
+//void AItem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//
+//	DOREPLIFETIME(AItem, OwnerCharacter);
+//	DOREPLIFETIME(AItem, Attachment);
+//	DOREPLIFETIME(AItem, CurrentData);
+//}

@@ -71,7 +71,12 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Status->SetSpeed(EWalkSpeedTpye::Walk);
+	if (Status && Equip)
+	{
+		Status->SetSpeed(EWalkSpeedTpye::Walk);
+		Equip->SupplyPotion();
+		Equip->SetPotionHealAmount(Status->GetMaxHP() * 0.3f);
+	}
 }
 
 void ABasePlayer::PossessedBy(AController* NewController)
@@ -222,6 +227,23 @@ void ABasePlayer::OnStepBack()
 	State->SetStepBackMode();
 }
 
+void ABasePlayer::OnInteraction()
+{
+	if (InteractableObject)
+	{
+		InteractableObject->OnInteraction();
+	}
+}
+
+void ABasePlayer::UsePotion()
+{
+	if (Equip && Equip->CanUsePotion() && Status->GetCurrentHP()!=Status->GetMaxHP())
+	{
+		Equip->UsePotion();
+		Status->StatusModify(Status->HP, Equip->GetPotionHealAmount());
+	}
+}
+
 void ABasePlayer::ServerOnMouseL_Implementation()
 {
 	MulticastOnDefaultAction();
@@ -295,5 +317,3 @@ void ABasePlayer::TickLockOn()
 	
 	
 }
-
-
