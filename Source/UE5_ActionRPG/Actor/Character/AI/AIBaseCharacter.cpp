@@ -26,6 +26,7 @@ void AAIBaseCharacter::BeginPlay()
 	if (UUI_BossStatus* AIStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject()))
 	{
 		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+		AIStatus->SetNameTag(NameTag);
 	}
 	if (ABaseAIController* controller = Cast<ABaseAIController>(GetController()))
 	{

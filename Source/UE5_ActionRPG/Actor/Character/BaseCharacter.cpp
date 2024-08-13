@@ -87,6 +87,11 @@ void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
 	}
 }
 
+void ABaseCharacter::Dead()
+{
+	MontageComponent->PlayDead();
+}
+
 void ABaseCharacter::SpawnBaseItem_Implementation()
 {
 	if (DefaultItemClass)
@@ -111,6 +116,13 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 
 	Status->StatusModify(Status->HP, -DamageAmount);
 	Status->DecreaseHealth(DamageAmount);
+
+	if (Status->GetHealth() == 0.f)
+	{
+		State->SetDeadMode();
+		Dead();
+	}
+
 	return DamageAmount;
 }
 

@@ -15,7 +15,7 @@ class UE5_ACTIONRPG_API UUI_BossStatus : public UUserWidget
 
 public:
 	void SetHP(const float CurrentHP, const float MaxHP);
-
+	void SetNameTag(FName InName);
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
 
 public:

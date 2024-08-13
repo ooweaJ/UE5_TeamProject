@@ -30,6 +30,7 @@ public:
 	
 	void EndAction();
 	void HitPlayMontage(TSubclassOf<UDamageType> InDamageType);
+	virtual void Dead();
 
 	UFUNCTION(Server,Reliable)
 	void SpawnBaseItem();

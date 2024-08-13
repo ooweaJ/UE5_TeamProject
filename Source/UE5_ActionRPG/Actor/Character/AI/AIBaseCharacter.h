@@ -49,6 +49,8 @@ protected:
 	class UWidgetComponent* HealthWidget;
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> StatusWidgetClass;
+	UPROPERTY(EditAnyWhere)
+	FName NameTag;
 protected:
 	class ABaseAIController* BaseController;
 	FVector Direction;
