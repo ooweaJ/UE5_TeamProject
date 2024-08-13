@@ -21,25 +21,14 @@ void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
+	if (bInit)
 	{
-		TSubclassOf<ABasePlayer>* BasePlayer = ClassMap.Find(ClassName);
-		if (!BasePlayer) return;
-
-		APlayerStart* PlayerStart = Cast<APlayerStart>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass())); 
-		if (!PlayerStart) return;
-
-		FVector SpawnLocation = PlayerStart->GetActorLocation(); 
-		FRotator SpawnRotation = PlayerStart->GetActorRotation(); 
-		FActorSpawnParameters SpawnParams; 
-		SpawnParams.Owner = NewPlayer; 
-
-		ABasePlayer* NewBasePlayer = GetWorld()->SpawnActor<ABasePlayer>(*BasePlayer, SpawnLocation, SpawnRotation, SpawnParams); 
-		if (!NewBasePlayer) { check(false); return; }
-		
-		if (AActor* Pawn = NewPlayer->GetPawn())
-			Pawn->Destroy();
-
-		NewPlayer->Possess(NewBasePlayer); 
+		SpawnRelevantPlayer(NewPlayer, true); 
+		bInit = false; 
+	}
+	else
+	{
+		SpawnRelevantPlayer(NewPlayer, false);
 	}
 }
 
@@ -47,8 +36,50 @@ APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemo
 {
 	APlayerController* PC = Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
 	const FString Class = UGameplayStatics::ParseOption(Options, "Class");
-	ClassName = Class;
+	SetPlayerClassName(Class); 
 	return PC;
+}
+
+void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer, bool InInit)
+{
+	TSubclassOf<ABasePlayer>* BasePlayer = ClassMap.Find(ClassName);
+	if (!BasePlayer) { return; }
+
+	APlayerStart* PlayerStart = Cast<APlayerStart>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass()));
+	if (!PlayerStart) { return; }
+
+	FVector SpawnLocation = PlayerStart->GetActorLocation();
+	FRotator SpawnRotation = PlayerStart->GetActorRotation();
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = NewPlayer;
+
+	ABasePlayer* NewBasePlayer = GetWorld()->SpawnActor<ABasePlayer>(*BasePlayer, SpawnLocation, SpawnRotation, SpawnParams);
+
+	if (!NewBasePlayer) { return; }
+	if (InInit)
+	{
+		AActor* OldPawn = NewPlayer->GetPawn();
+		OldPawn->Destroy();
+	}
+
+	if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(NewPlayer))
+	{
+		BasePlayerController->Possess(NewBasePlayer);
+		BasePlayerController->SetIgnoreMoveInput(false);
+		BasePlayerController->SetIgnoreLookInput(false);
+		BasePlayerController->SetRespawnedPlayer(NewBasePlayer);
+	}
+
+}
+
+void AMainWorldGameMode::Respawn(APlayerController* InPlayerController)
+{
+	FTimerDelegate TimerDelegate; 
+	TimerDelegate.BindLambda([this, InPlayerController]()
+		{
+			SpawnRelevantPlayer(InPlayerController, false); 
+		});
+	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, TimerDelegate, 3.f, false);
 }
 
 void AMainWorldGameMode::BeginPlay()
