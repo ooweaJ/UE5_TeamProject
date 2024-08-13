@@ -102,7 +102,7 @@ public:
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
-	AActor* InteractableObject;
+	class AInteractiveActor* InteractableObject;
 
 	UPROPERTY(EditAnywhere)
 	class UNiagaraSystem* DeathDissolveEffect; 
