@@ -46,8 +46,8 @@ public:
 	FORCEINLINE float GetSneakSpeed() { return Speed[(int32)EWalkSpeedTpye::Sneak]; }
 	FORCEINLINE float GetWalkSpeed() { return Speed[(int32)EWalkSpeedTpye::Walk]; }
 	FORCEINLINE float GetRunSpeed() { return Speed[(int32)EWalkSpeedTpye::Run]; }
-	FORCEINLINE float GetMax() { return HP.Max; }
-	FORCEINLINE float GetCurrent() { return HP.Current; }
+	FORCEINLINE float GetMaxHP() { return HP.Max; }
+	FORCEINLINE float GetCurrentHP() { return HP.Current; }
 	FORCEINLINE float GetDamage() { return Damage; }
 	// 캐릭터 이동 제어를 위해 받아옴
 	FORCEINLINE bool IsCanMove() { return bCanMove; }
