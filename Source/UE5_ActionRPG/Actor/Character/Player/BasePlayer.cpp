@@ -18,6 +18,7 @@
 #include "Others/InteractiveActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "HUD/InGameHUD.h"
 
 ABasePlayer::ABasePlayer()
 {
