@@ -12,7 +12,7 @@ class UE5_ACTIONRPG_API ABaseCharacter : public ACharacter , public ICombatInter
 	GENERATED_BODY()
 
 public:
-	ABaseCharacter(const FObjectInitializer& ObjectInitializer);
+	ABaseCharacter();
 
 	FORCEINLINE void SetParrying(bool InParry) { Parrying = InParry; }
 	FORCEINLINE bool GetParrying() { return Parrying; }
@@ -32,6 +32,7 @@ public:
 	
 	void EndAction();
 	void HitPlayMontage(TSubclassOf<UDamageType> InDamageType);
+	virtual void Dead();
 
 	UFUNCTION(Server,Reliable)
 	void SpawnBaseItem();

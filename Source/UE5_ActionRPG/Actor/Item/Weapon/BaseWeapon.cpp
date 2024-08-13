@@ -20,6 +20,7 @@ void ABaseWeapon::BeginPlay()
 
 void ABaseWeapon::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
 {
+	if (!HasAuthority()) return;
 	int32 hittedCharactersNum = HittedCharacters.Num();
 	HittedCharacters.AddUnique(InOtherCharacter);
 

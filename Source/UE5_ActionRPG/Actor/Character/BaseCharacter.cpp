@@ -8,16 +8,16 @@
 #include "Engine/DamageEvents.h"
 #include "Actor/Item/DamageType/DefaultDamageType.h"
 
-ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Equip = ObjectInitializer.CreateDefaultSubobject<UEquipComponent>(this, TEXT("EquipComponent"));
+	Equip = CreateDefaultSubobject<UEquipComponent>(TEXT("EquipComponent"));
 	Equip->SetIsReplicated(true);
-	State = ObjectInitializer.CreateDefaultSubobject<UStateComponent>(this, TEXT("StateComponent"));
-	Status = ObjectInitializer.CreateDefaultSubobject<UStatusComponent>(this, TEXT("StatusComponent"));
-	MontageComponent = ObjectInitializer.CreateDefaultSubobject<UMontageComponent>(this, TEXT("MontageComponent"));
+	State = CreateDefaultSubobject<UStateComponent>(TEXT("StateComponent"));
+	Status = CreateDefaultSubobject<UStatusComponent>(TEXT("StatusComponent"));
+	Status->SetIsReplicated(true);
+	MontageComponent = CreateDefaultSubobject<UMontageComponent>(TEXT("MontageComponent"));
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 }
 
@@ -87,6 +87,11 @@ void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
 	}
 }
 
+void ABaseCharacter::Dead()
+{
+	MontageComponent->PlayDead();
+}
+
 void ABaseCharacter::SpawnBaseItem_Implementation()
 {
 	if (DefaultItemClass)
@@ -104,14 +109,24 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	if (!DamageEvent.DamageTypeClass) return 0;
-
 	HitPlayMontage(DamageEvent.DamageTypeClass);
 
-	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
+	if (HasAuthority())
+	{
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
 
-	Status->StatusModify(Status->HP, -DamageAmount);
+		Status->StatusModify(Status->HP, -DamageAmount);
+		Status->DecreaseHealth(DamageAmount);
 
-	return DamageAmount;
+		if (Status->GetHealth() == 0.f)
+		{
+			State->SetDeadMode();
+			Dead();
+		}
+		return DamageAmount;
+	}
+
+	return 0;
 }
 
 

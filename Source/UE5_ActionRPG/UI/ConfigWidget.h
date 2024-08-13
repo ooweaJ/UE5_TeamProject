@@ -44,17 +44,30 @@ public:
 	virtual void NativeDestruct() override; 
 
 public:
-	void SetConfigNameText(EConfigName ConfigName); 
+	// Config Name 
+	uint8 GetConfigNameIndex() const { return ConfigNameIndex; }
 
-	void SetConfigQualityText(EConfigQuality ConfigQuality); 
+	void SetConfigNameText(EConfigName ConfigName); 
 
 	void SetConfigNameIndex(uint8 InIndex) { ConfigNameIndex = InIndex; }
 
-	void SetConfigQualityIndex(uint8 InIndex) { ConfigQualityIndex = InIndex; }
+	// Config Quality 
+	uint8 GetConfigQualityIndex() const { return CurrentConfigQualityIndex; }
 
-	uint8 GetConfigNameIndex() const { return ConfigNameIndex; }
+	void SetConfigQualityText(EConfigQuality ConfigQuality); 
 
-	uint8 GetConfigQualityIndex() const { return ConfigQualityIndex; }
+	void SetConfigQualityIndex(uint8 InIndex) { CurrentConfigQualityIndex = InIndex; }
+
+	// Config Last Quality 
+	uint8 GetLastQualityIndex() const { return LastConfigQualityIndex; }
+
+	void SetLastQualityIndex(uint8 InIndex) { LastConfigQualityIndex = InIndex; }
+
+	// Config Initialization
+	bool GetbInit() const { return bInit; }
+
+	void SetbInit(bool InInit) { bInit = InInit; }
+
 public:
 	UFUNCTION()
 	void OnConfigMinusButtonClicked(); 
@@ -78,6 +91,10 @@ protected:
 
 private:
 	uint8 ConfigNameIndex; 
+			
+	uint8 CurrentConfigQualityIndex; 
 
-	uint8 ConfigQualityIndex = 3; 
+	uint8 LastConfigQualityIndex; 
+
+	bool bInit = false; 
 };

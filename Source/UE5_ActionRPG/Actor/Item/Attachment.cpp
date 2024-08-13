@@ -36,49 +36,58 @@ void AAttachment::Tick(float DeltaTime)
 
 void AAttachment::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor == OwnerCharacter) return;
-
-
+	if (HasAuthority())
 	{
-		ACharacter* otherCharacter = Cast<ACharacter>(OtherActor);
-		if (otherCharacter == nullptr) return;
-		Targets.AddUnique(otherCharacter);
-		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, otherCharacter);
+		if (OtherActor == OwnerCharacter) return;
+
+		{
+			ACharacter* otherCharacter = Cast<ACharacter>(OtherActor);
+			if (otherCharacter == nullptr) return;
+			OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, otherCharacter);
+		}
 	}
 }
 
 void AAttachment::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OnAttachmentEndOverlap.IsBound())
+	if (HasAuthority())
 	{
-		ACharacter* otherCharacter = Cast<ACharacter>(OtherActor);
-		if (otherCharacter == nullptr) return;
-		OnAttachmentEndOverlap.Broadcast(OwnerCharacter, this, otherCharacter);
+		if (OnAttachmentEndOverlap.IsBound())
+		{
+			ACharacter* otherCharacter = Cast<ACharacter>(OtherActor);
+			if (otherCharacter == nullptr) return;
+			OnAttachmentEndOverlap.Broadcast(OwnerCharacter, this, otherCharacter);
+		}
 	}
 }
 
 void AAttachment::OnCollisions(FString InCollisionName)
 {
-	if (InCollisionName.Compare("None") == 0)
+	if (HasAuthority())
 	{
-		for (UShapeComponent* shape : ShapeComponents)
-			shape->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	}
-	else
-	{
-		for (UShapeComponent* shape : ShapeComponents)
+		if (InCollisionName.Compare("None") == 0)
 		{
-			if (shape->GetName().Contains(InCollisionName))
+			for (UShapeComponent* shape : ShapeComponents)
 				shape->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		}
+		else
+		{
+			for (UShapeComponent* shape : ShapeComponents)
+			{
+				if (shape->GetName().Contains(InCollisionName))
+					shape->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			}
+		}
 	}
-
 }
 
 void AAttachment::OffCollisions()
 {
-	for (UShapeComponent* shape : ShapeComponents)
-		shape->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	if (HasAuthority())
+	{
+		for (UShapeComponent* shape : ShapeComponents)
+			shape->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void AAttachment::AttachToCollision(USceneComponent* InComponent, FName InSocketName)
@@ -86,14 +95,3 @@ void AAttachment::AttachToCollision(USceneComponent* InComponent, FName InSocket
 	if(OwnerCharacter)
 	InComponent->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), InSocketName);
 }
-
-TArray<AActor*> AAttachment::GetTargets()
-{
-	if (Targets.IsEmpty())
-	{
-		return TArray<AActor*>();
-	}
-	return Targets;
-}
-
-
