@@ -32,6 +32,9 @@ public:
 	virtual void NativeDestruct() override;
 
 public:
+	UWidgetSwitcher* GetPauseMenuWidgetSwitcher() const { return PauseMenuWidgetSwitcher; }
+
+public:
 	UFUNCTION()
 	void OnResumeButtonClicked(); 
 
