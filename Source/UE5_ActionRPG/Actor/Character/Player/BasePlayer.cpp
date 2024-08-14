@@ -379,6 +379,15 @@ void ABasePlayer::DestroyAttachedActors()
 	}
 }
 
+void ABasePlayer::SetAirbone(bool InAirBone)
+{
+	bAirBone = InAirBone;
+	if (InAirBone)
+	{
+		State->SetHittedMode();
+	}
+}
+
 
 void ABasePlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

@@ -62,7 +62,7 @@ public:
 	void DestroyAttachedActors(); 
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetAirbone(bool InAirBone) { bAirBone = InAirBone; }
+	void SetAirbone(bool InAirBone);
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
