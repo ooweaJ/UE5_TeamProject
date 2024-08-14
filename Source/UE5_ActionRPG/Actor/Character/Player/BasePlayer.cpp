@@ -19,6 +19,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "HUD/InGameHUD.h"
+#include "Net/UnrealNetwork.h"
 
 ABasePlayer::ABasePlayer()
 {
@@ -192,7 +193,7 @@ void ABasePlayer::OnQ()
 	}
 }
 
-void ABasePlayer::OnShift()
+void ABasePlayer::OnShift_Implementation()
 {
 	if (Status)
 	{
@@ -200,7 +201,7 @@ void ABasePlayer::OnShift()
 	}
 }
 
-void ABasePlayer::OffShift()
+void ABasePlayer::OffShift_Implementation()
 {
 	if (Status)
 	{
@@ -376,4 +377,11 @@ void ABasePlayer::DestroyAttachedActors()
 	{
 		AttachedActor->Destroy(); 
 	}
+}
+
+
+void ABasePlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABasePlayer, bAirBone);
 }

@@ -32,7 +32,9 @@ public:
 	void OffMouseL();
 	void OffMouseR();
 	void OnQ(); 
+	UFUNCTION(Server, Reliable)
 	void OnShift();
+	UFUNCTION(Server, Reliable)
 	void OffShift();
 	void OnEvade();
 	void OnStepBack();
@@ -58,6 +60,10 @@ public:
 	void SetAttachedActorsVisiblity(bool bVisible); 
 
 	void DestroyAttachedActors(); 
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetAirbone(bool InAirBone) { bAirBone = InAirBone; }
+
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;
@@ -101,6 +107,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	float TESTNum = 0;
+
+	UPROPERTY(BlueprintReadOnly,Replicated)
+	bool bAirBone;
+
 
 	bool Condition = true;
 	

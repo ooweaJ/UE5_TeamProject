@@ -82,6 +82,8 @@ void ABaseAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors
 
 void ABaseAIController::CooldownSkill()
 {
+	uint32 RandomNum = FMath::RandRange(1, 3);
+	Blackboard->SetValueAsInt(FBlackBoardKeyNameTable::RandomKey, RandomNum);
 	bSkill = true;
 }
 
@@ -113,7 +115,7 @@ void ABaseAIController::OnSkill(uint32 Num)
 {
 	OwnerAI->OnSkill(Num);
 	bSkill = false;
-	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 15.f, false);
+	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 20.f, false);
 }
 
 void ABaseAIController::OnUltimate()

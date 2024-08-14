@@ -58,6 +58,7 @@ public:
 	FORCEINLINE void SetMove() { bCanMove = true; }
 	FORCEINLINE void SetStop() { bCanMove = false; }
 	// 원하는 스피드 값 설정
+	UFUNCTION(NetMulticast, Reliable)
 	void SetSpeed(EWalkSpeedTpye InType);
 	// 체력 증가 및 감소
 
