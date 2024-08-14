@@ -71,8 +71,8 @@ void ABaseAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors
 	ACharacter* player = nullptr;
 	for (AActor* actor : actors)
 	{
-		player = Cast<ACharacter>(actor);
-
+		if (actor->ActorHasTag("Player"))
+			player = Cast<ACharacter>(actor);
 		if (!!player)
 			break;
 	}
@@ -82,6 +82,8 @@ void ABaseAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors
 
 void ABaseAIController::CooldownSkill()
 {
+	uint32 RandomNum = FMath::RandRange(1, 3);
+	Blackboard->SetValueAsInt(FBlackBoardKeyNameTable::RandomKey, RandomNum);
 	bSkill = true;
 }
 
@@ -113,12 +115,22 @@ void ABaseAIController::OnSkill(uint32 Num)
 {
 	OwnerAI->OnSkill(Num);
 	bSkill = false;
-	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 15.f, false);
+	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 20.f, false);
 }
 
 void ABaseAIController::OnUltimate()
 {
 	OwnerAI->OnUltimate();
+}
+
+void ABaseAIController::MontagePlayRate()
+{
+	if (AAIBaseCharacter* AI = Cast<AAIBaseCharacter>(GetPawn()))
+	{
+		uint32 num = FMath::RandRange(0, 1);
+		if (num) return;
+		AI->PlayRateMontage();
+	}
 }
 
 ACharacter* ABaseAIController::GetTarget()

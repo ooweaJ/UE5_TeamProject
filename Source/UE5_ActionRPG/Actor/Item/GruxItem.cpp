@@ -68,7 +68,6 @@ void AGruxItem::OnSkillAction()
 void AGruxItem::OnSkillAction2()
 {
 	if (!OwnerState) return;
-	if (!OwnerState->IsIdleMode())return;
 	Super::OnSkillAction2();
 	OwnerState->SetActionMode();
 }
@@ -89,30 +88,6 @@ void AGruxItem::OnUltimateAction()
 	OwnerState->SetActionMode();
 }
 
-void AGruxItem::OffDefaultAction()
-{
-}
-
-void AGruxItem::OffDefaultAction2()
-{
-}
-
-void AGruxItem::OffDefaultAction3()
-{
-}
-
-void AGruxItem::OffSkillAction()
-{
-}
-
-void AGruxItem::OffSkillAction2()
-{
-}
-
-void AGruxItem::OffSkillAction3()
-{
-}
-
 void AGruxItem::OffUltimateAction()
 {
 }
@@ -120,5 +95,10 @@ void AGruxItem::OffUltimateAction()
 void AGruxItem::OnItemSkillAction()
 {
 	Grux->OnFlySkill(&CurrentData);
+}
+
+void AGruxItem::ItemAction2()
+{
+	Grux->OnSkill2();
 }
 

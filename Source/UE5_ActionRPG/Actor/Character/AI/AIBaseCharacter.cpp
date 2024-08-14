@@ -197,3 +197,14 @@ void AAIBaseCharacter::UpdateHP()
 		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
 	}
 }
+
+void AAIBaseCharacter::PlayRateMontage_Implementation()
+{
+	MultiPlayRateMontage();
+}
+
+void AAIBaseCharacter::MultiPlayRateMontage_Implementation()
+{
+	if (Equip)
+		Equip->GetCurrentItem()->MontagePlayRate(GetMesh()->GetAnimInstance(), 0.3f);
+}

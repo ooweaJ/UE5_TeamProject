@@ -18,6 +18,7 @@ public:
 	virtual void Tick(float DeltaTime);
 
 	void OnFlySkill(FActionData* InData);
+	void OnSkill2();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -29,6 +30,18 @@ public:
 	UFUNCTION(NetMulticast,Reliable)
 	void MultiFinishFlySkill();
 
+	void ApproachTarget();
+
+	UFUNCTION(Server, Reliable)
+	void UpperSkill();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiUpperSkill();
+
+	UFUNCTION(BlueprintCallable)
+	void AirStart();
+
+	void PlayAirCombo();
+
 	UFUNCTION()
 	void OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -38,12 +51,20 @@ public:
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* FlyAttack;
 
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* Skill2;
+
 	UPROPERTY(Replicated,BlueprintReadOnly)
 	bool bFly = false;
 
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	bool bTravel = false;
+
+	bool bApproach = false;
+
+	TArray<class ABasePlayer*> HitPlayer;
 	FTimerHandle TimerHandle;
 	FTimerDelegate TimerDel;
 	FVector TarGetLocation;
 	FActionData* Data;
-
 };

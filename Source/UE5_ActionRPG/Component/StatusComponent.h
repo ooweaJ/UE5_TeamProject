@@ -57,6 +57,7 @@ public:
 	FORCEINLINE void SetMove() { bCanMove = true; }
 	FORCEINLINE void SetStop() { bCanMove = false; }
 	// 원하는 스피드 값 설정
+	UFUNCTION(NetMulticast, Reliable)
 	void SetSpeed(EWalkSpeedTpye InType);
 	// 체력 증가 및 감소
 	void IncreaseHealth(float InAmount);
@@ -79,14 +80,14 @@ public:
 	void OnRep_Update();
 private:
 	UPROPERTY(EditAnywhere, Category = "Speed")
-	float Speed[(int32)EWalkSpeedTpye::Max] = { 300, 600, 900, 1200 };
+	float Speed[(int32)EWalkSpeedTpye::Max] = { 150, 300, 600, 900 };
 
 private:
 	float Damage;
 	bool bCanMove = true;
 
 public:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Status")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Status", ReplicatedUsing = "OnRep_Update")
 	FStatus HP;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Status")

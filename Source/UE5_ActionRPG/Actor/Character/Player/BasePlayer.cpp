@@ -4,6 +4,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "NiagaraSystem.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Component/StatusComponent.h"
@@ -17,6 +18,8 @@
 #include "Others/InteractiveActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "HUD/InGameHUD.h"
+#include "Net/UnrealNetwork.h"
 
 ABasePlayer::ABasePlayer()
 {
@@ -105,6 +108,7 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	/* TODO */
 	Status->StatusModify(Status->HP, -TempDamage);
 
+	// When HP is less or equal than 0 
 	if (Status->HP.Current <= 0.)
 	{
 		State->SetDeadMode();
@@ -119,18 +123,16 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 			BasePlayerController->SetIgnoreLookInput(true); 
 		}
 
-		UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
-			GetMesh(), FName("None"), FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
+		UNiagaraComponent* DeathDissolveComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
+			GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
 
-		TArray<AActor*> AttachedActors;
-		GetAttachedActors(AttachedActors);
-		for (AActor* AttachedActor : AttachedActors)
-		{
-			AttachedActor->Destroy(); 
-		}
+		SetPrimitiveComponentsVisibility(false);
 
+		SetAttachedActorsVisiblity(false);
 
-		Destroy();
+		DeathDissolveComponent->SetVisibility(true); 
+
+		SetActorEnableCollision(false); 
 
 		if (GameMode && BasePlayerController)
 		{
@@ -191,7 +193,7 @@ void ABasePlayer::OnQ()
 	}
 }
 
-void ABasePlayer::OnShift()
+void ABasePlayer::OnShift_Implementation()
 {
 	if (Status)
 	{
@@ -199,7 +201,7 @@ void ABasePlayer::OnShift()
 	}
 }
 
-void ABasePlayer::OffShift()
+void ABasePlayer::OffShift_Implementation()
 {
 	if (Status)
 	{
@@ -324,4 +326,70 @@ void ABasePlayer::TickLockOn()
 	}
 	
 	
+}
+
+void ABasePlayer::UpdateHP()
+{
+	AInGameHUD* MyHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+}
+
+void ABasePlayer::SetPrimitiveComponentsVisibility(bool bVisible)
+{
+	TArray<UActorComponent*> Components;
+	GetComponents(Components);
+
+	if (Components.Num() == 0) { return;  }
+
+	for (UActorComponent* Component : Components)
+	{
+		UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(Component);
+		if (PrimitiveComponent)
+		{
+			PrimitiveComponent->SetVisibility(bVisible, true);
+		}
+	}
+}
+
+void ABasePlayer::SetAttachedActorsVisiblity(bool bVisible)
+{
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+
+	if (AttachedActors.Num() == 0) { return; }
+
+	for (AActor* AttachedActor : AttachedActors)
+	{
+		TArray<UActorComponent*> AttachedComponents;
+		GetComponents(AttachedComponents);
+
+		for (UActorComponent* AttachedComponent : AttachedComponents)
+		{
+			UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(AttachedComponent);
+			if (PrimitiveComponent)
+			{
+				PrimitiveComponent->SetVisibility(bVisible, true);
+			}
+		}
+	}
+}
+
+void ABasePlayer::DestroyAttachedActors()
+{
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+
+	if (AttachedActors.Num() == 0) { return; }
+
+	for (AActor* AttachedActor : AttachedActors)
+	{
+		AttachedActor->Destroy(); 
+	}
+}
+
+
+void ABasePlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABasePlayer, bAirBone);
 }
