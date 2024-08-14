@@ -8,6 +8,9 @@
 #include "UI/InGame/UI_BossStatus.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "HUD/InGameHUD.h"
+#include "UI/InGame/UI_MainInGame.h"
 
 AAIBaseCharacter::AAIBaseCharacter()
 {
@@ -22,8 +25,9 @@ AAIBaseCharacter::AAIBaseCharacter()
 	ConstructorHelpers::FClassFinder<UUserWidget> Class(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/InGame/BPUI_BossStatus.BPUI_BossStatus_C'"));
 	if(Class.Succeeded())
 		HealthWidget->SetWidgetClass(Class.Class);
-	Tags.Add("Boss");
-	NameTag = TEXT("Boss");
+
+	UIPopCollision->OnComponentBeginOverlap.AddDynamic(this, &AAIBaseCharacter::OnUIPopUP);
+	UIPopCollision->OnComponentEndOverlap.AddDynamic(this, &AAIBaseCharacter::OnUIOff);
 }
 
 void AAIBaseCharacter::BeginPlay()
@@ -195,6 +199,38 @@ void AAIBaseCharacter::UpdateHP()
 	if (UUI_BossStatus* AIStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject()))
 	{
 		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+	}
+}
+
+void AAIBaseCharacter::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ABasePlayer* BP = Cast<ABasePlayer>(OtherActor);
+	if (!BP) return;
+
+	if (ActorHasTag("Boss"))
+	{
+		if (APlayerController* PC = Cast<APlayerController>(BP->GetController()))
+			if (AInGameHUD* HUD = Cast<AInGameHUD>(PC->GetHUD()))
+				if (UUI_MainInGame* InGameUI = Cast<UUI_MainInGame>(HUD->MainUI))
+				{
+					InGameUI->BPUI_BossStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+					InGameUI->BPUI_BossStatus->SetNameTag(NameTag);
+					InGameUI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Visible);
+				}
+	}
+}
+
+void AAIBaseCharacter::OnUIOff(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	ABasePlayer* BP = Cast<ABasePlayer>(OtherActor);
+	if (!BP) return;
+
+	if (ActorHasTag("Boss"))
+	{
+		if (APlayerController* PC = Cast<APlayerController>(BP->GetController()))
+			if (AInGameHUD* HUD = Cast<AInGameHUD>(PC->GetHUD()))
+				if (UUI_MainInGame* InGameUI = Cast<UUI_MainInGame>(HUD->MainUI))
+					InGameUI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 
