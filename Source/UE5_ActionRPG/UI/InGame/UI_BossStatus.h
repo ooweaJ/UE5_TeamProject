@@ -14,7 +14,9 @@ class UE5_ACTIONRPG_API UUI_BossStatus : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void SetHP(const float CurrentHP, const float MaxHP);
+	UFUNCTION(BlueprintCallable)
 	void SetNameTag(FName InName);
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
 

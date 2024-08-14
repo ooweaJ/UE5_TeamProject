@@ -96,10 +96,10 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Status")
 	FStatus SP;
 
-private:
-	UPROPERTY(EditAnywhere, Category = "Health")
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth = 100.f;
-	UPROPERTY(EditAnywhere, ReplicatedUsing = "OnRep_Update")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = "OnRep_Update")
 	float Health;
 	UPROPERTY(EditAnywhere, Category = "Cost")
 	float EvadeCost = -50.f;

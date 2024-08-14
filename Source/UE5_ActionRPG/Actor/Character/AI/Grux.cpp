@@ -9,9 +9,6 @@
 #include "Components/WidgetComponent.h"
 #include "Component/StatusComponent.h"
 #include "Actor/Character/Player/BasePlayer.h"
-#include "Kismet/GameplayStatics.h"
-#include "HUD/InGameHUD.h"
-#include "UI/InGame/UI_MainInGame.h"
 #include "UI/InGame/UI_BossStatus.h"
 #include "Component/StatusComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -24,9 +21,8 @@ void AGrux::BeginPlay()
     Super::BeginPlay();
 
     TimerDel.BindUFunction(this, FName("SpawnActorsAround"), 500.f, int32(6));
-    
-    if(UIPopCollision)
-        UIPopCollision->OnComponentBeginOverlap.AddDynamic(this, &AGrux::OnUIPopUP);
+    Tags.Add("Boss");
+    NameTag = TEXT("Grux");
 }
 
 void AGrux::Tick(float DeltaTime)
@@ -285,22 +281,7 @@ void AGrux::MultiUpperSkill_Implementation()
     PlayAnimMontage(Skill2);
 }
 
-void AGrux::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-    ABasePlayer* BP = Cast<ABasePlayer>(OtherActor);
-    if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
-    {
-        if (AInGameHUD* InGameHUD = Cast<AInGameHUD>(PC->GetHUD()))
-        {
-            if (UUI_MainInGame* UI = Cast<UUI_MainInGame>(InGameHUD->MainUI))
-            {
-                UI->BPUI_BossStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
-                UI->BPUI_BossStatus->SetNameTag(NameTag);
-                UI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Visible);
-            }
-        }
-    }
-}
+
 
 
 void AGrux::FinishFlySkill_Implementation()

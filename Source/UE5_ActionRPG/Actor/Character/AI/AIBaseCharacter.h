@@ -46,6 +46,11 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void MultiPlayRateMontage();
 
+	UFUNCTION()
+	void OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnUIOff(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 public:
 	FORCEINLINE void SetMoveDirection(FVector InDirection) { Direction = InDirection; }
 	FORCEINLINE void SetStrafe(bool InStrafe) { bStrafe = InStrafe; }
@@ -56,7 +61,7 @@ protected:
 	class UWidgetComponent* HealthWidget;
 	UPROPERTY(EditAnyWhere)
 	TSubclassOf<UUserWidget> StatusWidgetClass;
-	UPROPERTY(EditAnyWhere)
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
 	FName NameTag;
 protected:
 	class ABaseAIController* BaseController;
