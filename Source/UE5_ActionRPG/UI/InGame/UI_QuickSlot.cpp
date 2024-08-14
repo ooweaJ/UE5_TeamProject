@@ -27,6 +27,9 @@ void UUI_QuickSlot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	FText Amount = FText::AsNumber(PlayerPotion->Amount);
-	PotionAmount->SetText(Amount);
+	if (PlayerPotion)
+	{
+		FText Amount = FText::AsNumber(PlayerPotion->Amount);
+		PotionAmount->SetText(Amount);
+	}
 }
