@@ -41,6 +41,15 @@ public:
 	void AirStart();
 
 	void PlayAirCombo();
+	void AirDamage();
+	UFUNCTION()
+	void StartAirCombo();
+
+	UFUNCTION()
+	void EndAirCombo();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void AirSpawnEffect(FTransform InTransform);
 
 	UFUNCTION()
 	void OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -60,11 +69,25 @@ public:
 	UPROPERTY(Replicated, BlueprintReadOnly)
 	bool bTravel = false;
 
+	UPROPERTY(EditAnywhere)
+	class UParticleSystem* HitEffect;
+
 	bool bApproach = false;
+	bool bSkill2 = false;
 
 	TArray<class ABasePlayer*> HitPlayer;
 	FTimerHandle TimerHandle;
 	FTimerDelegate TimerDel;
 	FVector TarGetLocation;
 	FActionData* Data;
+
+private:
+	FVector CenterLocation;
+	TArray<FVector> StarPoints;
+	int32 CurrentPointIndex;
+	float MoveSpeed = 5000.f;
+
+	void DrawStarPattern(int Points, float Radius);
+	void CalculateStarPoints(int Points, float Radius);
+	void MoveToNextPoint();
 };

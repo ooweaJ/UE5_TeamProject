@@ -16,6 +16,8 @@
 #include "Component/StatusComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Actor/Character/Player/BasePlayer.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/DamageEvents.h"
 
 void AGrux::BeginPlay()
 {
@@ -43,6 +45,10 @@ void AGrux::Tick(float DeltaTime)
         {
             ApproachTarget();
         }
+
+        if(bSkill2)
+            MoveToNextPoint();
+
     }
 }
 
@@ -149,6 +155,10 @@ void AGrux::AirStart()
 
             PlayAirCombo();
         }
+        else
+        {
+            EndAction();
+        }
     }
 }
 
@@ -158,9 +168,110 @@ void AGrux::PlayAirCombo()
     {
         for (ABasePlayer* Player : HitPlayer)
         {
+            Player->GetCharacterMovement()->GravityScale = 0.5f;
             Player->LaunchCharacter(FVector(0, 0, 1000.f), false, true);
             Player->SetAirbone(true);
+            FDamageEvent de;
+            Player->TakeDamage(50.f, de, GetOwner()->GetInstigatorController(), this);
         }
+        UKismetSystemLibrary::K2_SetTimer(this, "StartAirCombo", 1.f, false);
+    }
+}
+
+void AGrux::AirDamage()
+{
+    if (HitPlayer.Num() > 0)
+    {
+        for (ABasePlayer* Player : HitPlayer)
+        {
+            Player->LaunchCharacter(FVector(0, 0, 100.f), false, true);
+            FDamageEvent de;
+            Player->TakeDamage(20.f, de, GetOwner()->GetInstigatorController(), this);
+
+            if (HitEffect)
+            {
+                FTransform transform;
+                transform.AddToTranslation(Player->GetActorLocation());
+                AirSpawnEffect(transform);
+            }
+        }
+    }
+}
+
+void AGrux::StartAirCombo()
+{
+    bSkill2 = true;
+    CenterLocation = GetActorLocation();
+    DrawStarPattern(5, 1000.0f);
+
+    UKismetSystemLibrary::K2_SetTimer(this, "EndAirCombo", 5.f, false);
+}
+
+void AGrux::EndAirCombo()
+{
+    if (HitPlayer.Num() > 0)
+    {
+        for (ABasePlayer* Player : HitPlayer)
+        {
+            FVector Location = Player->GetActorLocation() - CenterLocation;
+            Player->LaunchCharacter(Location * 3, false, true);
+            FDamageEvent de;
+            Player->TakeDamage(50.f, de, GetOwner()->GetInstigatorController(), this);
+            Player->GetCharacterMovement()->GravityScale = 1.f;
+
+            if (HitEffect)
+            {
+                FTransform transform;
+                transform.AddToTranslation(Player->GetActorLocation());
+                AirSpawnEffect(transform);
+            }
+        }
+    }
+    HitPlayer.Empty();
+    bSkill2 = false;
+    EndAction();
+}
+
+void AGrux::AirSpawnEffect_Implementation(FTransform InTransform)
+{
+    if (HitEffect)
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, InTransform);
+}
+
+void AGrux::DrawStarPattern(int Points, float Radius)
+{
+    CalculateStarPoints(Points, Radius);
+    CurrentPointIndex = 0;
+}
+
+void AGrux::CalculateStarPoints(int Points, float Radius)
+{
+    StarPoints.Empty();
+
+    float AngleStep = 360.0f / Points;
+    for (int32 i = 0; i < Points; i++)
+    {
+        float Angle = UKismetMathLibrary::DegreesToRadians(i * AngleStep * 2);
+        float X = CenterLocation.X + Radius * FMath::Cos(Angle);
+        float Y = CenterLocation.Y + Radius * FMath::Sin(Angle);
+        StarPoints.Add(FVector(X, Y, CenterLocation.Z));
+    }
+}
+
+void AGrux::MoveToNextPoint()
+{
+    if (StarPoints.Num() == 0) return;
+
+    FVector TargettoLocation = StarPoints[CurrentPointIndex];
+    FVector ToDirection = (TargettoLocation - GetActorLocation()).GetSafeNormal();
+    FVector NewLocation = GetActorLocation() + ToDirection * MoveSpeed * GetWorld()->GetDeltaSeconds();
+
+    SetActorLocation(NewLocation);
+
+    if (FVector::Dist(NewLocation, TargettoLocation) < 100.0f)
+    {
+        AirDamage();
+        CurrentPointIndex = (CurrentPointIndex + 1) % StarPoints.Num();
     }
 }
 

@@ -82,7 +82,7 @@ void ABaseAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors
 
 void ABaseAIController::CooldownSkill()
 {
-	uint32 RandomNum = FMath::RandRange(1, 3);
+	uint32 RandomNum = FMath::RandRange(1, 2);
 	Blackboard->SetValueAsInt(FBlackBoardKeyNameTable::RandomKey, RandomNum);
 	bSkill = true;
 }
