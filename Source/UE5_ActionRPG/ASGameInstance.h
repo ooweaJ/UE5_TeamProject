@@ -27,6 +27,24 @@ struct FCharacterData
 	ECharacterClass CharacterClassName = ECharacterClass::_End;
 };
 
+UENUM(BlueprintType)
+enum class ENetworkRole : uint8
+{
+	Server UMETA(DisplayName = "Server"), 
+	Client UMETA(DisplayName = "Client"),
+};
+
+USTRUCT(BlueprintType)
+struct FTravelInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString LoadingURL; 
+
+	UPROPERTY()
+	FString TravelURL; 
+};
 
 UCLASS()
 class UE5_ACTIONRPG_API UASGameInstance : public UGameInstance, public IMenuInterface
@@ -45,6 +63,12 @@ public:
 	void LoadinGameMenu();
 
 	void SetClassName(FString InName);
+
+	const FString& GetClassName() { return ClassName; }
+
+	void InitializeTravelInfos(); 
+
+	const TMap<ENetworkRole, FTravelInfo>& GetTravelInfos() const { return TravelInfos; }
 
 private:
 	void OnCreateSessionComplete(FName InSessionName, bool InSuccess);
@@ -80,4 +104,6 @@ private:
 	class UMenuWidget* InGameMenu; 
 	FString DesiredServerName;
 	FString ClassName;
+
+	TMap<ENetworkRole, FTravelInfo> TravelInfos; 
 };

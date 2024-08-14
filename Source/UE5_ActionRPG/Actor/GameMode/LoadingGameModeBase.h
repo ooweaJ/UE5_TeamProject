@@ -16,5 +16,21 @@ class UE5_ACTIONRPG_API ALoadingGameModeBase : public AGameModeBase
 
 public:
 	ALoadingGameModeBase(); 
-	
+
+protected:
+	virtual void BeginPlay() override; 
+
+protected:
+	UFUNCTION()
+	void OnMapLoadComplete(const FString& DestinationPath); 
+
+	void AsyncLoadMap(const FString& DestinationPath);
+
+	void LoadComplete(const FString& DestinationPath, float DelayTime); 
+
+protected:
+	FTimerHandle DelayTravelTimerHandle;
+
+private:
+	FString ReceivedOptions; 
 };

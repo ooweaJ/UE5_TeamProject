@@ -51,6 +51,8 @@ void UASGameInstance::Init()
 
 	if (!!GEngine)
 		GEngine->OnNetworkFailure().AddUObject(this, &ThisClass::OnNetworkFailure);
+
+	InitializeTravelInfos(); 
 }
 
 void UASGameInstance::LoadMainMenu()
@@ -134,6 +136,17 @@ void UASGameInstance::SetClassName(FString InName)
 	ClassName = InName;
 }
 
+void UASGameInstance::InitializeTravelInfos()
+{
+	FTravelInfo ServerInfo;
+	ServerInfo.LoadingURL = TEXT("/Game/_dev/Level/Loading?Listen");
+	TravelInfos.Add(ENetworkRole::Server, ServerInfo);
+
+	FTravelInfo ClientInfo;
+	ClientInfo.LoadingURL = TEXT("/Game/_dev/Level/Loading");
+	TravelInfos.Add(ENetworkRole::Client, ClientInfo);
+}
+
 void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSuccess)
 {
 	if (InSuccess == false)
@@ -153,8 +166,10 @@ void UASGameInstance::OnCreateSessionComplete(FName InSessionName, bool InSucces
 
 	UWorld* world = GetWorld();
 	if (world == nullptr) return;
-	UGameplayStatics::OpenLevel(world, FName("/Game/_dev/Level/MainWorld?listen"), true, ClassName);
 
+	FString ServerLoadingURL = TravelInfos[ENetworkRole::Server].LoadingURL;
+	TravelInfos.Remove(ENetworkRole::Client); 
+	UGameplayStatics::OpenLevel(world, FName(*ServerLoadingURL), true);
 }
 
 void UASGameInstance::OnDestroySessionComplete(FName InSessionName, bool InSuccess)
@@ -214,8 +229,10 @@ void UASGameInstance::OnJoinSessionComplete(FName InSessionName, EOnJoinSessionC
 	APlayerController* controller = GetFirstLocalPlayerController();
 	if (controller == nullptr) return;
 
-	UGameplayStatics::OpenLevel(GetWorld(), FName(address), true, ClassName);
-	//controller->ClientTravel(address, ETravelType::TRAVEL_Absolute);
+	TravelInfos[ENetworkRole::Client].TravelURL = address;
+	FString ClientLoadingURL = TravelInfos[ENetworkRole::Client].LoadingURL;
+	TravelInfos.Remove(ENetworkRole::Server); 
+	controller->ClientTravel(ClientLoadingURL, ETravelType::TRAVEL_Absolute);
 }
 
 void UASGameInstance::OnNetworkFailure(UWorld* InWorld, UNetDriver* InNetDriver, ENetworkFailure::Type InType, const FString& ErrorSting)

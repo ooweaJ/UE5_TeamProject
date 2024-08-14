@@ -27,9 +27,11 @@ void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
 APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
 {
 	APlayerController* PC = Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
-	const FString Class = UGameplayStatics::ParseOption(Options, "Class");
-	SetPlayerClassName(Class); 
-
+	// const FString Class = UGameplayStatics::ParseOption(Options, "Class");
+	if (UASGameInstance* ASGameInstance = Cast<UASGameInstance>(GetGameInstance()))
+	{
+		SetPlayerClassName(ASGameInstance->GetClassName()); 
+	}
 	return PC;
 }
 
