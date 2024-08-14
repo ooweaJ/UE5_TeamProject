@@ -23,6 +23,7 @@ AAIBaseCharacter::AAIBaseCharacter()
 	if(Class.Succeeded())
 		HealthWidget->SetWidgetClass(Class.Class);
 	Tags.Add("Boss");
+	NameTag = TEXT("Boss");
 }
 
 void AAIBaseCharacter::BeginPlay()

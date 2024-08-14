@@ -98,7 +98,7 @@ public:
 private:
 	UPROPERTY(EditAnywhere, Category = "Health")
 	float MaxHealth = 100.f;
-	UPROPERTY(ReplicatedUsing = "OnRep_Update")
+	UPROPERTY(EditAnywhere, ReplicatedUsing = "OnRep_Update")
 	float Health;
 	UPROPERTY(EditAnywhere, Category = "Cost")
 	float EvadeCost = -50.f;

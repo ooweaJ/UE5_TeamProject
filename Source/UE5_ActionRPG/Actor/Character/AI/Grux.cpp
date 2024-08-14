@@ -104,9 +104,9 @@ void AGrux::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherAct
         {
             if (UUI_MainInGame* UI = Cast<UUI_MainInGame>(InGameHUD->MainUI))
             {
-                UI->UI_BossStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject());
-                UI->UI_BossStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
-                UI->UI_BossStatus->SetVisibility(ESlateVisibility::Visible);
+                UI->BPUI_BossStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+                UI->BPUI_BossStatus->SetNameTag(NameTag);
+                UI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Visible);
             }
         }
     }

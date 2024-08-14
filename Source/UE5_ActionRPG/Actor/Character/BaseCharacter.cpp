@@ -118,7 +118,7 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		Status->StatusModify(Status->HP, -DamageAmount);
 		Status->DecreaseHealth(DamageAmount);
 
-		if (Status->GetHealth() == 0.f)
+		if (Status->GetHealth() == 0.f||Status->HP.Current == 0.f)
 		{
 			State->SetDeadMode();
 			Dead();

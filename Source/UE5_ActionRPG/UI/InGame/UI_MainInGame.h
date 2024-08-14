@@ -34,7 +34,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UUI_Text* UI_Text;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UUI_BossStatus* UI_BossStatus;
+	class UUI_BossStatus* BPUI_BossStatus;
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
