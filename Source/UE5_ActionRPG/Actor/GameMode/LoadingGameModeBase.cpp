@@ -2,8 +2,11 @@
 
 
 #include "Actor/GameMode/LoadingGameModeBase.h"
+#include "Actor/Controller/PlayerController/LoadingPlayerController.h"
 
 ALoadingGameModeBase::ALoadingGameModeBase()
 {
 	bUseSeamlessTravel = true; 
+
+	PlayerControllerClass = ALoadingPlayerController::StaticClass();
 }
