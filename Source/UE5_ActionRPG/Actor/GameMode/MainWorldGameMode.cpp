@@ -4,7 +4,7 @@
 #include "ASGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
-#include "Engine.h"
+#include "Component/StatusComponent.h"
 
 AMainWorldGameMode::AMainWorldGameMode()
 {
@@ -20,8 +20,6 @@ AMainWorldGameMode::AMainWorldGameMode()
 void AMainWorldGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
-
-	SpawnRelevantPlayer(NewPlayer); 
 }
 
 APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
@@ -29,11 +27,12 @@ APlayerController* AMainWorldGameMode::Login(UPlayer* NewPlayer, ENetRole InRemo
 	APlayerController* PC = Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
 	const FString Class = UGameplayStatics::ParseOption(Options, "Class");
 	SetPlayerClassName(Class); 
+	SpawnRelevantPlayer(PC);
 
 	return PC;
 }
 
-void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer)
+void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* InPlayerController)
 {
 	TSubclassOf<ABasePlayer>* BasePlayer = ClassMap.Find(ClassName);
 	if (!BasePlayer) { return; }
@@ -44,37 +43,59 @@ void AMainWorldGameMode::SpawnRelevantPlayer(APlayerController* NewPlayer)
 	FVector SpawnLocation = PlayerStart->GetActorLocation();
 	FRotator SpawnRotation = PlayerStart->GetActorRotation();
 	FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = NewPlayer;
+	SpawnParams.Owner = InPlayerController;
 
-	ABasePlayer* NewBasePlayer = GetWorld()->SpawnActor<ABasePlayer>(*BasePlayer, SpawnLocation, SpawnRotation, SpawnParams);
-
-	if (!NewBasePlayer) { return; }
+	ABasePlayer* SpawnedBasePlayer = GetWorld()->SpawnActor<ABasePlayer>(*BasePlayer, SpawnLocation, SpawnRotation, SpawnParams);
+	if (!SpawnedBasePlayer) { return; }
 	
-	AActor* OldPawn = NewPlayer->GetPawn();
+	AActor* OldPawn = InPlayerController->GetPawn();
 	if (ABasePlayer* OldBasePlayer = Cast<ABasePlayer>(OldPawn))
 	{
 		OldBasePlayer->DestroyAttachedActors(); 
 		OldBasePlayer->Destroy(); 
 	}
 	
-	if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(NewPlayer))
+	if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(InPlayerController))
 	{
-		BasePlayerController->Possess(NewBasePlayer);
-		BasePlayerController->SetIgnoreMoveInput(false);
-		BasePlayerController->SetIgnoreLookInput(false);
-		BasePlayerController->SetRespawnedPlayer(NewBasePlayer);
+		BasePlayerController->Possess(SpawnedBasePlayer);
 	}
 
 }
 
-void AMainWorldGameMode::Respawn(APlayerController* InPlayerController)
+void AMainWorldGameMode::Respawn(APlayerController* InPlayerController, float RespawnTime)
 {
 	FTimerDelegate TimerDelegate; 
 	TimerDelegate.BindLambda([this, InPlayerController]()
 		{
-			SpawnRelevantPlayer(InPlayerController); 
+			RevertToPlayerStart(InPlayerController); 
 		});
-	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, TimerDelegate, 3.f, false);
+	GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, TimerDelegate, RespawnTime, false);
+}
+
+void AMainWorldGameMode::RevertToPlayerStart(APlayerController* InPlayerController)
+{
+	APlayerStart* PlayerStart = Cast<APlayerStart>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass()));
+	if (!PlayerStart) { return; }
+
+	FVector SpawnLocation = PlayerStart->GetActorLocation();
+	FRotator SpawnRotation = PlayerStart->GetActorRotation();
+
+	if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(InPlayerController))
+	{
+		APawn* BasePawn = BasePlayerController->GetPawn(); 
+		if (ABasePlayer* BasePlayer = Cast<ABasePlayer>(BasePawn))
+		{
+			BasePlayer->SetActorLocation(SpawnLocation); 
+			BasePlayer->SetActorRotation(SpawnRotation); 
+			BasePlayer->SetPrimitiveComponentsVisibility(true); 
+			BasePlayer->SetAttachedActorsVisiblity(true);
+			BasePlayer->SetActorEnableCollision(true); 
+			BasePlayer->HandlePlayerRevival(); 
+		}
+
+		BasePlayerController->SetIgnoreMoveInput(false);
+		BasePlayerController->SetIgnoreLookInput(false);
+	}
 }
 
 void AMainWorldGameMode::BeginPlay()

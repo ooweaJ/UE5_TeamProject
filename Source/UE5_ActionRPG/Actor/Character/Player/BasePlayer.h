@@ -55,6 +55,10 @@ public:
 	void TickLockOn();
 	virtual void UpdateHP();
 
+	void HandlePlayerDeath(); 
+
+	void HandlePlayerRevival(); 
+
 	void SetPrimitiveComponentsVisibility(bool bVisible); 
 
 	void SetAttachedActorsVisiblity(bool bVisible); 

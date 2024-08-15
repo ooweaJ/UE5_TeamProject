@@ -111,34 +111,7 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	// When HP is less or equal than 0 
 	if (Status->HP.Current <= 0.)
 	{
-		State->SetDeadMode();
-
-		ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
-		AMainWorldGameMode* GameMode = Cast<AMainWorldGameMode>(UGameplayStatics::GetGameMode(this));
-
-		if (BasePlayerController)
-		{
-			BasePlayerController->UnPossess();
-			BasePlayerController->SetIgnoreMoveInput(true); 
-			BasePlayerController->SetIgnoreLookInput(true); 
-		}
-
-		UNiagaraComponent* DeathDissolveComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
-			GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
-
-		SetPrimitiveComponentsVisibility(false);
-
-		SetAttachedActorsVisiblity(false);
-
-		DeathDissolveComponent->SetVisibility(true); 
-
-		SetActorEnableCollision(false); 
-
-		if (GameMode && BasePlayerController)
-		{
-			GameMode->Respawn(BasePlayerController);
-		}
-
+		HandlePlayerDeath(); 
 	}
 
 	return TempDamage;
@@ -332,6 +305,44 @@ void ABasePlayer::UpdateHP()
 {
 	AInGameHUD* MyHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
+}
+
+void ABasePlayer::HandlePlayerDeath()
+{
+	State->SetDeadMode();
+
+	ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
+	
+	if (BasePlayerController)
+	{
+		BasePlayerController->SetIgnoreMoveInput(true);
+		BasePlayerController->SetIgnoreLookInput(true);
+	}
+
+	UNiagaraComponent* DeathDissolveComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
+		GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
+
+	SetPrimitiveComponentsVisibility(false);
+
+	SetAttachedActorsVisiblity(false);
+
+	DeathDissolveComponent->SetVisibility(true);
+
+	SetActorEnableCollision(false);
+
+	AMainWorldGameMode* GameMode = Cast<AMainWorldGameMode>(UGameplayStatics::GetGameMode(this));
+
+	if (GameMode && BasePlayerController)
+	{
+		GameMode->Respawn(BasePlayerController, 3.f);
+	}
+
+}
+
+void ABasePlayer::HandlePlayerRevival()
+{
+	Status->StatusModify(Status->HP, Status->GetMaxHealth());
+	State->SetIdleMode(); 
 }
 
 void ABasePlayer::SetPrimitiveComponentsVisibility(bool bVisible)
