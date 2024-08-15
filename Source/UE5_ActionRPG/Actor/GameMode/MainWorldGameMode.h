@@ -16,8 +16,9 @@ public:
 public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
-	void SpawnRelevantPlayer(APlayerController* NewPlayer); 
-	void Respawn(APlayerController* InPlayerController);
+	void SpawnRelevantPlayer(APlayerController* InPlayerController); 
+	void Respawn(APlayerController* InPlayerController, float RespawnTime);
+	void RevertToPlayerStart(APlayerController* InPlayerController);
 
 public:
 	void SetPlayerClassName(FString InClassName) { ClassName = InClassName; }
