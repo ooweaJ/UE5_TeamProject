@@ -234,9 +234,8 @@ void ABasePlayer::MulticastOnDefaultAction_Implementation()
 	if (AItem* item = Equip->GetCurrentItem())
 	{
 		if (Status->SP.Current < -Status->GetAttackCost()) return;
-
 		item->OnDefaultAction();
-		Status->StatusModify(Status->SP, Status->GetAttackCost());
+		//Status->StatusModify(Status->SP, Status->GetAttackCost());
 	}
 }
 

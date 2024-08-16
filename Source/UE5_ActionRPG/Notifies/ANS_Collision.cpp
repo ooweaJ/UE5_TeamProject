@@ -13,7 +13,9 @@ void UANS_Collision::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequence
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 	if (MeshComp == nullptr) return;
 
-	UEquipComponent* Equip = Cast<UEquipComponent>(MeshComp->GetOwner()->GetComponentByClass<UEquipComponent>());
+	AActor* Owner = MeshComp->GetOwner();
+	if (!Owner) return;
+	UEquipComponent* Equip = Cast<UEquipComponent>(Owner->GetComponentByClass<UEquipComponent>());
 	if (Equip == nullptr) return;
 
 	if (ABaseWeapon* Weapon = Cast<ABaseWeapon>(Equip->GetCurrentItem()))
@@ -36,7 +38,9 @@ void UANS_Collision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBa
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 	if (MeshComp == nullptr) return;
 
-	UEquipComponent* Equip = Cast<UEquipComponent>(MeshComp->GetOwner()->GetComponentByClass<UEquipComponent>());
+	AActor* Owner = MeshComp->GetOwner();
+	if (!Owner) return;
+	UEquipComponent* Equip = Cast<UEquipComponent>(Owner->GetComponentByClass<UEquipComponent>());
 	if (Equip == nullptr) return;
 	if (ABaseWeapon* Weapon = Cast<ABaseWeapon>(Equip->GetCurrentItem()))
 	{

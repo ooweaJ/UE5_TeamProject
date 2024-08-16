@@ -225,7 +225,10 @@ void AAIBaseCharacter::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActo
 				if (UUI_MainInGame* InGameUI = Cast<UUI_MainInGame>(HUD->MainUI))
 				{
 					if (ScreenStatusUI)
+					{
 						ScreenStatusUI = InGameUI->BPUI_BossStatus;
+						ScreenStatusUI->SetNameTag(NameTag);
+					}
 					InGameUI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Visible);
 					HealthWidget->SetVisibility(false);
 				}
