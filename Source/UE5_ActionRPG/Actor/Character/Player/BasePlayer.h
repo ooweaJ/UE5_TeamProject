@@ -31,7 +31,7 @@ public:
 	void MultiOnMouseR();
 	void OffMouseL();
 	void OffMouseR();
-	void OnQ(); 
+	virtual void OnQ(); 
 	UFUNCTION(Server, Reliable)
 	void OnShift();
 	UFUNCTION(Server, Reliable)

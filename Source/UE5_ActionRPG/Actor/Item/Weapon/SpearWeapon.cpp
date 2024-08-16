@@ -30,12 +30,9 @@ void ASpearWeapon::OnSkillAction()
 		FActionData* Data = GetSkillAction(2);
 		if (!Data) { return; }
 
-		if (SpearOwner->bCanThrowSpear)
-		{
-			SpearOwner->bCanThrowSpear = false;
-			SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.f);
-			OwnerState->SetIdleMode();
-		}
+
+		SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.f);
+		OwnerState->SetIdleMode();
 	}
 }
 
@@ -55,7 +52,6 @@ void ASpearWeapon::OnSkillAction2()
 
 
 		SpearOwner->PlayAnimMontage(Data->AnimMontage, 1.25f);
-		SpearOwner->bCanThrowSpear = true;
 		OwnerState->SetActionMode();
 	}
 }
