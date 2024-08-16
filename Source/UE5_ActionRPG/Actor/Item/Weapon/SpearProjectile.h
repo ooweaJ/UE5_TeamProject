@@ -36,7 +36,7 @@ protected:
 
 private:
 	UPROPERTY()
-	float SpearThrowingDamage = 10.f; 
+	float SpearThrowingDamage = 100.f; 
 protected:
 	UPROPERTY()
 	UBoxComponent* Box; 

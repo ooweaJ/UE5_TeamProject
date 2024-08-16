@@ -310,6 +310,7 @@ void ABasePlayer::UpdateHP()
 void ABasePlayer::HandlePlayerDeath()
 {
 	State->SetDeadMode();
+	Dead(); 
 
 	ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
 	
