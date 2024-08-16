@@ -345,7 +345,7 @@ void ABasePlayer::CompletePlayerDeath(ABasePlayerController* InPlayerController)
 
 void ABasePlayer::HandlePlayerRevival()
 {
-	Status->StatusModify(Status->HP, Status->GetMaxHealth());
+	Status->StatusModify(Status->HP, Status->GetMaxHP());
 	State->SetIdleMode(); 
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance(); 
