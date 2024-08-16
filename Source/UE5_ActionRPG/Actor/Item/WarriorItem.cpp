@@ -3,6 +3,7 @@
 #include "Actor/Character/BaseCharacter.h"
 #include "Engine/DamageEvents.h"
 #include "Actor/Item/DamageType/DefaultDamageType.h"
+#include "Kismet/GameplayStatics.h"
 
 void AWarriorItem::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
 {
@@ -17,6 +18,14 @@ void AWarriorItem::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter
 				 FDamageEvent de;
 				 de.DamageTypeClass = DDT;
 				 InOtherCharacter->TakeDamage(0, de, InAttacker->GetController(), InCauser);
+				 //Effect
+				 UParticleSystem* hitEffect = CurrentData.Effect;
+				 if (!!hitEffect)
+				 {
+					 FTransform transform = CurrentData.EffectTransform;
+					 transform.AddToTranslation(InOtherCharacter->GetActorLocation());
+					 UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), hitEffect, transform);
+				 }
 			 }
 		 }
 	}

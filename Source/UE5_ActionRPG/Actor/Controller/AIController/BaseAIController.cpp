@@ -7,6 +7,7 @@
 #include "GameFrameWork/Character.h"
 
 #include "Component/BehaviorComponent.h"
+#include "Component/StateComponent.h"
 #include "Actor/Character/AI/AIBaseCharacter.h"
 #include "MISC/MISC.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -30,7 +31,6 @@ ABaseAIController::ABaseAIController()
 	Perception->ConfigureSense(*Sight);
 	Perception->SetDominantSense(Sight->GetSenseImplementation());
 	Perception->OnPerceptionUpdated.AddDynamic(this, &ThisClass::OnPerceptionUpdated);
-
 }
 
 void ABaseAIController::BeginPlay()
@@ -68,16 +68,33 @@ void ABaseAIController::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors
 	TArray<AActor*> actors;
 	Perception->GetCurrentlyPerceivedActors(nullptr, actors);
 
-	ACharacter* player = nullptr;
+	ACharacter* ClosestPlayer = nullptr;
+	float ClosestDistance = FLT_MAX;  // 가장 가까운 거리 (초기값을 무한대로 설정)
+
 	for (AActor* actor : actors)
 	{
 		if (actor->ActorHasTag("Player"))
-			player = Cast<ACharacter>(actor);
-		if (!!player)
-			break;
+		{
+			ACharacter* PlayerCharacter = Cast<ACharacter>(actor);
+			UStateComponent* State = PlayerCharacter->FindComponentByClass<UStateComponent>();
+
+			if (State && !State->IsDeadMode())
+			{
+				// AI 컨트롤러가 제어하는 Pawn과 플레이어 사이의 거리 계산
+				float DistanceToPlayer = GetPawn()->GetDistanceTo(PlayerCharacter);
+
+				// 가장 가까운 플레이어 찾기
+				if (DistanceToPlayer < ClosestDistance)
+				{
+					ClosestDistance = DistanceToPlayer;
+					ClosestPlayer = PlayerCharacter;
+				}
+			}
+		}
 	}
 
-	Blackboard->SetValueAsObject(FBlackBoardKeyNameTable::TargetKey, player);
+	// 가장 가까운 플레이어를 블랙보드에 설정
+	Blackboard->SetValueAsObject(FBlackBoardKeyNameTable::TargetKey, ClosestPlayer);
 }
 
 void ABaseAIController::CooldownSkill()
@@ -113,9 +130,9 @@ void ABaseAIController::OnMeleeAttack()
 
 void ABaseAIController::OnSkill(uint32 Num)
 {
-	OwnerAI->OnSkill(Num);
 	bSkill = false;
-	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 20.f, false);
+	UKismetSystemLibrary::K2_SetTimer(this, "CooldownSkill", 30.f, false);
+	OwnerAI->OnSkill(Num);
 }
 
 void ABaseAIController::OnUltimate()

@@ -63,4 +63,5 @@ protected:
 
 	bool bSkill = false;
 	bool bUltimate = false;
+	TArray<AActor*> SensedActors;
 };

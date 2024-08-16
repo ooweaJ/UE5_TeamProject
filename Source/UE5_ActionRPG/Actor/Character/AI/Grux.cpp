@@ -154,10 +154,6 @@ void AGrux::AirStart()
 
             PlayAirCombo();
         }
-        else
-        {
-            EndAction();
-        }
     }
 }
 
@@ -174,6 +170,10 @@ void AGrux::PlayAirCombo()
             Player->TakeDamage(50.f, de, GetOwner()->GetInstigatorController(), this);
         }
         UKismetSystemLibrary::K2_SetTimer(this, "StartAirCombo", 1.f, false);
+    }
+    else
+    {
+        EndSkill2();
     }
 }
 
@@ -213,7 +213,7 @@ void AGrux::EndAirCombo()
         for (ABasePlayer* Player : HitPlayer)
         {
             FVector Location = Player->GetActorLocation() - CenterLocation;
-            Player->LaunchCharacter(Location * 3, false, true);
+            Player->LaunchCharacter(Location * FVector(0,0,-1), false, true);
             FDamageEvent de;
             Player->TakeDamage(50.f, de, GetOwner()->GetInstigatorController(), this);
             Player->GetCharacterMovement()->GravityScale = 1.f;
@@ -226,8 +226,15 @@ void AGrux::EndAirCombo()
             }
         }
     }
+    EndSkill2();
+}
+
+void AGrux::EndSkill2()
+{
     HitPlayer.Empty();
     bSkill2 = false;
+    bTravel = false;
+    bApproach = false;
     EndAction();
 }
 

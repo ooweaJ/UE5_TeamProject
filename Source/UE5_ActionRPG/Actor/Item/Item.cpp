@@ -224,6 +224,10 @@ void AItem::ItemAction2()
 {
 }
 
+void AItem::ItemAction3()
+{
+}
+
 void AItem::OnItemSkillAction()
 {
 }
@@ -244,6 +248,11 @@ void AItem::OnItemAction(int32 Num)
 		case 2:
 		{
 			ItemAction2();
+			break;
+		}
+		case 3:
+		{
+			ItemAction3();
 			break;
 		}
 	}

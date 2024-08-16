@@ -57,6 +57,7 @@ public:
 	virtual void EndAction();
 	virtual void ItemAction();
 	virtual void ItemAction2();
+	virtual void ItemAction3();
 	virtual void OnItemSkillAction();
 	virtual void OffItemSkillAction();
 

@@ -29,7 +29,7 @@ public:
 
 	virtual void OffUltimateAction();
 	virtual void OnItemSkillAction();
-	virtual void ItemAction2();
+	virtual void ItemAction3();
 
 	class AGrux* Grux;
 };

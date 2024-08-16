@@ -54,6 +54,7 @@ void UBehaviorComponent::SetHittedMode() { ChangeType(EBehaviorType::Hitted); }
 void UBehaviorComponent::SetKnockBackMode() { ChangeType(EBehaviorType::KnockBack); }
 void UBehaviorComponent::SetEquipMode() { ChangeType(EBehaviorType::Equip); }
 void UBehaviorComponent::SetStrafeMode() { ChangeType(EBehaviorType::Strafe); }
+void UBehaviorComponent::SetDeadMode() { ChangeType(EBehaviorType::Dead); }
 
 void UBehaviorComponent::ChangeType(EBehaviorType InType)
 {

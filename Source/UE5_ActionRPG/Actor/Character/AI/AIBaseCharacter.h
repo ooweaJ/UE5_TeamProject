@@ -36,6 +36,9 @@ public:
 	virtual void OffMelee();
 	virtual void OffSkill();
 	virtual void OffUltimate();
+	virtual void Dead();
+	UFUNCTION()
+	void End_Dead();
 
 	void TargetRotation();
 	void RotateToTarget();

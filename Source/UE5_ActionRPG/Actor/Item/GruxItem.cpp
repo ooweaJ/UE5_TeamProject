@@ -69,7 +69,6 @@ void AGruxItem::OnSkillAction2()
 {
 	if (!OwnerState) return;
 	Super::OnSkillAction2();
-	OwnerState->SetActionMode();
 }
 
 void AGruxItem::OnSkillAction3()
@@ -97,7 +96,7 @@ void AGruxItem::OnItemSkillAction()
 	Grux->OnFlySkill(&CurrentData);
 }
 
-void AGruxItem::ItemAction2()
+void AGruxItem::ItemAction3()
 {
 	Grux->OnSkill2();
 }

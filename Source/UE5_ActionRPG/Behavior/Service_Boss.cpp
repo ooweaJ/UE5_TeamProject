@@ -21,6 +21,16 @@ void UService_Boss::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 
 	AAIBaseCharacter* aiPawn = Cast<AAIBaseCharacter>(controller->GetPawn());
 
+
+	UStateComponent* State = aiPawn->GetComponentByClass<UStateComponent>();
+	if (!State) return;
+
+	if (State->IsDeadMode())
+	{
+		behavior->SetDeadMode();
+		return;
+	}
+
 	ACharacter* Target = behavior->GetTarget();
 
 	if (Target == nullptr)
@@ -32,25 +42,13 @@ void UService_Boss::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 	{
 		float distance = aiPawn->GetDistanceTo(Target);
 
-		if (controller->IsOnUltimate())
-		{
-			behavior->SetUltimateMode();
-			return;
-		}
-		else if (controller->IsOnSkill())
+		 if (controller->IsOnSkill())
 		{
 			behavior->SetSkillMode();
 			return;
 		}
 		else if (controller->GetAttackRange() > distance)
 		{
-			float RandomValue = FMath::FRand();
-			if (RandomValue > 0.5f)
-			{
-				behavior->SetStrafeMode();
-				return;
-			}
-			else
 			{
 				behavior->SetMeleeMode();
 				return;

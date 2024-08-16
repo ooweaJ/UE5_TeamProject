@@ -8,9 +8,11 @@
 #include "UI/InGame/UI_BossStatus.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "HUD/InGameHUD.h"
 #include "UI/InGame/UI_MainInGame.h"
+
 
 AAIBaseCharacter::AAIBaseCharacter()
 {
@@ -162,6 +164,21 @@ void AAIBaseCharacter::OffSkill()
 
 void AAIBaseCharacter::OffUltimate()
 {
+}
+
+void AAIBaseCharacter::Dead()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->GlobalAnimRateScale = 0.f;
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	UKismetSystemLibrary::K2_SetTimer(this, "End_Dead", 2.f, false);
+}
+
+void AAIBaseCharacter::End_Dead()
+{
+	Destroy();
 }
 
 void AAIBaseCharacter::TargetRotation()

@@ -21,6 +21,15 @@ void UService_AI::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory,
 
 	AAIBaseCharacter* aiPawn = Cast<AAIBaseCharacter>(controller->GetPawn());
 
+	UStateComponent* State = aiPawn->GetComponentByClass<UStateComponent>();
+	if (!State) return;
+
+	if (State->IsDeadMode())
+	{
+		behavior->SetDeadMode();
+		return;
+	}
+
 	ACharacter* Target = behavior->GetTarget();
 
 	if (Target == nullptr)

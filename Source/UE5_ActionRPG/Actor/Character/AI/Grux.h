@@ -51,6 +51,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void AirSpawnEffect(FTransform InTransform);
 
+	void EndSkill2();
 	
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class AGruxMeteor> ActorToSpawn;
