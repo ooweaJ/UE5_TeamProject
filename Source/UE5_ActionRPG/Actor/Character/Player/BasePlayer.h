@@ -56,6 +56,8 @@ public:
 	virtual void UpdateHP();
 
 	void HandlePlayerDeath(); 
+	
+	void CompletePlayerDeath(class ABasePlayerController* InPlayerController); 
 
 	virtual void HandlePlayerRevival(); 
 
