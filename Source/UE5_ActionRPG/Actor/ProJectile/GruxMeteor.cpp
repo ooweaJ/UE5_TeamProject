@@ -75,11 +75,10 @@ void AGruxMeteor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
                     if (HitActor && HitActor->ActorHasTag("Player"))
                     {
                         //Damage
-                        float LocalDamage = Data->Power;
+                        float LocalDamage = 20.f;
                         LocalDamage = LocalDamage * FMath::FRandRange(0.9f, 1.1f);
 
                         FDamageEvent de;
-                        de.DamageTypeClass = Data->DamageType;
                         HitActor->TakeDamage(LocalDamage, de, GetOwner()->GetInstigatorController(), this);
                     }
                 }

@@ -18,6 +18,7 @@ public:
 	virtual void Tick(float DeltaTime);
 
 	void OnFlySkill(FActionData* InData);
+	void OnSkill2();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -29,21 +30,62 @@ public:
 	UFUNCTION(NetMulticast,Reliable)
 	void MultiFinishFlySkill();
 
-	UFUNCTION()
-	void OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void ApproachTarget();
 
+	UFUNCTION(Server, Reliable)
+	void UpperSkill();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiUpperSkill();
+
+	UFUNCTION(BlueprintCallable)
+	void AirStart();
+
+	void PlayAirCombo();
+	void AirDamage();
+	UFUNCTION()
+	void StartAirCombo();
+
+	UFUNCTION()
+	void EndAirCombo();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void AirSpawnEffect(FTransform InTransform);
+
+	
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class AGruxMeteor> ActorToSpawn;
 
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* FlyAttack;
 
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* Skill2;
+
 	UPROPERTY(Replicated,BlueprintReadOnly)
 	bool bFly = false;
 
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	bool bTravel = false;
+
+	UPROPERTY(EditAnywhere)
+	class UParticleSystem* HitEffect;
+
+	bool bApproach = false;
+	bool bSkill2 = false;
+
+	TArray<class ABasePlayer*> HitPlayer;
 	FTimerHandle TimerHandle;
 	FTimerDelegate TimerDel;
 	FVector TarGetLocation;
 	FActionData* Data;
 
+private:
+	FVector CenterLocation;
+	TArray<FVector> StarPoints;
+	int32 CurrentPointIndex;
+	float MoveSpeed = 5000.f;
+
+	void DrawStarPattern(int Points, float Radius);
+	void CalculateStarPoints(int Points, float Radius);
+	void MoveToNextPoint();
 };

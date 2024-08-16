@@ -95,6 +95,8 @@ void ASpearProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 {
 	if (OtherActor)
 	{
+		SetComponentsVisibility(false); 
+
 		AAIBaseCharacter* BossCharacter = Cast<AAIBaseCharacter>(OtherActor); 
 
 		if (!BossCharacter) { return;  }

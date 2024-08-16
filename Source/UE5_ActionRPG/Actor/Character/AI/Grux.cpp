@@ -9,19 +9,20 @@
 #include "Components/WidgetComponent.h"
 #include "Component/StatusComponent.h"
 #include "Actor/Character/Player/BasePlayer.h"
-#include "Kismet/GameplayStatics.h"
-#include "HUD/InGameHUD.h"
-#include "UI/InGame/UI_MainInGame.h"
 #include "UI/InGame/UI_BossStatus.h"
+#include "Component/StatusComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Actor/Character/Player/BasePlayer.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/DamageEvents.h"
 
 void AGrux::BeginPlay()
 {
     Super::BeginPlay();
 
     TimerDel.BindUFunction(this, FName("SpawnActorsAround"), 500.f, int32(6));
-    
-    if(UIPopCollision)
-        UIPopCollision->OnComponentBeginOverlap.AddDynamic(this, &AGrux::OnUIPopUP);
+    Tags.Add("Boss");
+    NameTag = TEXT("Grux");
 }
 
 void AGrux::Tick(float DeltaTime)
@@ -35,6 +36,15 @@ void AGrux::Tick(float DeltaTime)
             FVector location = UKismetMathLibrary::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, 2.f);
             SetActorLocation(location);
         }
+
+        if(bApproach)
+        {
+            ApproachTarget();
+        }
+
+        if(bSkill2)
+            MoveToNextPoint();
+
     }
 }
 
@@ -42,6 +52,7 @@ void AGrux::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AGrux, bFly);
+    DOREPLIFETIME(AGrux, bTravel);
 }
 
 void AGrux::OnFlySkill(FActionData* InData)
@@ -64,6 +75,13 @@ void AGrux::OnFlySkill(FActionData* InData)
     bFly = true;
 
     GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 3.0f, false);
+}
+
+void AGrux::OnSkill2()
+{
+    bTravel = true;
+    bApproach = true;
+    Status->SetSpeed(EWalkSpeedTpye::HighRun);
 }
 
 void AGrux::SpawnActorsAround(float Distance, int32 NumberOfActors)
@@ -95,22 +113,175 @@ void AGrux::SpawnActorsAround(float Distance, int32 NumberOfActors)
     UKismetSystemLibrary::K2_SetTimer(this, "FinishFlySkill", 4.f, false);
 }
 
-void AGrux::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AGrux::ApproachTarget()
 {
-    ABasePlayer* BP = Cast<ABasePlayer>(OtherActor);
-    if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+    if (!BaseController) return;
+    ACharacter* Target = BaseController->GetTarget();
+    if (!Target) return;
+    if (300.f > GetDistanceTo(Target))
     {
-        if (AInGameHUD* InGameHUD = Cast<AInGameHUD>(PC->GetHUD()))
+        bApproach = false;
+        UpperSkill();
+        return;
+    }
+    Direction = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+    AddMovementInput(Direction);
+}
+
+void AGrux::AirStart()
+{
+    if (HasAuthority())
+    {
+        FVector Location = GetActorLocation() + GetActorForwardVector() * 300;
+        TArray<FHitResult> HitResults;
+        TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+        ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+
+        if (UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Location, Location, 300.f, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, HitResults, true))
         {
-            if (UUI_MainInGame* UI = Cast<UUI_MainInGame>(InGameHUD->MainUI))
+            for (const FHitResult& HitResult : HitResults)
             {
-                UI->BPUI_BossStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
-                UI->BPUI_BossStatus->SetNameTag(NameTag);
-                UI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Visible);
+                AActor* HitActor = HitResult.GetActor();
+                if (HitActor && HitActor->ActorHasTag("Player"))
+                {
+                    if (ABasePlayer* Player = Cast<ABasePlayer>(HitActor))
+                        HitPlayer.Add(Player);
+                }
+            }
+
+            PlayAirCombo();
+        }
+        else
+        {
+            EndAction();
+        }
+    }
+}
+
+void AGrux::PlayAirCombo()
+{
+    if (HitPlayer.Num() > 0)
+    {
+        for (ABasePlayer* Player : HitPlayer)
+        {
+            Player->GetCharacterMovement()->GravityScale = 0.5f;
+            Player->LaunchCharacter(FVector(0, 0, 1000.f), false, true);
+            Player->SetAirbone(true);
+            FDamageEvent de;
+            Player->TakeDamage(50.f, de, GetOwner()->GetInstigatorController(), this);
+        }
+        UKismetSystemLibrary::K2_SetTimer(this, "StartAirCombo", 1.f, false);
+    }
+}
+
+void AGrux::AirDamage()
+{
+    if (HitPlayer.Num() > 0)
+    {
+        for (ABasePlayer* Player : HitPlayer)
+        {
+            Player->LaunchCharacter(FVector(0, 0, 100.f), false, true);
+            FDamageEvent de;
+            Player->TakeDamage(20.f, de, GetOwner()->GetInstigatorController(), this);
+
+            if (HitEffect)
+            {
+                FTransform transform;
+                transform.AddToTranslation(Player->GetActorLocation());
+                AirSpawnEffect(transform);
             }
         }
     }
 }
+
+void AGrux::StartAirCombo()
+{
+    bSkill2 = true;
+    CenterLocation = GetActorLocation();
+    DrawStarPattern(5, 1000.0f);
+
+    UKismetSystemLibrary::K2_SetTimer(this, "EndAirCombo", 5.f, false);
+}
+
+void AGrux::EndAirCombo()
+{
+    if (HitPlayer.Num() > 0)
+    {
+        for (ABasePlayer* Player : HitPlayer)
+        {
+            FVector Location = Player->GetActorLocation() - CenterLocation;
+            Player->LaunchCharacter(Location * 3, false, true);
+            FDamageEvent de;
+            Player->TakeDamage(50.f, de, GetOwner()->GetInstigatorController(), this);
+            Player->GetCharacterMovement()->GravityScale = 1.f;
+
+            if (HitEffect)
+            {
+                FTransform transform;
+                transform.AddToTranslation(Player->GetActorLocation());
+                AirSpawnEffect(transform);
+            }
+        }
+    }
+    HitPlayer.Empty();
+    bSkill2 = false;
+    EndAction();
+}
+
+void AGrux::AirSpawnEffect_Implementation(FTransform InTransform)
+{
+    if (HitEffect)
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, InTransform);
+}
+
+void AGrux::DrawStarPattern(int Points, float Radius)
+{
+    CalculateStarPoints(Points, Radius);
+    CurrentPointIndex = 0;
+}
+
+void AGrux::CalculateStarPoints(int Points, float Radius)
+{
+    StarPoints.Empty();
+
+    float AngleStep = 360.0f / Points;
+    for (int32 i = 0; i < Points; i++)
+    {
+        float Angle = UKismetMathLibrary::DegreesToRadians(i * AngleStep * 2);
+        float X = CenterLocation.X + Radius * FMath::Cos(Angle);
+        float Y = CenterLocation.Y + Radius * FMath::Sin(Angle);
+        StarPoints.Add(FVector(X, Y, CenterLocation.Z));
+    }
+}
+
+void AGrux::MoveToNextPoint()
+{
+    if (StarPoints.Num() == 0) return;
+
+    FVector TargettoLocation = StarPoints[CurrentPointIndex];
+    FVector ToDirection = (TargettoLocation - GetActorLocation()).GetSafeNormal();
+    FVector NewLocation = GetActorLocation() + ToDirection * MoveSpeed * GetWorld()->GetDeltaSeconds();
+
+    SetActorLocation(NewLocation);
+
+    if (FVector::Dist(NewLocation, TargettoLocation) < 100.0f)
+    {
+        AirDamage();
+        CurrentPointIndex = (CurrentPointIndex + 1) % StarPoints.Num();
+    }
+}
+
+void AGrux::UpperSkill_Implementation()
+{
+    MultiUpperSkill();
+}
+
+void AGrux::MultiUpperSkill_Implementation()
+{
+    PlayAnimMontage(Skill2);
+}
+
+
 
 
 void AGrux::FinishFlySkill_Implementation()
