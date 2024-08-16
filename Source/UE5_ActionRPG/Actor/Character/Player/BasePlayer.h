@@ -36,7 +36,10 @@ public:
 	void OnShift();
 	UFUNCTION(Server, Reliable)
 	void OffShift();
+	UFUNCTION(Server, Reliable)
 	void OnEvade();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiOnEvade();
 	void OnStepBack();
 	void OnInteraction();
 	void UsePotion();

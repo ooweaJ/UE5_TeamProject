@@ -182,7 +182,12 @@ void ABasePlayer::OffShift_Implementation()
 	}
 }
 
-void ABasePlayer::OnEvade()
+void ABasePlayer::OnEvade_Implementation()
+{
+	MultiOnEvade();
+}
+
+void ABasePlayer::MultiOnEvade_Implementation()
 {
 	if (!State->IsIdleMode()) return;
 	if (Status->SP.Current < -Status->GetEvadeCost()) return;
