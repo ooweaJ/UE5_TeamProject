@@ -20,6 +20,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "HUD/InGameHUD.h"
 #include "Net/UnrealNetwork.h"
+#include "Components/SceneComponent.h"
 
 ABasePlayer::ABasePlayer()
 {
@@ -59,7 +60,7 @@ ABasePlayer::ABasePlayer()
 		SpringArm->TargetArmLength = 300.f;
 		SpringArm->bDoCollisionTest = true;
 		SpringArm->bUsePawnControlRotation = true;
-	}
+		}
 	{
 		ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(TEXT("/Script/Niagara.NiagaraSystem'/Game/_dev/Effect/Death/NS_DeathDissolve.NS_DeathDissolve'"));
 		if (NiagaraSystemAsset.Succeeded())
@@ -80,11 +81,13 @@ void ABasePlayer::BeginPlay()
 		Equip->SupplyPotion();
 		Equip->SetPotionHealAmount(Status->GetMaxHP() * 0.3f);
 	}
+	
 }
 
 void ABasePlayer::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+	SpringArm->SetUsingAbsoluteLocation(true);
 
 }
 
@@ -278,7 +281,6 @@ void ABasePlayer::LockOn()
 		bLockOn = false;
 		TargetActor = nullptr;
 	}
-
 }
 
 void ABasePlayer::TickLockOn()
@@ -426,6 +428,11 @@ void ABasePlayer::SetAirbone(bool InAirBone)
 	{
 		State->SetHittedMode();
 	}
+}
+
+bool ABasePlayer::GetAbsolute()
+{
+	return SpringArm->IsUsingAbsoluteLocation();
 }
 
 

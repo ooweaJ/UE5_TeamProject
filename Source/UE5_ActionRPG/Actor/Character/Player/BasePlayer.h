@@ -73,6 +73,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetAirbone(bool InAirBone);
 
+	UFUNCTION(BlueprintCallable)
+	bool GetAbsolute();
+
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 	class USpringArmComponent* SpringArm;
