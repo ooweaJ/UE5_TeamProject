@@ -67,7 +67,7 @@ void ASpearman::BeginPlay()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance(); 
 	if (AnimInstance)
 	{
-		AnimInstance->OnMontageEnded.AddDynamic(this, &ASpearman::OnMontageEnded); 
+		AnimInstance->OnMontageEnded.AddDynamic(this, &ASpearman::OnThrowSpearMontageEnded); 
 	}
 }
 
@@ -101,7 +101,31 @@ void ASpearman::HandlePlayerRevival()
 	SpearProjectile->SetComponentsVisibility(false); 
 }
 
-void ASpearman::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+void ASpearman::OnQ()
+{
+	if (bCanPlaySpearSkillMontage && !bCanThrowSpear)
+	{
+		Super::OnQ();
+	}
+	
+	bCanPlaySpearSkillMontage = false; 
+	bCanThrowSpear = true; 
+}
+
+void ASpearman::ChangeBoolAtCooltimeOver(float CoolTime)
+{
+	bCanThrowSpear = false;
+
+	FTimerDelegate TimerDelegate; 
+	TimerDelegate.BindLambda([this]()
+		{
+			bCanThrowSpear = false; 
+			bCanPlaySpearSkillMontage = true; 
+		});
+	GetWorld()->GetTimerManager().SetTimer(SpearSkillCoolHandle, TimerDelegate, CoolTime, false);
+}
+
+void ASpearman::OnThrowSpearMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	if (Montage)
 	{
@@ -113,9 +137,6 @@ void ASpearman::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 			if (UAN_ThrowSpear* ThrowSpearNotify = Cast<UAN_ThrowSpear>(AnimNotify))
 			{
 				SpearProjectile->Destroy(); 
-				/*ASpearWeapon* SpearWeapon = GetSpearWeapon(); 
-				AAttachment* SpearAttachment = SpearWeapon->GetAttachment();
-				SpearAttachment->SetActorHiddenInGame(false);*/
 
 				TArray<AActor*> AttachedActors; 
 				GetAttachedActors(AttachedActors); 
@@ -132,7 +153,7 @@ void ASpearman::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 		}
 	}
 
-	bCanThrowSpear = true; 
+	ChangeBoolAtCooltimeOver(3.f); 
 }
 
 void ASpearman::ThrowSpear()

@@ -37,6 +37,12 @@ protected:
 
 	virtual void HandlePlayerRevival() override; 
 
+	virtual void OnQ() override; 
+
+	void ChangeBoolAtCooltimeOver(float CoolTime);
+
+	FTimerHandle SpearSkillCoolHandle;
+
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -44,7 +50,8 @@ protected:
 
 	bool bCanCombo = false; 
 
-private:
 	UFUNCTION()
-	void OnMontageEnded(UAnimMontage* Montage, bool bInterrupted); 	
+	void OnThrowSpearMontageEnded(UAnimMontage* Montage, bool bInterrupted); 	
+
+	bool bCanPlaySpearSkillMontage = true; 
 };

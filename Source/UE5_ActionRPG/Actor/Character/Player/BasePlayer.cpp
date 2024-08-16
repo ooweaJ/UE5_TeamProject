@@ -310,15 +310,22 @@ void ABasePlayer::UpdateHP()
 void ABasePlayer::HandlePlayerDeath()
 {
 	State->SetDeadMode();
-	SetActorEnableCollision(false); 
-	Dead(); 
+	SetActorEnableCollision(false);
 
 	ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
-	
-	if (BasePlayerController)
+
+	if (!BasePlayerController) { return; }
+
+	BasePlayerController->SetIgnoreMoveInput(true);
+	BasePlayerController->SetIgnoreLookInput(true);
+
+	if (GetCharacterMovement()->IsMovingOnGround())
 	{
-		BasePlayerController->SetIgnoreMoveInput(true);
-		BasePlayerController->SetIgnoreLookInput(true);
+		Dead();
+	}
+	else
+	{
+		CompletePlayerDeath(BasePlayerController);
 	}
 }
 
