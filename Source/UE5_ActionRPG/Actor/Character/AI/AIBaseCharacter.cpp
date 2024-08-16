@@ -36,7 +36,8 @@ void AAIBaseCharacter::BeginPlay()
 
 	if (UUI_BossStatus* AIStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject()))
 	{
-		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+		ScreenStatusUI = AIStatus;
+		AIStatus->SetHP(Status->GetCurrentHP(), Status->GetMaxHP());
 		AIStatus->SetNameTag(NameTag);
 	}
 	if (ABaseAIController* controller = Cast<ABaseAIController>(GetController()))
@@ -75,10 +76,6 @@ void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 float AAIBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
-	ABasePlayer* Player = Cast<ABasePlayer>(DamageCauser->GetOwner());
-
-
 
 	return TempDamage;
 }
@@ -196,10 +193,8 @@ void AAIBaseCharacter::RotateToTarget()
 void AAIBaseCharacter::UpdateHP()
 {
 	Super::UpdateHP();
-	if (UUI_BossStatus* AIStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject()))
-	{
-		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
-	}
+	if(ScreenStatusUI)
+		ScreenStatusUI->SetHP(Status->GetCurrentHP(), Status->GetMaxHP());
 }
 
 void AAIBaseCharacter::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -208,16 +203,15 @@ void AAIBaseCharacter::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActo
 	if (!BP) return;
 
 	if (ActorHasTag("Boss"))
-	{
 		if (APlayerController* PC = Cast<APlayerController>(BP->GetController()))
 			if (AInGameHUD* HUD = Cast<AInGameHUD>(PC->GetHUD()))
 				if (UUI_MainInGame* InGameUI = Cast<UUI_MainInGame>(HUD->MainUI))
 				{
-					InGameUI->BPUI_BossStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
-					InGameUI->BPUI_BossStatus->SetNameTag(NameTag);
+					if (ScreenStatusUI)
+						ScreenStatusUI = InGameUI->BPUI_BossStatus;
 					InGameUI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Visible);
+					HealthWidget->SetVisibility(false);
 				}
-	}
 }
 
 void AAIBaseCharacter::OnUIOff(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -226,12 +220,14 @@ void AAIBaseCharacter::OnUIOff(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (!BP) return;
 
 	if (ActorHasTag("Boss"))
-	{
 		if (APlayerController* PC = Cast<APlayerController>(BP->GetController()))
 			if (AInGameHUD* HUD = Cast<AInGameHUD>(PC->GetHUD()))
 				if (UUI_MainInGame* InGameUI = Cast<UUI_MainInGame>(HUD->MainUI))
-					InGameUI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Collapsed);
-	}
+				{
+					ScreenStatusUI->SetVisibility(ESlateVisibility::Collapsed);
+					ScreenStatusUI = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject());
+					HealthWidget->SetVisibility(true);
+				}
 }
 
 void AAIBaseCharacter::PlayRateMontage_Implementation()

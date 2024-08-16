@@ -74,4 +74,6 @@ protected:
 	bool bStrafe = false;
 	bool bRotate = false;
 	FVector TargetLocation;
+
+	class UUI_BossStatus* ScreenStatusUI;
 };

@@ -51,17 +51,12 @@ public:
 	FORCEINLINE float GetDamage() { return Damage; }
 	// 캐릭터 이동 제어를 위해 받아옴
 	FORCEINLINE bool IsCanMove() { return bCanMove; }
-	FORCEINLINE float GetMaxHealth() { return MaxHealth; }
-	FORCEINLINE float GetHealth() { return Health; }
 	// 이동제어
 	FORCEINLINE void SetMove() { bCanMove = true; }
 	FORCEINLINE void SetStop() { bCanMove = false; }
 	// 원하는 스피드 값 설정
 	UFUNCTION(NetMulticast, Reliable)
 	void SetSpeed(EWalkSpeedTpye InType);
-	// 체력 증가 및 감소
-	void IncreaseHealth(float InAmount);
-	void DecreaseHealth(float InAmount);
 
 	FORCEINLINE float GetEvadeCost() { return EvadeCost; }
 	FORCEINLINE float GetAttackCost() { return AttackCost; }
@@ -97,10 +92,6 @@ public:
 	FStatus SP;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float MaxHealth = 100.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = "OnRep_Update")
-	float Health;
 	UPROPERTY(EditAnywhere, Category = "Cost")
 	float EvadeCost = -50.f;
 	UPROPERTY(EditAnywhere, Category = "Cost")

@@ -12,7 +12,6 @@ void UStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Health = MaxHealth;
 }
 
 void UStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -55,27 +54,6 @@ void UStatusComponent::SetDamage(float InAmount)
 	Damage = InAmount;
 }
 
-
-void UStatusComponent::IncreaseHealth(float InAmount)
-{
-	Health += InAmount;
-	Health = FMath::Clamp(Health, 0.f, MaxHealth);
-	if (GetOwner()->HasAuthority())
-	{
-		OnRep_Update();
-	}
-}
-
-void UStatusComponent::DecreaseHealth(float InAmount)
-{
-	Health -= InAmount;
-	Health = FMath::Clamp(Health, 0.f, MaxHealth);
-	if (GetOwner()->HasAuthority())
-	{
-		OnRep_Update();
-	}
-}
-
 void UStatusComponent::OnRep_Update()
 {
 	if (ICombatInterface* Combat = Cast<ICombatInterface>(GetOwner()))
@@ -88,6 +66,5 @@ void UStatusComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& O
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UStatusComponent, Health);
 	DOREPLIFETIME(UStatusComponent, HP);
 }
