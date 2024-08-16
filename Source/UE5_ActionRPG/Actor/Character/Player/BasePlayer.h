@@ -57,7 +57,7 @@ public:
 
 	void HandlePlayerDeath(); 
 
-	void HandlePlayerRevival(); 
+	virtual void HandlePlayerRevival(); 
 
 	void SetPrimitiveComponentsVisibility(bool bVisible); 
 

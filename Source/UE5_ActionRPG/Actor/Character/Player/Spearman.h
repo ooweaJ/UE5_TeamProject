@@ -35,6 +35,8 @@ protected:
 
 	void SetupSpearProjectile(); 
 
+	virtual void HandlePlayerRevival() override; 
+
 
 protected:
 	UPROPERTY(EditAnywhere)

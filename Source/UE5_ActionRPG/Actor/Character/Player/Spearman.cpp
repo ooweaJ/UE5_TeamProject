@@ -94,6 +94,13 @@ void ASpearman::SetupSpearProjectile()
 	SpearProjectile->SetComponentsVisibility(false);
 }
 
+void ASpearman::HandlePlayerRevival()
+{
+	Super::HandlePlayerRevival(); 
+
+	SpearProjectile->SetComponentsVisibility(false); 
+}
+
 void ASpearman::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	if (Montage)
