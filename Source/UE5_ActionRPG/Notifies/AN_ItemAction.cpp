@@ -13,7 +13,9 @@ void UAN_ItemAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase*
 
 	if (MeshComp == nullptr) return;
 
-	UEquipComponent* Equip = Cast<UEquipComponent>(MeshComp->GetOwner()->GetComponentByClass<UEquipComponent>());
+	AActor* Owner = MeshComp->GetOwner();
+	if (!Owner) return;
+	UEquipComponent* Equip = Cast<UEquipComponent>(Owner->GetComponentByClass<UEquipComponent>());
 	if (Equip == nullptr) return;
 	if (AItem* Item = Cast<AItem>(Equip->GetCurrentItem()))
 	{

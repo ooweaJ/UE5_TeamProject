@@ -62,7 +62,7 @@ void ABaseCharacter::EndAction()
 
 void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
 {
-
+	if (!InDamageType) return;
 	if (UDefaultDamageType* DamageType = Cast<UDefaultDamageType>(InDamageType->GetDefaultObject()))
 	{
 		if (!MontageComponent) return;
