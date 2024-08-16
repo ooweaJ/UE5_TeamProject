@@ -89,6 +89,7 @@ void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
 
 void ABaseCharacter::Dead()
 {
+	State->SetDeadMode();
 	MontageComponent->PlayDead();
 }
 
@@ -116,11 +117,9 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
 
 		Status->StatusModify(Status->HP, -DamageAmount);
-		Status->DecreaseHealth(DamageAmount);
 
-		if (Status->GetHealth() == 0.f||Status->HP.Current == 0.f)
+		if (Status->GetCurrentHP() == 0.f)
 		{
-			State->SetDeadMode();
 			Dead();
 		}
 		return DamageAmount;

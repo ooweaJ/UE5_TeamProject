@@ -11,7 +11,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "HUD/InGameHUD.h"
 #include "UI/InGame/UI_MainInGame.h"
-#include "Actor/Character/Player/BasePlayer.h"
 
 AAIBaseCharacter::AAIBaseCharacter()
 {
@@ -21,7 +20,7 @@ AAIBaseCharacter::AAIBaseCharacter()
 	
 	UIPopCollision = CreateDefaultSubobject<USphereComponent>(TEXT("UIPopCollision"));
 	UIPopCollision->SetupAttachment(RootComponent);
-	UIPopCollision->SetSphereRadius(1500.f);
+	UIPopCollision->SetSphereRadius(1000.f);
 
 	ConstructorHelpers::FClassFinder<UUserWidget> Class(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/_dev/UI/InGame/BPUI_BossStatus.BPUI_BossStatus_C'"));
 	if(Class.Succeeded())
@@ -37,7 +36,8 @@ void AAIBaseCharacter::BeginPlay()
 
 	if (UUI_BossStatus* AIStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject()))
 	{
-		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
+		ScreenStatusUI = AIStatus;
+		AIStatus->SetHP(Status->GetCurrentHP(), Status->GetMaxHP());
 		AIStatus->SetNameTag(NameTag);
 	}
 	if (ABaseAIController* controller = Cast<ABaseAIController>(GetController()))
@@ -65,17 +65,6 @@ void AAIBaseCharacter::Tick(float DeltaTime)
 	{
 		TargetRotation();
 	}
-
-	
-	if(APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0))
-	{
-		FVector PlayerLocation = PlayerPawn->GetActorLocation();
-
-		FVector WidgetLocation = HealthWidget->K2_GetComponentLocation();
-
-		FRotator RotateVal = UKismetMathLibrary::FindLookAtRotation(WidgetLocation, PlayerLocation);
-		HealthWidget->SetWorldRotation(RotateVal);
-	}
 }
 
 void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -83,11 +72,10 @@ void AAIBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-
+#include "Actor/Character/Player/BasePlayer.h"
 float AAIBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
 
 	return TempDamage;
 }
@@ -205,21 +193,8 @@ void AAIBaseCharacter::RotateToTarget()
 void AAIBaseCharacter::UpdateHP()
 {
 	Super::UpdateHP();
-	if (UUI_BossStatus* AIStatus = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject()))
-	{
-		AIStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
-	}
-
-	if (ActorHasTag("Boss"))
-	{
-		if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
-			if (AInGameHUD* HUD = Cast<AInGameHUD>(PC->GetHUD()))
-				if (UUI_MainInGame* InGameUI = Cast<UUI_MainInGame>(HUD->MainUI))
-				{
-					InGameUI->BPUI_BossStatus->SetHP(Status->GetHealth(), Status->GetMaxHealth());
-					InGameUI->BPUI_BossStatus->SetNameTag(NameTag);
-				}
-	}
+	if(ScreenStatusUI)
+		ScreenStatusUI->SetHP(Status->GetCurrentHP(), Status->GetMaxHP());
 }
 
 void AAIBaseCharacter::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -228,15 +203,15 @@ void AAIBaseCharacter::OnUIPopUP(UPrimitiveComponent* OverlappedComponent, AActo
 	if (!BP) return;
 
 	if (ActorHasTag("Boss"))
-	{
 		if (APlayerController* PC = Cast<APlayerController>(BP->GetController()))
 			if (AInGameHUD* HUD = Cast<AInGameHUD>(PC->GetHUD()))
 				if (UUI_MainInGame* InGameUI = Cast<UUI_MainInGame>(HUD->MainUI))
 				{
+					if (ScreenStatusUI)
+						ScreenStatusUI = InGameUI->BPUI_BossStatus;
 					InGameUI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Visible);
-					HealthWidget->GetUserWidgetObject()->SetVisibility(ESlateVisibility::Collapsed);
+					HealthWidget->SetVisibility(false);
 				}
-	}
 }
 
 void AAIBaseCharacter::OnUIOff(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -245,15 +220,14 @@ void AAIBaseCharacter::OnUIOff(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (!BP) return;
 
 	if (ActorHasTag("Boss"))
-	{
 		if (APlayerController* PC = Cast<APlayerController>(BP->GetController()))
 			if (AInGameHUD* HUD = Cast<AInGameHUD>(PC->GetHUD()))
 				if (UUI_MainInGame* InGameUI = Cast<UUI_MainInGame>(HUD->MainUI))
 				{
-					InGameUI->BPUI_BossStatus->SetVisibility(ESlateVisibility::Collapsed);
-					HealthWidget->GetUserWidgetObject()->SetVisibility(ESlateVisibility::Visible);
+					ScreenStatusUI->SetVisibility(ESlateVisibility::Collapsed);
+					ScreenStatusUI = Cast<UUI_BossStatus>(HealthWidget->GetUserWidgetObject());
+					HealthWidget->SetVisibility(true);
 				}
-	}
 }
 
 void AAIBaseCharacter::PlayRateMontage_Implementation()

@@ -310,6 +310,7 @@ void ABasePlayer::UpdateHP()
 void ABasePlayer::HandlePlayerDeath()
 {
 	State->SetDeadMode();
+	SetActorEnableCollision(false); 
 	Dead(); 
 
 	ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
@@ -319,6 +320,11 @@ void ABasePlayer::HandlePlayerDeath()
 		BasePlayerController->SetIgnoreMoveInput(true);
 		BasePlayerController->SetIgnoreLookInput(true);
 	}
+}
+
+void ABasePlayer::CompletePlayerDeath(ABasePlayerController* InPlayerController)
+{
+	if (!InPlayerController) { return; }
 
 	UNiagaraComponent* DeathDissolveComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
 		GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
@@ -329,21 +335,24 @@ void ABasePlayer::HandlePlayerDeath()
 
 	DeathDissolveComponent->SetVisibility(true);
 
-	SetActorEnableCollision(false);
-
 	AMainWorldGameMode* GameMode = Cast<AMainWorldGameMode>(UGameplayStatics::GetGameMode(this));
 
-	if (GameMode && BasePlayerController)
+	if (GameMode && InPlayerController)
 	{
-		GameMode->Respawn(BasePlayerController, 3.f);
+		GameMode->Respawn(InPlayerController, 5.f);
 	}
-
 }
 
 void ABasePlayer::HandlePlayerRevival()
 {
-	Status->StatusModify(Status->HP, Status->GetMaxHealth());
+	Status->StatusModify(Status->HP, Status->GetMaxHP());
 	State->SetIdleMode(); 
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance(); 
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Stop(0.f);
+	}
 }
 
 void ABasePlayer::SetPrimitiveComponentsVisibility(bool bVisible)
