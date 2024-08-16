@@ -108,8 +108,8 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	if (!DamageEvent.DamageTypeClass) return 0;
-	HitPlayMontage(DamageEvent.DamageTypeClass);
+	if (bRoll) return 0;
+
 
 	if (HasAuthority())
 	{
@@ -122,9 +122,11 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		{
 			State->SetDeadMode();
 			Dead();
+			return DamageAmount;
 		}
-		return DamageAmount;
 	}
+
+	HitPlayMontage(DamageEvent.DamageTypeClass);
 
 	return 0;
 }

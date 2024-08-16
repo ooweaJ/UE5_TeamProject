@@ -145,7 +145,10 @@ void AGrux::AirStart()
                 if (HitActor && HitActor->ActorHasTag("Player"))
                 {
                     if (ABasePlayer* Player = Cast<ABasePlayer>(HitActor))
-                        HitPlayer.Add(Player);
+                    {
+                        if (Player->IsRoll()) return;
+                        HitPlayer.AddUnique(Player);
+                    }
                 }
             }
 

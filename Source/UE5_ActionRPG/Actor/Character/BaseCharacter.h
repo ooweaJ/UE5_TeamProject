@@ -54,5 +54,7 @@ protected:
 
 	bool Parrying;
 
-	
+public:
+	FORCEINLINE bool IsRoll() { return bRoll; }
+	bool bRoll = false;
 };
