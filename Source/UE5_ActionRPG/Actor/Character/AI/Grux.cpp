@@ -166,6 +166,7 @@ void AGrux::PlayAirCombo()
             Player->GetCharacterMovement()->GravityScale = 0.5f;
             Player->LaunchCharacter(FVector(0, 0, 1000.f), false, true);
             Player->SetAirbone(true);
+            Player->StopAnimMontage();
             FDamageEvent de;
             Player->TakeDamage(50.f, de, GetOwner()->GetInstigatorController(), this);
         }

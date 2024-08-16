@@ -4,6 +4,7 @@
 #include "Engine/DamageEvents.h"
 #include "Actor/Item/DamageType/DefaultDamageType.h"
 #include "Kismet/GameplayStatics.h"
+#include "Actor/Item/Attachment.h"
 
 void AWarriorItem::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
 {
@@ -23,7 +24,7 @@ void AWarriorItem::OnDamage(ACharacter* InAttacker, AActor* InCauser, ACharacter
 				 if (!!hitEffect)
 				 {
 					 FTransform transform = CurrentData.EffectTransform;
-					 transform.AddToTranslation(InOtherCharacter->GetActorLocation());
+					 transform.AddToTranslation(Attachment->GetActorLocation());
 					 UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), hitEffect, transform);
 				 }
 			 }
