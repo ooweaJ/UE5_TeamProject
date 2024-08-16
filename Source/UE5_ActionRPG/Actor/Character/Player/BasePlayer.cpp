@@ -109,9 +109,10 @@ float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	Status->StatusModify(Status->HP, -TempDamage);
 
 	// When HP is less or equal than 0 
-	if (Status->HP.Current <= 0.)
+	if (Status->HP.Current <= 0. && bCanTakeDamage)
 	{
 		HandlePlayerDeath(); 
+		bCanTakeDamage = false; 
 	}
 
 	return TempDamage;
@@ -346,7 +347,7 @@ void ABasePlayer::CompletePlayerDeath(ABasePlayerController* InPlayerController)
 
 	if (GameMode && InPlayerController)
 	{
-		GameMode->Respawn(InPlayerController, 5.f);
+		GameMode->Respawn(InPlayerController, 3.f);
 	}
 }
 

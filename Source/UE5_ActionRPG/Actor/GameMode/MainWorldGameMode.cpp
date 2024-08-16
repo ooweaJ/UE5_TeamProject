@@ -91,6 +91,7 @@ void AMainWorldGameMode::RevertToPlayerStart(APlayerController* InPlayerControll
 			BasePlayer->SetAttachedActorsVisiblity(true);
 			BasePlayer->SetActorEnableCollision(true); 
 			BasePlayer->HandlePlayerRevival(); 
+			BasePlayer->bCanTakeDamage = true; 
 		}
 
 		BasePlayerController->SetIgnoreMoveInput(false);

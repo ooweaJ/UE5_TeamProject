@@ -123,6 +123,8 @@ public:
 	FVector ArmPos;
 	FVector ActorPos;
 
+	bool bCanTakeDamage = true; 
+
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 	class AInteractiveActor* InteractableObject;
