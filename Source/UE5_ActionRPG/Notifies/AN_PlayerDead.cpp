@@ -13,10 +13,7 @@ void UAN_PlayerDead::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase*
 	{
 		if (ABasePlayer* BasePlayer = Cast<ABasePlayer>(MeshComp->GetOwner()))
 		{
-			if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(BasePlayer->GetController()))
-			{
-				BasePlayer->CompletePlayerDeath(BasePlayerController);
-			}
+				BasePlayer->CompletePlayerDeath();
 		}
 	}
 }

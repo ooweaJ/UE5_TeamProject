@@ -87,7 +87,7 @@ void ABaseCharacter::HitPlayMontage(TSubclassOf<UDamageType> InDamageType)
 	}
 }
 
-void ABaseCharacter::Dead()
+void ABaseCharacter::Dead_Implementation()
 {
 	State->SetDeadMode();
 	MontageComponent->PlayDead();
@@ -112,10 +112,9 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	if (bRoll) return 0;
 
 
-	if (HasAuthority())
 	{
 		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
-
+		if(HasAuthority())
 		Status->StatusModify(Status->HP, -DamageAmount);
 
 		if (Status->GetCurrentHP() == 0.f)

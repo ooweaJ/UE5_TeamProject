@@ -50,7 +50,7 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void AirSpawnEffect(FTransform InTransform);
-
+	UFUNCTION(NetMulticast, Reliable)
 	void EndSkill2();
 	
 	UPROPERTY(EditAnywhere, Category = "Spawning")

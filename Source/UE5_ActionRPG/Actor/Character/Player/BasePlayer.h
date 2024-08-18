@@ -21,8 +21,6 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
 public:
 	void OnMouseL();
 	UFUNCTION(Server, Reliable)
@@ -57,11 +55,13 @@ public:
 	
 	void TickLockOn();
 	virtual void UpdateHP();
-
+	virtual void Dead();
 	void HandlePlayerDeath(); 
-	
-	void CompletePlayerDeath(class ABasePlayerController* InPlayerController); 
-
+	UFUNCTION(Server, Reliable)
+	void CompletePlayerDeath();
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiCompletePlayerDeath(); 
+	UFUNCTION()
 	virtual void HandlePlayerRevival(); 
 
 	void SetPrimitiveComponentsVisibility(bool bVisible); 

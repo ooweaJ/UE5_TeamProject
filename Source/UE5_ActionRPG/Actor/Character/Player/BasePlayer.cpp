@@ -104,21 +104,6 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
-float ABasePlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	float TempDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
-	/* TODO */
-	Status->StatusModify(Status->HP, -TempDamage);
-
-	// When HP is less or equal than 0 
-	if (Status->HP.Current <= 0.)
-	{
-		HandlePlayerDeath(); 
-	}
-
-	return TempDamage;
-}
 
 void ABasePlayer::OnMouseL()
 {
@@ -313,9 +298,15 @@ void ABasePlayer::UpdateHP()
 
 }
 
+void ABasePlayer::Dead()
+{
+	Super::Dead();
+
+	HandlePlayerDeath();
+}
+
 void ABasePlayer::HandlePlayerDeath()
 {
-	State->SetDeadMode();
 	SetActorEnableCollision(false);
 
 	ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController());
@@ -324,35 +315,34 @@ void ABasePlayer::HandlePlayerDeath()
 
 	BasePlayerController->SetIgnoreMoveInput(true);
 	BasePlayerController->SetIgnoreLookInput(true);
-
-	if (GetCharacterMovement()->IsMovingOnGround())
-	{
-		Dead();
-	}
-	else
-	{
-		CompletePlayerDeath(BasePlayerController);
-	}
 }
 
-void ABasePlayer::CompletePlayerDeath(ABasePlayerController* InPlayerController)
+void ABasePlayer::CompletePlayerDeath_Implementation()
 {
-	if (!InPlayerController) { return; }
+	MultiCompletePlayerDeath();
+}
 
-	UNiagaraComponent* DeathDissolveComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
-		GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
-
+void ABasePlayer::MultiCompletePlayerDeath_Implementation()
+{
 	SetPrimitiveComponentsVisibility(false);
 
 	SetAttachedActorsVisiblity(false);
 
+	UNiagaraComponent* DeathDissolveComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(DeathDissolveEffect,
+		GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false);
 	DeathDissolveComponent->SetVisibility(true);
+
+
+	UKismetSystemLibrary::K2_SetTimer(this, "HandlePlayerRevival", 3.f, false);
 
 	AMainWorldGameMode* GameMode = Cast<AMainWorldGameMode>(UGameplayStatics::GetGameMode(this));
 
-	if (GameMode && InPlayerController)
+	if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController()))
 	{
-		GameMode->Respawn(InPlayerController, 5.f);
+		if (GameMode)
+		{
+			GameMode->Respawn(BasePlayerController, 3.f);
+		}
 	}
 }
 
@@ -360,6 +350,15 @@ void ABasePlayer::HandlePlayerRevival()
 {
 	Status->StatusModify(Status->HP, Status->GetMaxHP());
 	State->SetIdleMode(); 
+	SetPrimitiveComponentsVisibility(true);
+	SetAttachedActorsVisiblity(true);
+	SetActorEnableCollision(true);
+
+	if (ABasePlayerController* BasePlayerController = Cast<ABasePlayerController>(GetController()))
+	{
+		BasePlayerController->SetIgnoreMoveInput(false);
+		BasePlayerController->SetIgnoreLookInput(false);
+	}
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance(); 
 	if (AnimInstance)

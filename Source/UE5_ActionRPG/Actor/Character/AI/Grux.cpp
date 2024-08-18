@@ -146,7 +146,11 @@ void AGrux::AirStart()
                 {
                     if (ABasePlayer* Player = Cast<ABasePlayer>(HitActor))
                     {
-                        if (Player->IsRoll()) return;
+                        if (Player->IsRoll())
+                        {
+                            EndSkill2();
+                            return;
+                        }
                         HitPlayer.AddUnique(Player);
                     }
                 }
@@ -171,10 +175,6 @@ void AGrux::PlayAirCombo()
             Player->TakeDamage(50.f, de, GetOwner()->GetInstigatorController(), this);
         }
         UKismetSystemLibrary::K2_SetTimer(this, "StartAirCombo", 1.f, false);
-    }
-    else
-    {
-        EndSkill2();
     }
 }
 
@@ -230,7 +230,7 @@ void AGrux::EndAirCombo()
     EndSkill2();
 }
 
-void AGrux::EndSkill2()
+void AGrux::EndSkill2_Implementation()
 {
     HitPlayer.Empty();
     bSkill2 = false;

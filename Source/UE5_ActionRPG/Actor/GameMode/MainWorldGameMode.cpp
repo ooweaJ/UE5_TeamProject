@@ -87,14 +87,7 @@ void AMainWorldGameMode::RevertToPlayerStart(APlayerController* InPlayerControll
 		{
 			BasePlayer->SetActorLocation(SpawnLocation); 
 			BasePlayer->SetActorRotation(SpawnRotation); 
-			BasePlayer->SetPrimitiveComponentsVisibility(true); 
-			BasePlayer->SetAttachedActorsVisiblity(true);
-			BasePlayer->SetActorEnableCollision(true); 
-			BasePlayer->HandlePlayerRevival(); 
 		}
-
-		BasePlayerController->SetIgnoreMoveInput(false);
-		BasePlayerController->SetIgnoreLookInput(false);
 	}
 }
 

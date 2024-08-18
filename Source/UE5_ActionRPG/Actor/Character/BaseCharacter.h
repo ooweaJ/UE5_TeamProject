@@ -32,6 +32,7 @@ public:
 	
 	void EndAction();
 	void HitPlayMontage(TSubclassOf<UDamageType> InDamageType);
+	UFUNCTION(NetMulticast, Reliable)
 	virtual void Dead();
 
 	UFUNCTION(Server,Reliable)
