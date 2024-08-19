@@ -57,7 +57,7 @@ ABasePlayer::ABasePlayer()
 		Camera->SetupAttachment(SpringArm);
 
 		SpringArm->SetRelativeLocation(FVector(0, 0, 90));
-		SpringArm->TargetArmLength = 300.f;
+		SpringArm->TargetArmLength = 500.f;
 		SpringArm->bDoCollisionTest = true;
 		SpringArm->bUsePawnControlRotation = true;
 		}
@@ -146,7 +146,12 @@ void ABasePlayer::OffMouseR()
 	}
 }
 
-void ABasePlayer::OnQ()
+void ABasePlayer::OnQ_Implementation()
+{
+	MultiOnQ();
+}
+
+void ABasePlayer::MultiOnQ_Implementation()
 {
 	if (AItem* item = Equip->GetCurrentItem())
 	{

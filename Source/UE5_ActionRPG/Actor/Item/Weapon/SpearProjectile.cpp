@@ -23,7 +23,7 @@ ASpearProjectile::ASpearProjectile()
 		SetRootComponent(Box);
 		Box->SetBoxExtent(FVector(180., 430., 180.)); 
 
-		Box->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		Box->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		Box->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 		Box->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
@@ -38,6 +38,7 @@ ASpearProjectile::ASpearProjectile()
 		static ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalAsset(TEXT("/Script/Engine.SkeletalMesh'/Game/Boss/Boss_Asset/InfinityBladeWeapons/Weapons/Spear/source/SpearofAdun.SpearofAdun'"));
 		ensure(SkeletalAsset.Object); 
 		SkeletalMesh->SetSkeletalMesh(SkeletalAsset.Object); 
+		SkeletalMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	// Niagara System Component - Aura
@@ -95,13 +96,12 @@ void ASpearProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 {
 	if (OtherActor)
 	{
-		SetComponentsVisibility(false); 
-
 		AAIBaseCharacter* BossCharacter = Cast<AAIBaseCharacter>(OtherActor); 
 
 		if (!BossCharacter) { return;  }
 
 		UGameplayStatics::ApplyDamage(BossCharacter, SpearThrowingDamage, nullptr, this, UDamageType::StaticClass()); 
-		
+		SetComponentsVisibility(false);
+
 	}
 }

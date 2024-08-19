@@ -110,10 +110,9 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	if (bRoll) return 0;
-
+	if (State->IsDeadMode()) return 0;
 
 	{
-		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString::SanitizeFloat(DamageAmount));
 		if(HasAuthority())
 		Status->StatusModify(Status->HP, -DamageAmount);
 

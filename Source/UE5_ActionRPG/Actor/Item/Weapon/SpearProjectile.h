@@ -38,10 +38,10 @@ private:
 	UPROPERTY()
 	float SpearThrowingDamage = 100.f; 
 protected:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	UBoxComponent* Box; 
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* SkeletalMesh; 
 
 	UPROPERTY()
