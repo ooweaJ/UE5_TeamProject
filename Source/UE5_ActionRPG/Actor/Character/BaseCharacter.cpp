@@ -128,12 +128,12 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	return 0;
 }
 
-void ABaseCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	if (Equip->GetCurrentItem())
-	{
-		Equip->GetCurrentItem()->EndItem();
-	}
-}
+//void ABaseCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+//{
+//	if (Equip->GetCurrentItem())
+//	{
+//		Equip->GetCurrentItem()->EndItem();
+//	}
+//}
 
 

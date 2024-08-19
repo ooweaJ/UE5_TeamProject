@@ -43,6 +43,10 @@ void UStatusComponent::StatusRegen(FStatus& Status)
 	{
 		Status.Current = FMath::Clamp(Status.Current + (Status.Regen*GetWorld()->GetDeltaSeconds()), 0.f, Status.Max);
 	}
+	if (GetOwner()->HasAuthority())
+	{
+		OnRep_Update();
+	}
 }
 
 void UStatusComponent::SetDamage(float InAmount)
