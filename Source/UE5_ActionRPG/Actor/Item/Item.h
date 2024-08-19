@@ -64,6 +64,7 @@ public:
 	void OnItemAction(int32 Num);
 
 	void MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate);
+	void EndItem();
 protected:
 	UPROPERTY(EditAnywhere)
 	class UCombatActionDataAsset* ItemData;

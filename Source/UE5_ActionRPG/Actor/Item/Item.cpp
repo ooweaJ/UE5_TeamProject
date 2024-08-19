@@ -266,6 +266,13 @@ void AItem::MontagePlayRate(UAnimInstance* AnimInstance, float PlayRate)
 	}
 }
 
+void AItem::EndItem()
+{
+	if (Attachment)
+		Attachment->Destroy();
+	Destroy();
+}
+
 //
 //void AItem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 //{

@@ -42,15 +42,23 @@ void UService_Boss::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 	{
 		float distance = aiPawn->GetDistanceTo(Target);
 
-		 if (controller->IsOnSkill())
+		if (distance < 1000.f)
 		{
-			behavior->SetSkillMode();
-			return;
-		}
-		else if (controller->GetAttackRange() > distance)
-		{
+			if (controller->IsOnSkill())
 			{
-				behavior->SetMeleeMode();
+				behavior->SetSkillMode();
+				return;
+			}
+			else if (controller->GetAttackRange() > distance)
+			{
+				{
+					behavior->SetMeleeMode();
+					return;
+				}
+			}
+			else
+			{
+				behavior->SetApproachMode();
 				return;
 			}
 		}
@@ -59,6 +67,5 @@ void UService_Boss::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 			behavior->SetApproachMode();
 			return;
 		}
-		
 	}
 }
