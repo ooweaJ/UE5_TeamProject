@@ -16,6 +16,7 @@
 #include "Components/BoxComponent.h"
 #include "Component/StatusComponent.h"
 #include "Component/StateComponent.h"
+#include "Net/UnrealNetwork.h"
 
 ASpearman::ASpearman()
 {
@@ -54,15 +55,13 @@ void ASpearman::OnConstruction(const FTransform& Transform)
 			MID->SetVectorParameterValue(TEXT("Color"), FVector4(0.f, 1.f, 0.f, 1.f));
 		}
 	}
-
-	DefaultItemClass = ASpearWeapon::StaticClass(); 
-	
-	SetupSpearProjectile();
 }
 
 void ASpearman::BeginPlay()
 {
 	Super::BeginPlay(); 
+
+	SetupSpearProjectile();
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance(); 
 	if (AnimInstance)
@@ -80,8 +79,11 @@ void ASpearman::SetupSpearProjectile()
 	const FTransform& SocketTransform = GetMesh()->GetSocketTransform(SocketName, ERelativeTransformSpace::RTS_ParentBoneSpace);
 	const FVector& SocketLocation = SocketTransform.GetLocation(); 
 	
-	SpearProjectile = GetWorld()->SpawnActor<ASpearProjectile>(SocketLocation, FRotator::ZeroRotator, SpawnParams);
-	SpearProjectile->SetActorEnableCollision(false);
+	if (Projecttileclass)
+	{
+		SpearProjectile = GetWorld()->SpawnActor<ASpearProjectile>(Projecttileclass, SocketLocation, FRotator::ZeroRotator, SpawnParams);
+		SpearProjectile->SetActorEnableCollision(false);
+	}
 
 	UProjectileMovementComponent* ProjectileMovement = SpearProjectile->FindComponentByClass<UProjectileMovementComponent>();
 	if (ProjectileMovement)
@@ -156,7 +158,7 @@ void ASpearman::OnThrowSpearMontageEnded(UAnimMontage* Montage, bool bInterrupte
 	ChangeBoolAtCooltimeOver(3.f); 
 }
 
-void ASpearman::ThrowSpear()
+void ASpearman::ThrowSpear_Implementation()
 {
 	SpearProjectile->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
@@ -164,11 +166,19 @@ void ASpearman::ThrowSpear()
 
 	if (!GetController()) return;
 	const FRotator& SpearControlRotation = GetController()->GetControlRotation();
-	const FVector& SpearControlVector = SpearControlRotation.Vector(); 
+	SpearControlVector = SpearControlRotation.Vector(); 
 
 	SpearProjectile->SetActorRotation(SpearControlRotation - FRotator(0., 90., 0.)); 
 	UProjectileMovementComponent* ProjectileComp = SpearProjectile->GetProjectileComp();
 	ProjectileComp->Velocity = SpearControlVector * 1500.f;
 	ProjectileComp->Activate(true);
 	SpearProjectile->SetActorEnableCollision(true);
+}
+
+void ASpearman::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ASpearman, bCanPlaySpearSkillMontage);
+	DOREPLIFETIME(ASpearman, bCanThrowSpear);
+	DOREPLIFETIME(ASpearman, SpearControlVector);
 }

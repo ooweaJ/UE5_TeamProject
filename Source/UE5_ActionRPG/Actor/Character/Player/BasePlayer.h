@@ -29,7 +29,10 @@ public:
 	void MultiOnMouseR();
 	void OffMouseL();
 	void OffMouseR();
+	UFUNCTION(Server, Reliable)
 	virtual void OnQ(); 
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiOnQ(); 
 	UFUNCTION(Server, Reliable)
 	void OnShift();
 	UFUNCTION(Server, Reliable)

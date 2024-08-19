@@ -24,8 +24,9 @@ public:
 	ASpearWeapon* GetSpearWeapon() const;
 	UCameraComponent* GetCamera() const { return Camera; }
 
+	UFUNCTION(NetMulticast, Reliable)
 	void ThrowSpear();
-
+	UPROPERTY(Replicated)
 	bool bCanThrowSpear = false; 
 
 protected:
@@ -45,13 +46,16 @@ protected:
 
 
 protected:
-	UPROPERTY(EditAnywhere)
 	ASpearProjectile* SpearProjectile = nullptr; 
-
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASpearProjectile> Projecttileclass;
 	bool bCanCombo = false; 
 
 	UFUNCTION()
 	void OnThrowSpearMontageEnded(UAnimMontage* Montage, bool bInterrupted); 	
 
+	UPROPERTY(Replicated)
 	bool bCanPlaySpearSkillMontage = true; 
+	UPROPERTY(Replicated)
+	FVector SpearControlVector;
 };
