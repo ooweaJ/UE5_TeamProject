@@ -137,7 +137,7 @@ void AGrux::AirStart()
         TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
         ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
 
-        if (UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Location, Location, 300.f, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, HitResults, true))
+        if (UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), Location, Location, 300.f, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::None, HitResults, true))
         {
             for (const FHitResult& HitResult : HitResults)
             {
